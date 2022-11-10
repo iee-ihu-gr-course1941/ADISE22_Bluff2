@@ -70,7 +70,8 @@ INSERT INTO karta (id, timh, arithmos, symboloarithmou, xrwma, seira, eikona) VA
 INSERT INTO karta (id, timh, arithmos, symboloarithmou, xrwma, seira, eikona) VALUES (54, 14, 'joker', 'W', 'joker', 'joker', 'black_joker.png');
 
 CREATE TABLE IF NOT EXISTS `hand` (	
-	`pos` tinyint NOT NULL,
+	`user` varchar(20) primary key,
+        `pos` tinyint NOT NULL,
 	`idcard` tinyint
 )	
 
