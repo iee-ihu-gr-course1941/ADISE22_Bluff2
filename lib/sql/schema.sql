@@ -13,7 +13,6 @@ constraint timh_range check (`timh` > 0 and `timh` <= 14)
 
 
 --ace_of_hearts-> https://legendmod.ml/adise/ace_of_spades.png
--- INSERT INTO karta (id, timh, arithmos, symboloarithmou, xrwma, seira, eikona) VALUES (0, null, null, null, null, null, null);
 INSERT INTO karta (id, timh, arithmos, symboloarithmou, xrwma, seira, eikona) VALUES (1, 1, 'ena', 'A', 'kokkino', 'koupa', 'ace_of_hearts');
 INSERT INTO karta (id, timh, arithmos, symboloarithmou, xrwma, seira, eikona) VALUES (2, 2, 'duo', '2', 'kokkino', 'koupa', '2_of_hearts');
 INSERT INTO karta (id, timh, arithmos, symboloarithmou, xrwma, seira, eikona) VALUES (3, 3, 'tria', '3', 'kokkino', 'koupa', '3_of_hearts');
@@ -67,8 +66,13 @@ INSERT INTO karta (id, timh, arithmos, symboloarithmou, xrwma, seira, eikona) VA
 INSERT INTO karta (id, timh, arithmos, symboloarithmou, xrwma, seira, eikona) VALUES (51, 12, 'ntama', 'Q', 'mauro', 'mpastouni', 'queen_of_spades2');
 INSERT INTO karta (id, timh, arithmos, symboloarithmou, xrwma, seira, eikona) VALUES (52, 13, 'papas', 'K', 'mauro', 'mpastouni', 'king_of_spades2');
 
-INSERT INTO karta (id, timh, arithmos, symboloarithmou, xrwma, seira, eikona) VALUES (53, 14, 'joker', 'joker', 'joker', 'joker', 'red_joker.png');
-INSERT INTO karta (id, timh, arithmos, symboloarithmou, xrwma, seira, eikona) VALUES (54, 14, 'joker', 'joker', 'joker', 'joker', 'black_joker.png');
+INSERT INTO karta (id, timh, arithmos, symboloarithmou, xrwma, seira, eikona) VALUES (53, 14, 'joker', 'W', 'joker', 'joker', 'red_joker.png');
+INSERT INTO karta (id, timh, arithmos, symboloarithmou, xrwma, seira, eikona) VALUES (54, 14, 'joker', 'W', 'joker', 'joker', 'black_joker.png');
+
+CREATE TABLE IF NOT EXISTS `hand` (	
+	`pos` tinyint NOT NULL,
+	`idcard` tinyint
+)	
 
 CREATE TABLE IF NOT EXISTS `game_status` (
   `status` enum('not active','initialized','started','ended','aborded') NOT NULL DEFAULT 'not active',
@@ -92,3 +96,5 @@ CREATE TABLE IF NOT EXISTS `players` (
 INSERT INTO `players` (`username`, `side`, `token`, `last_action`) VALUES
 	(NULL, '1', NULL, NULL),
 	(NULL, '2', NULL, NULL);
+	
+	
