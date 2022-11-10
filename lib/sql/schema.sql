@@ -1,10 +1,16 @@
 
-CREATE TABLE IF NOT EXISTS `game_status` (
+DELIMITER $$
+CREATE OR REPLACE PROCEDURE new_game_status()
+BEGIN 
+DROP TABLE IF EXISTS game_status;
+CREATE TABLE `game_status` (
   `status` enum('not active','initialized','started','ended','aborded') NOT NULL DEFAULT 'not active',
   `p_turn` enum('1','2') DEFAULT NULL,
   `result` enum('Equal','Win','Defeat') DEFAULT NULL,
   `last_change` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-)
+);
+END $$
+call new_game_status();
   
 -- INSERT INTO `game_status` (`status`, `p_turn`, `result`, `last_change`) VALUES ('not active', '1', 'Win', '2022-11-08 18:57:40');
 
@@ -12,21 +18,19 @@ CREATE TABLE IF NOT EXISTS `game_status` (
 DELIMITER $$
 CREATE OR REPLACE PROCEDURE new_players()
 BEGIN 
-drop table `players`;
-CREATE TABLE IF NOT EXISTS `players` (
+drop table IF EXISTS `players`;
+CREATE TABLE `players` (
   `username` varchar(20) DEFAULT NULL,
   `side` enum('1','2') NOT NULL,
   `token` varchar(100) DEFAULT NULL,
   `last_action` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`side`)
-)
+);
 END $$
 call new_players();
 
 
-INSERT INTO `players` (`username`, `side`, `token`, `last_action`) VALUES
-	(NULL, '1', NULL, NULL),
-	(NULL, '2', NULL, NULL);
+-- INSERT INTO `players` (`username`, `side`, `token`, `last_action`) VALUES (NULL, '1', NULL, NULL), (NULL, '2', NULL, NULL);
 
 	
 CREATE OR REPLACE TABLE tablo(
