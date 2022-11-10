@@ -32,11 +32,17 @@ call new_players();
 
 -- INSERT INTO `players` (`username`, `side`, `token`, `last_action`) VALUES (NULL, '1', NULL, NULL), (NULL, '2', NULL, NULL);
 
-	
+DELIMITER $$
+CREATE OR REPLACE PROCEDURE new_tablo()
+BEGIN 
+drop table IF EXISTS tablo;
 CREATE OR REPLACE TABLE tablo(
    card tinyint ,
    pos enum ('1','2','3','4')
-)
+);
+END $$
+call new_tablo();
+
 	
 DELIMITER $$
   CREATE OR REPLACE PROCEDURE create_Card(in num varchar(1), IN symbol VARCHAR(8), IN eikona VARCHAR(20))
