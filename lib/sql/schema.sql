@@ -80,11 +80,6 @@ INSERT INTO karta (id, timh, arithmos, symboloarithmou, xrwma, seira, eikona) VA
 INSERT INTO karta (id, timh, arithmos, symboloarithmou, xrwma, seira, eikona) VALUES (53, 14, 'joker', 'W', 'joker', 'joker', 'red_joker.png');
 INSERT INTO karta (id, timh, arithmos, symboloarithmou, xrwma, seira, eikona) VALUES (54, 14, 'joker', 'W', 'joker', 'joker', 'black_joker.png');
 
-CREATE TABLE IF NOT EXISTS `hand` (	
-	`user` varchar(20) primary key,
-        `pos` tinyint NOT NULL,
-	`idcard` tinyint
-)	
 
 CREATE TABLE IF NOT EXISTS `game_status` (
   `status` enum('not active','initialized','started','ended','aborded') NOT NULL DEFAULT 'not active',
@@ -133,6 +128,7 @@ drop procedure new_Deck;
 DELIMITER $$
 CREATE PROCEDURE new_Deck()
 BEGIN 
+drop table Deck;
 CALL create_Card('1','spades');
 CALL create_Card('2','spades');
 CALL create_Card('3','spades');
@@ -189,3 +185,20 @@ END $$
 DELIMITER;
 
 CALL new_Deck;
+
+--foreing key fix 
+CREATE table board(
+   card tinyint foreign key,
+   pos tinyint enum (1,2,3,4),
+   FOREIGN KEY card REFERENCES Deck(card_id)
+)
+--function shuffle random
+DELIMITER $$
+  CREATE PROCEDURE shuffle()
+  BEGIN
+  Declare card1 tinyint;  
+  set card1 :=SELECT card_id FROM Deck ORDER BY RAND() LIMIT 1 ;
+  INSERT INTO board (card,pos) VALUES (card1,1);
+  delete from deck where card_id=card1;
+  END $$
+DELIMITER;
