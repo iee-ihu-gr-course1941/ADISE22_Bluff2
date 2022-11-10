@@ -194,11 +194,31 @@ CREATE table board(
 )
 --function shuffle random
 DELIMITER $$
-  CREATE PROCEDURE shuffle()
+  CREATE OR REPLACE PROCEDURE shuffle(poss VARCHAR(1))
   BEGIN
   Declare card1 tinyint;  
-  set card1 :=SELECT card_id FROM Deck ORDER BY RAND() LIMIT 1 ;
-  INSERT INTO board (card,pos) VALUES (card1,1);
+  set card1 :=(SELECT card_id FROM Deck ORDER BY RAND() LIMIT 1 );
+  INSERT INTO board (card,pos) VALUES (card1,poss);
   delete from deck where card_id=card1;
   END $$
-DELIMITER;
+  
+DELIMITER $$
+  CREATE OR REPLACE PROCEDURE shuffleAll()
+  BEGIN
+	DECLARE a INT Default 1 ;
+      simple_loop: LOOP
+         call shuffle('1');
+         SET a=a+1;
+         IF a=26 THEN
+            LEAVE simple_loop;
+         END IF;
+   END LOOP simple_loop;
+   DECLARE b INT Default 1 ;
+      simple_loop: LOOP
+         call shuffle('2');
+         SET b=b+1;
+         IF b=26 THEN
+            LEAVE simple_loop;
+         END IF;
+   END LOOP simple_loop;
+  END $$
