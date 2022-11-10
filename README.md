@@ -1,11 +1,11 @@
 # Bluff Game
 ## ADISE22_Bluff2
 
-A multiplayer card game
+Διαδικτυακό παιχνίδι μπλόφας
 
 ![alt tag](https://raw.githubusercontent.com/iee-ihu-gr-course1941/ADISE22_Bluff2/main/images/Bluff.jpg)
 
-Author: Stratos Skarlatos, Dimitrios Kyriakidis
+Συγγραφείς: Σκαρλάτος Στράτος, Κυριακίδης Δημήτριος
 
 Website: [www.---.ml](http://www.---.ml)
 
