@@ -10,6 +10,17 @@ eikona char(20) NOT NULL,
 constraint id_range check (`id` >= 0 and `id` <= 54),
 constraint timh_range check (`timh` > 0 and `timh` <= 14)
 );
+--Συνάρτηση που προσθέτει τις κάρτες στην τράπουλα
+DELIMITER //
+  CREATE PROCEDURE create_Card(in card_number INT, IN card_symbol VARCHAR)
+  BEGIN 
+  --Αριθμός και σύμβολο
+  INSERT INTO Deck (Num,Symbol) VALUES (card_number,card_symbol);
+  END //
+DELIMITER;
+
+
+
 
 
 --ace_of_hearts-> https://legendmod.ml/adise/ace_of_spades.png
@@ -85,7 +96,7 @@ CREATE TABLE IF NOT EXISTS `game_status` (
 INSERT INTO `game_status` (`status`, `p_turn`, `result`, `last_change`) VALUES
   ('not active', '1', 'Win', '2022-11-08 18:57:40');
 
-
+drop table `players`;
 CREATE TABLE IF NOT EXISTS `players` (
   `username` varchar(20) DEFAULT NULL,
   `side` enum('1','2') NOT NULL,
@@ -98,4 +109,83 @@ INSERT INTO `players` (`username`, `side`, `token`, `last_action`) VALUES
 	(NULL, '1', NULL, NULL),
 	(NULL, '2', NULL, NULL);
 	
+
 	
+drop procedure create_Card;
+
+DELIMITER $$
+  CREATE PROCEDURE create_Card(in num varchar(1), IN symbol VARCHAR(8))
+  BEGIN 
+  INSERT INTO Deck (card_number,card_symbol) VALUES (num,symbol);
+  END $$
+DELIMITER;
+
+drop table Deck;
+
+CREATE TABLE  Deck(
+  card_id INT PRIMARY KEY AUTO_INCREMENT,
+  card_number enum ('1','2','3','4','5','6','7','8','9','10','J','Q','K') NOT NULL,
+  card_symbol enum ('clubs','diamonds','spades','hearts') NOT NULL
+);
+
+drop procedure new_Deck;
+
+DELIMITER $$
+CREATE PROCEDURE new_Deck()
+BEGIN 
+CALL create_Card('1','spades');
+CALL create_Card('2','spades');
+CALL create_Card('3','spades');
+CALL create_Card('4','spades');
+CALL create_Card('5','spades');
+CALL create_Card('6','spades');
+CALL create_Card('7','spades');
+CALL create_Card('8','spades');
+CALL create_Card('9','spades');
+CALL create_Card('10','spades');
+CALL create_Card('J','spades');
+CALL create_Card('Q','spades');
+CALL create_Card('K','spades'); 
+CALL create_Card('1','clubs');
+CALL create_Card('2','clubs');
+CALL create_Card('3','clubs');
+CALL create_Card('4','clubs');
+CALL create_Card('5','clubs');
+CALL create_Card('6','clubs');
+CALL create_Card('7','clubs');
+CALL create_Card('8','clubs');
+CALL create_Card('9','clubs');
+CALL create_Card('10','clubs');
+CALL create_Card('J','clubs');
+CALL create_Card('Q','clubs');
+CALL create_Card('K','clubs'); 
+CALL create_Card('1','hearts');
+CALL create_Card('2','hearts');
+CALL create_Card('3','hearts');
+CALL create_Card('4','hearts');
+CALL create_Card('5','hearts');
+CALL create_Card('6','hearts');
+CALL create_Card('7','hearts');
+CALL create_Card('8','hearts');
+CALL create_Card('9','hearts');
+CALL create_Card('10','hearts');
+CALL create_Card('J','hearts');
+CALL create_Card('Q','hearts');
+CALL create_Card('K','hearts'); 
+CALL create_Card('1','diamonds');
+CALL create_Card('2','diamonds');
+CALL create_Card('3','diamonds');
+CALL create_Card('4','diamonds');
+CALL create_Card('5','diamonds');
+CALL create_Card('6','diamonds');
+CALL create_Card('7','diamonds');
+CALL create_Card('8','diamonds');
+CALL create_Card('9','diamonds');
+CALL create_Card('10','diamonds');
+CALL create_Card('J','diamonds');
+CALL create_Card('Q','diamonds');
+CALL create_Card('K','diamonds'); 
+END $$
+DELIMITER;
+
+CALL new_Deck;
