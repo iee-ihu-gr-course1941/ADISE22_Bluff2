@@ -1,0 +1,18 @@
+body {
+	background-color: grey;
+	text-align: center;
+}
+#mainSection {
+	padding-top: 0px;
+	padding-bottom: 0px; 
+	color: black;
+	text-align: center;
+	height=10%;
+}
+#bannerFrame {
+	width: 30%;
+	height: 10%;
+	border: none;
+	border-width: 0px;
+	scroll-behavior: smooth;	
+}
