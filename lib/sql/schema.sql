@@ -37,7 +37,8 @@ CREATE OR REPLACE PROCEDURE new_tablo()
 BEGIN 
 drop table IF EXISTS tablo;
 CREATE OR REPLACE TABLE tablo(
-   card tinyint ,
+   tablocard_id INT PRIMARY KEY AUTO_INCREMENT,
+   card tinyint,
    pos enum ('1','2','3','4')
 );
 END $$
@@ -158,16 +159,46 @@ DELIMITER $$
             LEAVE simple_loop;
          END IF;
    END LOOP simple_loop;
-  END $$
+ END $$
+
+DELIMITER $$
+  CREATE OR REPLACE PROCEDURE pass() --Kanei ta teleutaia fulla na mhn einai allo teleutaia, dinei 8esh sta fulla pou 8a riksei o epomenos paikths
+  BEGIN 
+  DELETE * FROM tablo WHERE pos = 4;
+ END $$ 
   
+DELIMITER $$
+  CREATE OR REPLACE PROCEDURE passFinal() --Oloi phgan pasw, adiazei ola ta fulla katw kai ta fulla pou erikse o teleutaios paikths
+  BEGIN 
+  DELETE * FROM tablo WHERE pos = 3;
+  DELETE * FROM tablo WHERE pos = 4;
+ END $$  
+ 
+DELIMITER $$
+  CREATE OR REPLACE PROCEDURE takeBackAll(playerID tinyint) --Dinei ston paikth ola ta fylla pou einai katw
+  BEGIN 
+	UPDATE tablo SET pos = playerID WHERE pos = '3';
+ END $$  
+ 
+DELIMITER $$
+  CREATE OR REPLACE PROCEDURE bluffOnCard(numberFromEnd tinyint) RETURNS INTEGER --Ean einai 0 blepei to teleutaio, ean 1 proteleutaio, ean klei8ei apo olh function den epistrefei tipota
+  BEGIN
+	SET @a = SELECT COUNT(*) FROM tablo WHERE pos = '3';
+	SET @a = @a - numberFromEnd;
+	RETURN SELECT * FROM tablo where tablocard_id=@a;
+END $$  
+
+
+
 DELIMITER $$
   CREATE OR REPLACE PROCEDURE move(cardd tinyint)
   BEGIN 
-    UPDATE tablo SET pos = '4' WHERE card = cardd; --To teleutaio fyllo katw enos paikth
-  END $$
+    UPDATE tablo SET pos = '3' WHERE card = cardd; --To teleutaio fyllo katw enos paikth sta fulla pou paiksan oloi
+	UPDATE tablo SET pos = '4' WHERE card = cardd; --To teleutaio fyllo katw enos paikth sta fulla pou epaikse
+ END $$
   
  DELIMITER $$
-  CREATE OR REPLACE PROCEDURE moveMany(times tinyint)
+  CREATE OR REPLACE PROCEDURE moveMany(times tinyint) --Auth den 8a xreiastei, einai la8os
   BEGIN
       SET @a = 0;
       simple_loop: LOOP
