@@ -164,28 +164,28 @@ DELIMITER $$
 DELIMITER $$
   CREATE OR REPLACE PROCEDURE pass() --Kanei ta teleutaia fulla na mhn einai allo teleutaia, dinei 8esh sta fulla pou 8a riksei o epomenos paikths
   BEGIN 
-  DELETE * FROM tablo WHERE pos = 4;
+  DELETE * FROM tablo WHERE pos = 3;--Prepei na pane kai oi duo paiktes paso gia na svhstoun oi kartes
+  call passFinal();
  END $$ 
-  
+
 DELIMITER $$
   CREATE OR REPLACE PROCEDURE passFinal() --Oloi phgan pasw, adiazei ola ta fulla katw kai ta fulla pou erikse o teleutaios paikths
   BEGIN 
+  
   DELETE * FROM tablo WHERE pos = 3;
   DELETE * FROM tablo WHERE pos = 4;
  END $$  
  
 DELIMITER $$
-  CREATE OR REPLACE PROCEDURE takeBackAll(playerID tinyint) --Dinei ston paikth ola ta fylla pou einai katw
+  CREATE OR REPLACE PROCEDURE takeBackAll(playerID varchar(1)) --Dinei ston paikth ola ta fylla pou einai katw
   BEGIN 
 	UPDATE tablo SET pos = playerID WHERE pos = '3';
  END $$  
  
 DELIMITER $$
-  CREATE OR REPLACE PROCEDURE bluffOnCard(numberFromEnd tinyint) RETURNS INTEGER --Ean einai 0 blepei to teleutaio, ean 1 proteleutaio, ean klei8ei apo olh function den epistrefei tipota
+  CREATE OR REPLACE PROCEDURE bluffOnCard(DeclaredNumber tinyint)--Parametros einai o arithmos pou dhlwse o paikths sthn arxh toy guroy
   BEGIN
-	SET @a = SELECT COUNT(*) FROM tablo WHERE pos = '3';
-	SET @a = @a - numberFromEnd;
-	RETURN SELECT * FROM tablo where tablocard_id=@a;
+	SELECT * from board where pos='4'
 END $$  
 
 
