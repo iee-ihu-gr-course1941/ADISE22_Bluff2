@@ -183,17 +183,20 @@ DELIMITER $$
  
   /*Parametros einai o arithmos pou dhlwse o paikths sthn arxh toy guroy*/
 DELIMITER $$
-  CREATE OR REPLACE PROCEDURE bluffOnCard(DeclaredNumber tinyint)
+  CREATE OR REPLACE PROCEDURE bluffOnCard(DeclaredNumber varchar(1)) 
   BEGIN
+	DECLARE isExist tinyint;
+    SET isExist = 0;
+	
+    SELECT EXISTS(    
 	SELECT tr.card_number
     from tablo t natural join trapoula tr
-    where t.pos='4' and t.card=tr.card_id ;
-    
-    
-END $$  
+    where t.pos='4' and t.card=tr.card_id and tr.card_number=DeclaredNumber
+    ) INTO isExist;
+    select isExist;
+END $$
 
-DELIMITER $$
-  CREATE OR REPLACE PROCEDURE bluffOnCard(DeclaredNumber tinyint)
+
 
 
 DELIMITER $$
