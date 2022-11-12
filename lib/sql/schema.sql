@@ -1,4 +1,7 @@
 
+/* */
+SET SQL_SAFE_UPDATES = 0;
+
 DELIMITER $$
 CREATE OR REPLACE PROCEDURE new_game_status()
 BEGIN 
@@ -66,7 +69,7 @@ CREATE OR REPLACE TABLE  trapoula(
 DELIMITER $$
 CREATE OR REPLACE PROCEDURE new_trapoula()
 BEGIN 
-drop table trapoula;
+drop table if exists trapoula;
 call createtrapoulaTable();
 
 CALL create_Card('1','spades', 'ace_of_spades');
@@ -91,7 +94,7 @@ CALL create_Card('6','clubs', '6_of_clubs');
 CALL create_Card('7','clubs', '7_of_clubs');
 CALL create_Card('8','clubs', '8_of_clubs');
 CALL create_Card('9','clubs', '9_of_clubs');
-CALL create_Card('10','clubs', '10_of_clubs');;
+CALL create_Card('10','clubs', '10_of_clubs');
 CALL create_Card('J','clubs', 'jack_of_clubs2');
 CALL create_Card('Q','clubs', 'queen_of_clubs2');
 CALL create_Card('K','clubs', 'king_of_clubs2'); 
@@ -123,7 +126,7 @@ CALL create_Card('Q','diamonds', 'queen_of_hearts2');
 CALL create_Card('K','diamonds', 'king_of_hearts2'); 
 END $$
 
-CALL new_trapoula;
+CALL new_trapoula();
 
 --function shuffle random
 DELIMITER $$
@@ -136,12 +139,12 @@ DELIMITER $$
   END $$
 
 
-  --delete from tablo;
   
 DELIMITER $$
   CREATE OR REPLACE PROCEDURE shuffleAll()
   BEGIN
-	  delete from tablo;
+	  drop table if exists tablo;
+      call new_tablo();
 	  call new_trapoula();
       SET @a = 0;
       simple_loop: LOOP
@@ -159,55 +162,54 @@ DELIMITER $$
             LEAVE simple_loop;
          END IF;
    END LOOP simple_loop;
+   call new_trapoula(); 
  END $$
 
-DELIMITER $$
-  CREATE OR REPLACE PROCEDURE pass() --Kanei ta teleutaia fulla na mhn einai allo teleutaia, dinei 8esh sta fulla pou 8a riksei o epomenos paikths
-  BEGIN 
-  DELETE * FROM tablo WHERE pos = 3;--Prepei na pane kai oi duo paiktes paso gia na svhstoun oi kartes
-  call passFinal();
- END $$ 
 
 DELIMITER $$
-  CREATE OR REPLACE PROCEDURE passFinal() --Oloi phgan pasw, adiazei ola ta fulla katw kai ta fulla pou erikse o teleutaios paikths
+  CREATE OR REPLACE PROCEDURE passFinal() 
   BEGIN 
-  
-  DELETE * FROM tablo WHERE pos = 3;
-  DELETE * FROM tablo WHERE pos = 4;
+
+  DELETE FROM tablo WHERE pos = 3;
+  DELETE FROM tablo WHERE pos = 4;
  END $$  
  
 DELIMITER $$
   CREATE OR REPLACE PROCEDURE takeBackAll(playerID varchar(1)) --Dinei ston paikth ola ta fylla pou einai katw
-  BEGIN 
+  BEGIN
 	UPDATE tablo SET pos = playerID WHERE pos = '3';
+	UPDATE tablo SET pos = playerID WHERE pos = '4';
  END $$  
  
+  /*Parametros einai o arithmos pou dhlwse o paikths sthn arxh toy guroy*/
 DELIMITER $$
-  CREATE OR REPLACE PROCEDURE bluffOnCard(DeclaredNumber tinyint)--Parametros einai o arithmos pou dhlwse o paikths sthn arxh toy guroy
+  CREATE OR REPLACE PROCEDURE bluffOnCard(DeclaredNumber tinyint)
   BEGIN
-	SELECT * from board where pos='4'
+	SELECT tr.card_number
+    from tablo t natural join trapoula tr
+    where t.pos='4' and t.card=tr.card_id ;
+    
+    
 END $$  
 
+DELIMITER $$
+  CREATE OR REPLACE PROCEDURE bluffOnCard(DeclaredNumber tinyint)
 
 
 DELIMITER $$
   CREATE OR REPLACE PROCEDURE move(cardd tinyint)
   BEGIN 
-    UPDATE tablo SET pos = '3' WHERE card = cardd; --To teleutaio fyllo katw enos paikth sta fulla pou paiksan oloi
-	UPDATE tablo SET pos = '4' WHERE card = cardd; --To teleutaio fyllo katw enos paikth sta fulla pou epaikse
+	UPDATE tablo SET pos = '4' WHERE card = cardd; 
+    
  END $$
-  
+ 
+ /*h endMoves kalleite gia ka8e paikth otan teliwsei na rixnei kartes*/
  DELIMITER $$
-  CREATE OR REPLACE PROCEDURE moveMany(times tinyint) --Auth den 8a xreiastei, einai la8os
+  CREATE OR REPLACE PROCEDURE pass() 
   BEGIN
-      SET @a = 0;
-      simple_loop: LOOP
-		 call move();
-         SET @a=@a+1;
-         IF @a=times THEN
-            LEAVE simple_loop;
-         END IF;
-   END LOOP simple_loop;
+	update tablo set pos = '3' WHERE pos = '4';
   END $$ 
   
-  moveMany();
+SET SQL_SAFE_UPDATES = 0;
+select * from tablo;
+select * from trapoula;
