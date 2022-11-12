@@ -202,8 +202,11 @@ DELIMITER $$
 
 	SELECT count(tr.card_number)
     from tablo t natural join trapoula tr
-    where t.pos='4' and t.card=tr.card_id and tr.card_number=DeclaredNumber
-   
+    where t.pos='4' and t.card=tr.card_id and tr.card_number=DeclaredNumber;
+    union 
+    SELECT count(tr.card_number)
+    from tablo t natural join trapoula tr
+    where t.pos='4' and t.card=tr.card_id ;
 END $$
 
 
