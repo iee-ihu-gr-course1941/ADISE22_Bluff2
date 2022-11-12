@@ -196,6 +196,15 @@ DELIMITER $$
     select isExist;
 END $$
 
+DELIMITER $$
+  CREATE OR REPLACE PROCEDURE bluffOnCard(DeclaredNumber varchar(1)) 
+  BEGIN
+
+	SELECT count(tr.card_number)
+    from tablo t natural join trapoula tr
+    where t.pos='4' and t.card=tr.card_id and tr.card_number=DeclaredNumber
+   
+END $$
 
 
 
