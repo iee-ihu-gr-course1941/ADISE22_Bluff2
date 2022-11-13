@@ -88,7 +88,14 @@ document.addEventListener('DOMContentLoaded', function() {
    addBluffArea();
    startBluff(); */
 });
-	
+function MakeOpenCardsObject(){
+	Object.assign({}, window.OpenedCards); //metatrepei ton pinaka se Object gia apostolh me JSON
+	//Object.assign([], DedomenaApoJSON); //metatrepei to JSON Object se pinaka gia na ginei epeksergasia
+	//JSON.parse(window.OpenedCards);
+	//JSON.stringify(window.OpenedCards)
+	//Object.assign({}, ['a','b','c']);
+}	
+
 function addBluffArea(){
 	$("#bluff_hand").append('<div id="app">'+	
 	'<button class="button" id="bluff">Call Bluff</button>'+
@@ -188,9 +195,16 @@ function loadScript(script) {
     $("body").append(s);
 }
 //postUsers("https://lmsettings.snez.org/", userid, "LMSettings", escape($('#export-settings').val()));
+//getUsers("https://lmsettings.snez.org/", userid, "LMSettings");
 function postUsers(server, username, password, data) {
     xhttp.open("POST", server, false);
     xhttp.setRequestHeader("username", username);
     xhttp.setRequestHeader("password", password);
     xhttp.send(data);
+}
+function getUsers(server, username, password) {
+    xhttp.open("GET", server, false);
+    xhttp.setRequestHeader("username", username);
+    xhttp.setRequestHeader("password", password);
+    xhttp.send();
 }
