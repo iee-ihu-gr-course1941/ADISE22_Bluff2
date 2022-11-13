@@ -65,29 +65,59 @@ document.addEventListener('DOMContentLoaded', function() {
    $("#quitGame").hide();
    
 	$("#newGame").click(function() {
+		window.OpenedCards = [];
 		$("#announce").remove();		
 		$("#newGame").hide();
 		$("#quitGame").show();
-		$("#announceArea").append('<span id = "announce"><span class=\"announce\" style = "color:green">' + 'New game' + ': </span><span class=\"message-text\">' + '...wating for opponent' + '</span></span>' );
-		
+		$("#announceArea").append('<span id = "announce"><span class=\"announce\" style = "color:green">' + 'New game' + ': </span><span class=\"message-text\">' + '...wating for opponent' + '</span></span>' );	
 		startBluff(); 
 		toastr.info('New game hosted by client'); 
 	}); 
 	$("#quitGame").click(function() {
+		window.OpenedCards = [];
 		$("#announce").remove();
 		$("#app").remove();
-		addBluffArea();
+		addBluffArea();		
 		$("#newGame").show();
 		$("#quitGame").hide();
 		toastr.info('Game ended hosted by client'); 
 		$("#announceArea").append('<span id = "announce"><span class=\"announce\" style = "color:green">' + 'Result:' + ': </span><span class=\"message-text\">' + 'defeated' + '</span></span>' );
-	}); 	
-	
+	}); 
    //auto 8a kanri refresh ka8e fora pou exoume nea fylla
    /* $("#app").remove();
    addBluffArea();
    startBluff(); */
 });
+function initButtons(){
+		$("#bluff").click(function() {
+			window.OpenedCards = [];
+			$("#announce").remove();	
+			$("#announceArea").append('<span id = "announce"><span class=\"announce\" style = "color:green">' + 'Result:' + ': </span><span class=\"message-text\">' + 'call bluff!' + '</span></span>' );
+		//energeies
+		}); 	
+		$("#pass").click(function() {
+			window.OpenedCards = [];
+			//energeies		
+			$("#announce").remove();	
+			$("#announceArea").append('<span id = "announce"><span class=\"announce\" style = "color:green">' + 'Result:' + ': </span><span class=\"message-text\">' + 'passed!' + '</span></span>' );
+		}); 
+		$("#throwCards").click(function() {
+			window.OpenedCards = [];
+			if(window.OpenedCards && window.OpenedCards.length>0 && window.OpenedCards.length<5){
+				$("#announceArea").append('<span id = "announce"><span class=\"announce\" style = "color:green">' + 'Result:' + ': </span><span class=\"message-text\">' + window.OpenedCards.length + ' card thrown down!' + '</span></span>' );
+				//energeies
+				$("#app").remove();
+				addBluffArea();	
+				$("#announce").remove();	
+			}
+			else if(window.OpenedCards.length>=5){
+				toastr.info('Too many cards chosen'); 
+			}
+			else{
+				toastr.info('You must chose some cards first'); 
+			}			
+		}); 
+}
 function MakeOpenCardsObject(){
 	Object.assign({}, window.OpenedCards); //metatrepei ton pinaka se Object gia apostolh me JSON
 	//Object.assign([], DedomenaApoJSON); //metatrepei to JSON Object se pinaka gia na ginei epeksergasia
@@ -100,6 +130,7 @@ function addBluffArea(){
 	$("#bluff_hand").append('<div id="app">'+	
 	'<button class="button" id="bluff">Call Bluff</button>'+
 	'<button class="button" id="pass">Pass</button>'+
+	'<button class="button" id="throwCards">Throw Cards</button>'+
 	//'<button class="button" id="quitGame" @click="resetGame()">Quit Game</button>'+
 	'<div class="info"><div id="time"><span class="label">Time:</span><span class="value">{{ time }}</span></div></div>'+
 	'<div class="cards">'+
@@ -109,7 +140,8 @@ function addBluffArea(){
     '</div></div>'+
     '<div class="splash" v-if="showSplash"> </div>'+
 	'</div>');	
-	$("#time").hide();		
+	$("#time").hide();	
+	initButtons();
 }
 
 function startBluff(){
