@@ -114,7 +114,7 @@ function addBluffArea(){
 
 function startBluff(){
    $("#time").show();
-   new Vue({
+   window.BluffGAME = new Vue({
       el: "#app",
 
   data: {
@@ -125,7 +125,6 @@ function startBluff(){
     flipBackTimer: null,
     timer: null,
     time: "--:--"},
-
   methods: {
     resetGame() {
       this.showSplash = false;
@@ -141,7 +140,15 @@ function startBluff(){
 
       this.cards = cards;
     },
-
+	flipTheAlreadyFlippedCards() { //prepei na trexei gia na epanafortwnoun oi anoigmenes kartes, trexei otan kaloune mplofa kai pernw thn mpaza
+      _.each(cards, card => {
+		  for( var i=0; i<window.OpenedCards.length; i++ ){
+			if (card.name = window.OpenedCards[i]){
+				card.flipped = true;
+		  }
+		}     
+      });	  
+	},
     flippedCards() {
       return _.filter(this.cards, card => card.flipped);
     },
