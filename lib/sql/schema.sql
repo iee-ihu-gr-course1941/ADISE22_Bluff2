@@ -14,8 +14,6 @@ CREATE TABLE `game_status` (
 );
 END $$
 call new_game_status();
-  
--- INSERT INTO `game_status` (`status`, `p_turn`, `result`, `last_change`) VALUES ('not active', '1', 'Win', '2022-11-08 18:57:40');
 
 
 DELIMITER $$
@@ -33,7 +31,6 @@ END $$
 call new_players();
 
 
--- INSERT INTO `players` (`username`, `side`, `token`, `last_action`) VALUES (NULL, '1', NULL, NULL), (NULL, '2', NULL, NULL);
 
 DELIMITER $$
 CREATE OR REPLACE PROCEDURE new_tablo()
@@ -129,7 +126,7 @@ END $$
 
 CALL new_trapoula();
 
---function shuffle random
+
 DELIMITER $$
   CREATE OR REPLACE PROCEDURE shuffle(poss VARCHAR(1))
   BEGIN
@@ -180,14 +177,22 @@ DELIMITER $$
  END $$  
  
 DELIMITER $$
-  CREATE OR REPLACE PROCEDURE takeBackAll(playerID varchar(1)) --Dinei ston paikth ola ta fylla pou einai katw
+  CREATE OR REPLACE PROCEDURE takeBackAll(playerID varchar(1)) /*Dinei ston paikth ola ta fylla pou einai katw*/
   BEGIN
 	UPDATE tablo SET pos = playerID WHERE pos = '3';
 	UPDATE tablo SET pos = playerID WHERE pos = '4';
  END $$  
  
   /*Parametros einai o arithmos pou dhlwse o paikths sthn arxh toy guroy*/
-  
+
+SELECT cardNumber, 
+CASE WHEN (SELECT COUNT(DISTINCT cardNumber) 
+           FROM tablo WHERE cardNumber='3' and pos='4'
+ ) > 1 
+THEN 'no' ELSE 'yes' END AS flag
+FROM tablo
+WHERE pos='4';
+ 
 DELIMITER $$
   CREATE OR REPLACE PROCEDURE bluffOnCard(DeclaredNumber varchar(1)) 
   BEGIN
@@ -208,11 +213,11 @@ DELIMITER $$
     DECLARE isExist tinyint;
     SET isExist = 0;
 
-    SELECT count(distinct
+    SELECT COUNT(DISTINCT
     SELECT tr.card_number
     from tablo t natural join trapoula tr
     where t.pos='4' and t.card=tr.card_id and tr.card_number=DeclaredNumber
-    ) INTO isExist;
+    ) FROM tablo WHERE tablo.cardNumber=DeclaredNumber INTO isExist; 
     select isExist;
 END $$
 
@@ -231,13 +236,14 @@ END $$
 
 DELIMITER $$
   CREATE OR REPLACE PROCEDURE bluffOnCard(DeclaredNumber varchar(1)) 
-  BEGIN
-	select card 
-    from tablo 
-    where DeclaredNumber <> cn 
-    and exists(select cardNumber as cn
-			   from tablo
-               where pos ='4');
+BEGIN
+SELECT cardNumber
+FROM tablo
+WHERE DeclaredNumber = ALL
+  (SELECT cardNumber
+  FROM tablo
+  WHERE pos='4');  
+  
 END $$
 
 
@@ -259,3 +265,46 @@ DELIMITER $$
 SET SQL_SAFE_UPDATES = 0;
 select * from tablo;
 select * from trapoula;
+
+
+
+DELIMITER $$
+CREATE OR REPLACE PROCEDURE testAllCards()
+BEGIN 
+drop table IF EXISTS `temporary`;
+CREATE TABLE `temporary` (
+	if INT PRIMARY KEY AUTO_INCREMENT
+  `test` varchar(1) DEFAULT NULL
+);
+      SET @a = 0;
+      simple_loop: LOOP
+		 call shuffle('1');
+         SET @a=@a+1;
+         IF @a=4 THEN
+            LEAVE simple_loop;
+         END IF;
+   END LOOP simple_loop;
+
+INSERT INTO temporary (test) VALUES (SELECT tr.card_number
+    from tablo t natural join trapoula tr
+    where t.pos='4' and t.card=tr.card_id and tr.card_number='3');
+
+END $$
+
+DELIMITER $$
+CREATE OR REPLACE PROCEDURE testEachCard(tinyint ab)
+BEGIN 
+
+INSERT INTO temporary (test) VALUES (SELECT tr.card_number
+    from tablo t natural join trapoula tr
+    where t.pos='4' and t.card=tr.card_id and tr.card_number='3' and tablocard_id=ab);
+
+END $$
+
+
+
+drop table IF EXISTS `temporary`;
+CREATE TABLE `temporary` (
+   id int PRIMARY KEY AUTO_INCREMENT,
+  `test` varchar(1)
+);
