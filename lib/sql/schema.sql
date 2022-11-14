@@ -209,6 +209,24 @@ DELIMITER $$
     where t.pos='4' and t.card=tr.card_id ;
 END $$
 
+DELIMITER $$
+  CREATE OR REPLACE PROCEDURE bluffOnCard(DeclaredNumber varchar(1)) 
+  BEGIN
+	select card 
+    from tablo 
+    where DeclaredNumber <> cn 
+    and exists(select cardNumber(id) as cn
+			   from tablo
+               where pos ='4');
+	
+
+END $$
+
+DELIMITER $$
+  CREATE OR REPLACE PROCEDURE cardNumber(cardd tinyint)
+  BEGIN 
+	
+ END $$
 
 
 DELIMITER $$
