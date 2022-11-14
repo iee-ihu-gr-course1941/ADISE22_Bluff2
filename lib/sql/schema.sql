@@ -41,6 +41,7 @@ BEGIN
 drop table IF EXISTS tablo;
 CREATE OR REPLACE TABLE tablo(
    tablocard_id INT PRIMARY KEY AUTO_INCREMENT,
+   cardNumber enum ('1','2','3','4','5','6','7','8','9','10','J','Q','K') not null, 
    card tinyint,
    pos enum ('1','2','3','4')
 );
@@ -133,11 +134,15 @@ DELIMITER $$
   CREATE OR REPLACE PROCEDURE shuffle(poss VARCHAR(1))
   BEGIN
   Declare card1 tinyint;  
+  Declare card2 varchar(1);  
   set card1 :=(SELECT card_id FROM trapoula ORDER BY RAND() LIMIT 1 );
-  INSERT INTO tablo (card,pos) VALUES (card1,poss);
+  set card2 :=(SELECT card_number FROM trapoula where card_id=card1 );
+
+  INSERT INTO tablo (cardNumber,card,pos) VALUES (card2,card1,poss);
   delete from trapoula where card_id=card1;
   END $$
 
+call shuffleAll();
 
   
 DELIMITER $$
@@ -215,18 +220,11 @@ DELIMITER $$
 	select card 
     from tablo 
     where DeclaredNumber <> cn 
-    and exists(select cardNumber(id) as cn
+    and exists(select cardNumber as cn
 			   from tablo
                where pos ='4');
-	
-
 END $$
 
-DELIMITER $$
-  CREATE OR REPLACE PROCEDURE cardNumber(cardd tinyint)
-  BEGIN 
-	
- END $$
 
 
 DELIMITER $$
