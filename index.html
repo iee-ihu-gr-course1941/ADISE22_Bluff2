@@ -1,5 +1,4 @@
-<!doctype html>
-<html lang="en">
+<html>
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -8,36 +7,33 @@
     <title>ADISE: Bluff</title>
 	
 	<link rel="stylesheet" href="https://legendmod.ml/toastr.min.css"></link>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
-  <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.css">	
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.css">	
     <link href="style.css" rel="stylesheet">
     
-    <script src="bluff.js"></script>
+    
     <script src="https://legendmod.ml/jquery.min.js"></script>
 	<script src="https://legendmod.ml/jquery-ui.js"></script>
 	
 	<script src="https://legendmod.ml/toastr.min.js"></script>	
-	
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/1.0.26/vue.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.12.0/lodash.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.14.1/moment.min.js"></script>	
+	<script src="bluff.js"></script>
 </head>
 <body>
 <section id="mainSection">
 		<iframe id="bannerFrame" class="result-iframe"  src="./extras/banner.html" sandbox="allow-scripts allow-pointer-lock allow-same-origin allow-popups allow-modals allow-forms" allowfullscreen="allowfullscreen"></iframe>
 </section>
     <div id="bluff_board">
+	<button id= "newGame" class="newGame">New game</button>
+	<button id= "quitGame" class="newGame">Quit game</button>
+	<div id="announceArea"></div>
 	<div id="bluff_hand">
-	wqqwqwwq
-  <div id="app">
-  <div class="info">
-    <div><span class="label">Time:</span><span class="value">--:-- </span></div>
-    <div><span class="label">Turns:</span><span class="value">0 </span></div>
-  </div>
-  <div class="cards">
-  </div>
-  
-</div>	
+
 	</div>
+	
     </div>
     <br />
-</section>
+
 </body>
 </html>
