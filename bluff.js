@@ -62,9 +62,12 @@ var canPlay=false;
 	
 
 function userCards(){	
-	window.CardOfPlayer = JSON.parse(JSON.stringify(window.CardTypes)); //den einai ayta, alla auta pou dinei o server
+	window.CardOfPlayerPlay = JSON.parse(JSON.stringify(window.CardTypes)); //den einai ayta, alla auta pou dinei o server
+	window.CardOfPlayer = JSON.parse(JSON.stringify(window.CardOfPlayerPlay)); //den einai ayta, alla auta pou dinei o server
 }	
-	
+function userCardsTheRest(){	
+	window.CardOfPlayer = JSON.parse(JSON.stringify(window.CardOfPlayerPlay)); //den einai ayta, alla auta pou dinei o server
+}	
 document.addEventListener('DOMContentLoaded', function() {
    //addBluffArea();
    toastr.options.positionClass = 'toast-bottom-left';
@@ -122,10 +125,12 @@ function becomeBluffedSucceeded(cards){
 		for (var x=0;x<window.TakenCardsAsArray.length;x++){
 			if (CardTypes[i].name==window.TakenCardsAsArray[x]){
 				//console.log(window.TakenCardsAsArray[x]);
-				window.CardOfPlayer.push(window.TakenCardsAsArray[x]);
+				var temp = { name:  window.TakenCardsAsArray[x], image: "https://legendmod.ml/adise/" + window.TakenCardsAsArray[x] + ".png" }
+				window.CardOfPlayerPlay.push(temp);
 			}
 		}		
 	}
+	
 	var newCards = "";
 	for (var i=0;i<window.TakenCardsAsArray.length;i++){
 		if (window.TakenCardsAsArray[i]){
@@ -134,7 +139,12 @@ function becomeBluffedSucceeded(cards){
 	}
 	newCards.replace("_"," ");
 	toastr.info('You got bluffed. Cards added: ' + newCards); 
-	canPlay=false;
+	
+	window.OpenedCards = [];
+	$("#app").remove();
+	addBluffArea();		
+	startBluff();	
+	canPlay=false;	
 }
 function yourTurn(cardsDown, lastCardsOfEnemey){
 	if (cardsDown && lastCardsOfEnemey){
@@ -180,10 +190,10 @@ function initButtons(){
 				
 
 				for (var i=0;i<window.OpenedCards.length;i++){
-					for (var x=0;x<window.CardOfPlayer.length;x++){
-						if (window.CardOfPlayer[x] && window.CardOfPlayer[x].name==window.OpenedCards[i]){	
+					for (var x=0;x<window.CardOfPlayerPlay.length;x++){
+						if (window.CardOfPlayerPlay[x] && window.CardOfPlayerPlay[x].name==window.OpenedCards[i]){	
 							//console.log(window.OpenedCards[i]);
-							window.CardOfPlayer = window.CardOfPlayer.filter(function(item) { //afairei tis kartes pou pesan
+							window.CardOfPlayerPlay = window.CardOfPlayerPlay.filter(function(item) { //afairei tis kartes pou pesan
 							return item.name !== window.OpenedCards[i];
 							});		
 						}	
@@ -238,6 +248,7 @@ function addBluffArea(){
 }
 
 function startBluff(){
+	userCardsTheRest();
    $("#time").show();
    window.BluffGAME = new Vue({
       el: "#app",
@@ -299,7 +310,7 @@ function startBluff(){
       let flipCount = this.flippedCards().length;	  
       card.flipped = !card.flipped;
 	  //console.log(this.flippedCards());
-	  window.OpenedCards = []
+	  window.OpenedCards = [];
 	  this.flippedCards().forEach(this.addToOpenedCards)
     },
 	addToOpenedCards(item){
