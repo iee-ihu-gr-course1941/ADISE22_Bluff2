@@ -36,6 +36,7 @@ body {
   margin: 2em;
 }
 
+
 .info {
   text-align: center;
   padding-bottom: 1em;
@@ -183,4 +184,7 @@ body {
     text-decoration: none;	
     padding: 8px 2px;	
     margin: 8px;	
+}
+#cardsss {	
+    width:40px;
 }
