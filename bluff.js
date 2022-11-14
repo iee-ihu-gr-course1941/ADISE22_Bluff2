@@ -107,7 +107,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		$("#cardsss").hide();
 		$("#time").hide();	
 		toastr.info('Game ended by client'); 
-		$("#announceArea").append('<span id = "announce"><span class=\"announce\" style = "color:green">' + 'Result:' + ': </span><span class=\"message-text\">' + 'defeated' + '</span></span>' );
+		$("#announceArea").append('<span id = "announce"><span class=\"announce\" style = "color:green">' + 'Result' + ': </span><span class=\"message-text\">' + 'defeated' + '</span></span>' );
 		canPlay=false;
 	}); 
    //auto 8a kanri refresh ka8e fora pou exoume nea fylla
@@ -138,13 +138,16 @@ function becomeBluffedSucceeded(cards){
 }
 function yourTurn(cardsDown, lastCardsOfEnemey){
 	if (cardsDown && lastCardsOfEnemey){
-		$("#announceArea").append('<span id = "announce"><span class=\"announce\" style = "color:green">' + 'Your turn:' + ': </span><span class=\"message-text\">' + cardsDown + ' cards down. Opponent thrown ' + lastCardsOfEnemey + ' cards!</span></span>' );
+		$("#announce").remove();	
+		$("#announceArea").append('<span id = "announce"><span class=\"announce\" style = "color:green">' + 'Your turn' + ': </span><span class=\"message-text\">' + cardsDown + ' 🃛 cards down. Opponent thrown ' + lastCardsOfEnemey + ' cards!</span></span>' );
 	}
 	else if(cardsDown){
-		$("#announceArea").append('<span id = "announce"><span class=\"announce\" style = "color:green">' + 'Your turn:' + ': </span><span class=\"message-text\">' + cardsDown + ' cards down. Opponent passed!</span></span>' );
+		$("#announce").remove();	
+		$("#announceArea").append('<span id = "announce"><span class=\"announce\" style = "color:green">' + 'Your turn' + ': </span><span class=\"message-text\">' + cardsDown + ' 🃛 cards down. Opponent passed!</span></span>' );
 	}
 	else{
-		$("#announceArea").append('<span id = "announce"><span class=\"announce\" style = "color:green">' + 'Your turn:' + ': </span><span class=\"message-text\">0 cards down. Opponent passed!</span></span>' );
+		$("#announce").remove();	
+		$("#announceArea").append('<span id = "announce"><span class=\"announce\" style = "color:green">' + 'Your turn' + ': </span><span class=\"message-text\">0 cards down. Opponent passed!</span></span>' );
 	}	
 	canPlay = true;	
 }
@@ -152,7 +155,7 @@ function initButtons(){
 		$("#bluff").click(function() {
 		//if (canPlay){
 		$("#announce").remove();	
-		$("#announceArea").append('<span id = "announce"><span class=\"announce\" style = "color:green">' + 'Result:' + ': </span><span class=\"message-text\">' + 'call bluff!' + '</span></span>' );
+		$("#announceArea").append('<span id = "announce"><span class=\"announce\" style = "color:green">' + 'Result' + ': </span><span class=\"message-text\">' + 'call bluff!' + '</span></span>' );
 		//energeies
 		window.OpenedCards = [];
 		canPlay=false;
@@ -163,7 +166,7 @@ function initButtons(){
 			//energeies	
 			window.OpenedCards = [];
 			$("#announce").remove();	
-			$("#announceArea").append('<span id = "announce"><span class=\"announce\" style = "color:green">' + 'Result:' + ': </span><span class=\"message-text\">' + 'passed!' + '</span></span>' );
+			$("#announceArea").append('<span id = "announce"><span class=\"announce\" style = "color:green">' + 'Result' + ': </span><span class=\"message-text\">' + 'passed!' + '</span></span>' );
 			canPlay=false;
 		//}
 		}); 
@@ -171,7 +174,7 @@ function initButtons(){
 			//if (canPlay){	
 			if(window.OpenedCards && window.OpenedCards.length>0 && window.OpenedCards.length<5){
 				$("#announce").remove();
-				$("#announceArea").append('<span id = "announce"><span class=\"announce\" style = "color:green">' + 'Result:' + ': </span><span class=\"message-text\">' + window.OpenedCards.length + ' card thrown down!' + '</span></span>' );
+				$("#announceArea").append('<span id = "announce"><span class=\"announce\" style = "color:green">' + 'Result' + ': </span><span class=\"message-text\">' + window.OpenedCards.length + ' card thrown down!' + '</span></span>' );
 				//$("#cardsss").val()
 				//energeies
 				
