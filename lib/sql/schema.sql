@@ -226,8 +226,8 @@ BEGIN
 END $$
 DELIMITER ;
 
-/* Auto ekteleitai gia na epistrefei thn parapanw
-CALL checkVictory(DeclaredNumber,@TotalSum);
+/* Auto ekteleitai gia na epistrefei thn parapanw, opou DeclaredNumber to 1 h 2
+CALL checkVictory(DeclaredNumber,@TotalSum); 
 SELECT @TotalSum;
 */
    
