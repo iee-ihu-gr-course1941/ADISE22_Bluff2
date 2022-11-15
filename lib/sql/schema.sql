@@ -140,9 +140,6 @@ DELIMITER $$
   delete from trapoula where card_id=card1;
   END $$
 
-call shuffleAll();
-
-  
 DELIMITER $$
   CREATE OR REPLACE PROCEDURE shuffleAll()
   BEGIN
@@ -167,7 +164,8 @@ DELIMITER $$
    END LOOP simple_loop;
    call new_trapoula(); 
  END $$
-
+ 
+call shuffleAll();
 
 DELIMITER $$
   CREATE OR REPLACE PROCEDURE passFinal() 
@@ -216,28 +214,4 @@ SET SQL_SAFE_UPDATES = 0;
 select * from tablo;
 select * from trapoula;
 
-
-
-DELIMITER $$
-CREATE OR REPLACE PROCEDURE testAllCards()
-BEGIN 
-drop table IF EXISTS `temporary`;
-CREATE TABLE `temporary` (
-	if INT PRIMARY KEY AUTO_INCREMENT
-  `test` varchar(1) DEFAULT NULL
-);
-      SET @a = 0;
-      simple_loop: LOOP
-		 call shuffle('1');
-         SET @a=@a+1;
-         IF @a=4 THEN
-            LEAVE simple_loop;
-         END IF;
-   END LOOP simple_loop;
-
-INSERT INTO temporary (test) VALUES (SELECT tr.card_number
-    from tablo t natural join trapoula tr
-    where t.pos='4' and t.card=tr.card_id and tr.card_number='3');
-
-END $$
 
