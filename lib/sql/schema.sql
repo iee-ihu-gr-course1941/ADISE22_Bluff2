@@ -12,6 +12,9 @@ CREATE TABLE `game_status` (
   `result` enum('Equal','Win','Defeat') DEFAULT NULL,
   `last_change` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 );
+
+INSERT INTO `game_status`(`status`,`p_turn`,``,,`last_change`)
+INSERT INTO trapoula (card_number,card_symbol, card_icon) VALUES (num,symbol, eikona);
 END $$
 
 call new_game_status();
