@@ -359,4 +359,26 @@ function getUsers(server, username, password) {
     xhttp.setRequestHeader("username", username);
     xhttp.setRequestHeader("password", password);
     xhttp.send();
+	xhttp.onreadystatechange = xhttpOnComplete;
+	//var response = xhttp.response;
+}
+
+function xhttpOnComplete(){
+	if (xhttp.readyState ==4){
+		console.log(this.responseText);		
+	}
+}
+function getUserss(){ //auto douleuei, ta alla oxi
+	$.ajax({
+		type: "GET",
+		url: 'http://localhost/api.php',
+		headers: {
+			'HELLO':'Basicxxxxxxxxxxxxx',
+			//'X-CSRF-TOKEN':'xxxxxxxxxxxxxxxxxxxx',
+			'HELLO1':'wqwqwwq'
+		},		
+		success: function(data){
+        alert(data);
+		}
+	});
 }
