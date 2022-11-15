@@ -241,27 +241,3 @@ INSERT INTO temporary (test) VALUES (SELECT tr.card_number
 
 END $$
 
-DELIMITER $$
-CREATE OR REPLACE PROCEDURE testEachCard(tinyint ab)
-BEGIN 
-
-INSERT INTO temporary (test) VALUES (SELECT tr.card_number
-    from tablo t natural join trapoula tr
-    where t.pos='4' and t.card=tr.card_id and tr.card_number='3' and tablocard_id=ab);
-
-END $$
-
-DELIMITER $$
-CREATE OR REPLACE PROCEDURE bluffOnCard(DeclaredNumber varchar(1)) 
-BEGIN
-    select ( sum(cardNumber <> DeclaredNumber) ) as metablhth
-    from tablo
-    where pos='4';
-END $$
-
-
-drop table IF EXISTS `temporary`;
-CREATE TABLE `temporary` (
-   id int PRIMARY KEY AUTO_INCREMENT,
-  `test` varchar(1)
-);
