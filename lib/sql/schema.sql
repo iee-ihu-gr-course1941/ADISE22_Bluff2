@@ -185,67 +185,15 @@ DELIMITER $$
  
   /*Parametros einai o arithmos pou dhlwse o paikths sthn arxh toy guroy*/
 
-SELECT cardNumber, 
-CASE WHEN (SELECT COUNT(DISTINCT cardNumber) 
-           FROM tablo WHERE cardNumber='3' and pos='4'
- ) > 1 
-THEN 'no' ELSE 'yes' END AS flag
-FROM tablo
-WHERE pos='4';
+
  
 DELIMITER $$
-  CREATE OR REPLACE PROCEDURE bluffOnCard(DeclaredNumber varchar(1)) 
-  BEGIN
-	DECLARE isExist tinyint;
-    SET isExist = 0;
-	
-    SELECT EXISTS(    
-	SELECT tr.card_number
-    from tablo t natural join trapoula tr
-    where t.pos='4' and t.card=tr.card_id and tr.card_number=DeclaredNumber
-    ) INTO isExist;
-    select isExist;
-END $$
-
-DELIMITER $$
-  CREATE OR REPLACE PROCEDURE bluffOnCard(DeclaredNumber varchar(1)) 
-  BEGIN
-    DECLARE isExist tinyint;
-    SET isExist = 0;
-
-    SELECT COUNT(DISTINCT
-    SELECT tr.card_number
-    from tablo t natural join trapoula tr
-    where t.pos='4' and t.card=tr.card_id and tr.card_number=DeclaredNumber
-    ) FROM tablo WHERE tablo.cardNumber=DeclaredNumber INTO isExist; 
-    select isExist;
-END $$
-
-DELIMITER $$
-  CREATE OR REPLACE PROCEDURE bluffOnCard(DeclaredNumber varchar(1)) 
-  BEGIN
-
-	SELECT count(tr.card_number)
-    from tablo t natural join trapoula tr
-    where t.pos='4' and t.card=tr.card_id and tr.card_number=DeclaredNumber;
-    union 
-    SELECT count(tr.card_number)
-    from tablo t natural join trapoula tr
-    where t.pos='4' and t.card=tr.card_id ;
-END $$
-
-DELIMITER $$
-  CREATE OR REPLACE PROCEDURE bluffOnCard(DeclaredNumber varchar(1)) 
+CREATE OR REPLACE PROCEDURE bluffOnCard(DeclaredNumber varchar(1)) 
 BEGIN
-SELECT cardNumber
-FROM tablo
-WHERE DeclaredNumber = ALL
-  (SELECT cardNumber
-  FROM tablo
-  WHERE pos='4');  
-  
+	select ( sum(cardNumber <> DeclaredNumber) ) as metablhth
+	from tablo
+	where pos='4';
 END $$
-
 
 
 DELIMITER $$
