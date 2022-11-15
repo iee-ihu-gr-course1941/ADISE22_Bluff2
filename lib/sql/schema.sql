@@ -13,6 +13,7 @@ CREATE TABLE `game_status` (
   `last_change` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 );
 END $$
+
 call new_game_status();
 
 
@@ -181,6 +182,7 @@ DELIMITER $$
   BEGIN
 	UPDATE tablo SET pos = playerID WHERE pos = '3';
 	UPDATE tablo SET pos = playerID WHERE pos = '4';
+  update game_status set p_turn=if(p_turn='1','2','1');
  END $$  
  
   /*Parametros einai o arithmos pou dhlwse o paikths sthn arxh toy guroy*/
@@ -252,7 +254,7 @@ DELIMITER $$
   CREATE OR REPLACE PROCEDURE move(cardd tinyint)
   BEGIN 
 	UPDATE tablo SET pos = '4' WHERE card = cardd; 
-    
+  update game_status set p_turn=if(p_turn='1','2','1');
  END $$
  
  /*h endMoves kalleite gia ka8e paikth otan teliwsei na rixnei kartes*/
