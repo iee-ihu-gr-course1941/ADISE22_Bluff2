@@ -339,11 +339,20 @@ function loadScript(script) {
 }
 //postUsers("https://lmsettings.snez.org/", userid, "LMSettings", escape($('#export-settings').val()));
 //getUsers("https://lmsettings.snez.org/", userid, "LMSettings");
+
+var xhttp = new XMLHttpRequest();
 function postUsers(server, username, password, data) {
-    xhttp.open("POST", server, false);
+
+	xhttp.open("POST", server, false);
     xhttp.setRequestHeader("username", username);
     xhttp.setRequestHeader("password", password);
     xhttp.send(data);
+	
+	/*xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            console.log(this.responseText);
+        }
+    };*/
 }
 function getUsers(server, username, password) {
     xhttp.open("GET", server, false);
