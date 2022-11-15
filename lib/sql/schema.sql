@@ -210,27 +210,27 @@ DELIMITER $$
   END $$ 
   
 DELIMITER $$
-CREATE OR REPLACE PROCEDURE checkVictory(DeclaredNumber varchar(1)) RETURNS varchar(20)
+CREATE OR REPLACE PROCEDURE checkVictory(DeclaredNumber varchar(1),out stat int)
+READS SQL DATA
+DETERMINISTIC
 BEGIN
    DECLARE Message varchar(20);
 	DECLARE sum DECIMAL(10,2) DEFAULT 0;
 	SELECT COUNT(*) INTO sum FROM tablo WHERE pos = DeclaredNumber;
 	IF sum = 0 THEN
 	update game_status set status='Win';
-	SET Message = "1"; 
+	set stat = '1';
 	ELSE
-	SET Message = "0";
+	set stat = '0';
 	END IF;
-	RETURN Message;
 END $$
 DELIMITER ;
+
+/* Auto ekteleitai gia na epistrefei thn parapanw
+CALL checkVictory(DeclaredNumber,@TotalSum);
+SELECT @TotalSum;
+*/
    
-SELECT OrderID, Quantity,
-CASE WHEN Quantity > 30 THEN 'The quantity is greater than 30'
-WHEN Quantity = 30 THEN 'The quantity is 30'
-ELSE 'The quantity is under 30'
-END AS QuantityText
-FROM OrderDetails;
 
 select * from tablo;
 select * from trapoula;
