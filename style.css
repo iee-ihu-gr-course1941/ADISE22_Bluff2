@@ -188,3 +188,8 @@ body {
 #cardsss {	
     width:40px;
 }
+#announce {	
+	display:block;
+	min-height:90px;
+	max-height:90px;
+}
