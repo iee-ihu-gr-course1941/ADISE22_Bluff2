@@ -10,11 +10,11 @@ CREATE TABLE `game_status` (
   `status` enum('not active','initialized','started','ended','aborded') NOT NULL DEFAULT 'not active',
   `p_turn` enum('1','2') DEFAULT NULL,
   `result` enum('Equal','Win','Defeat') DEFAULT NULL,
+  `declared_number` enum ('1','2','3','4','5','6','7','8','9','10','J','Q','K')
   `last_change` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 );
 
-INSERT INTO `game_status`(`status`,`p_turn`,``,,`last_change`)
-INSERT INTO trapoula (card_number,card_symbol, card_icon) VALUES (num,symbol, eikona);
+INSERT INTO `game_status`(`status`,`p_turn`,`result`,`last_change`) VALUES ('not active','1',null,null,current_timestamp())
 END $$
 
 call new_game_status();
@@ -201,7 +201,12 @@ END $$
 DELIMITER $$
   CREATE OR REPLACE PROCEDURE move(cardd tinyint)
   BEGIN 
-	UPDATE tablo SET pos = '4' WHERE card = cardd; 
+  /*
+  H Καρτα που μετακινούμε πρέπει να ανήκει στον παίκτη που παίζει
+  */
+  DECLARE player varchar(1);
+  SELECT `p_turn` into player from game_status ;
+	UPDATE tablo SET pos = '4' WHERE card = cardd and player=pos; 
 	/*Εβγαλα απο την move την αλλαγή σειράς γιατί θα καλείτε σε κάθε κάρτα που αλλάζει θέση
 	Η αλλαγή σειράς θα γίνεται στην επιλογή της κίνησης
     */
@@ -215,13 +220,15 @@ DELIMITER $$
   END $$ 
   
 DELIMITER $$
-CREATE OR REPLACE PROCEDURE checkVictory(player varchar(1),out stat int)
+CREATE OR REPLACE PROCEDURE checkVictory(out stat int)
 READS SQL DATA
 DETERMINISTIC
 BEGIN
    DECLARE Message varchar(20);
+  DECLARE player varchar(1);
+  SELECT `p_turn` into player from game_status ;
 	DECLARE sum DECIMAL(10,2) DEFAULT 0;
-	SELECT COUNT(*) INTO sum FROM tablo WHERE pos = DeclaredNumber;
+	SELECT COUNT(*) INTO sum FROM tablo WHERE pos = player;
 	IF sum = 0 THEN
 	update game_status set status='Win';
 	set stat = '1';
