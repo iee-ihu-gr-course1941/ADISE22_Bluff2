@@ -251,6 +251,13 @@ INSERT INTO temporary (test) VALUES (SELECT tr.card_number
 
 END $$
 
+DELIMITER $$
+CREATE OR REPLACE PROCEDURE bluffOnCard(DeclaredNumber varchar(1)) 
+BEGIN
+    select ( sum(cardNumber <> DeclaredNumber) ) as metablhth
+    from tablo
+    where pos='4';
+END $$
 
 
 drop table IF EXISTS `temporary`;
