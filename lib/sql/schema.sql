@@ -199,7 +199,9 @@ DELIMITER $$
   CREATE OR REPLACE PROCEDURE move(cardd tinyint)
   BEGIN 
 	UPDATE tablo SET pos = '4' WHERE card = cardd; 
-  update game_status set p_turn=if(p_turn='1','2','1');
+	/*Εβγαλα απο την move την αλλαγή σειράς γιατί θα καλείτε σε κάθε κάρτα που αλλάζει θέση
+	Η αλλαγή σειράς θα γίνεται στην επιλογή της κίνησης
+    */
  END $$
  
  /*h endMoves kalleite gia ka8e paikth otan teliwsei na rixnei kartes*/
@@ -210,7 +212,7 @@ DELIMITER $$
   END $$ 
   
 DELIMITER $$
-CREATE OR REPLACE PROCEDURE checkVictory(DeclaredNumber varchar(1),out stat int)
+CREATE OR REPLACE PROCEDURE checkVictory(player varchar(1),out stat int)
 READS SQL DATA
 DETERMINISTIC
 BEGIN
@@ -225,6 +227,20 @@ BEGIN
 	END IF;
 END $$
 DELIMITER ;
+
+DELIMITER $$
+CREATE OR REPLACE PROCEDURE playerMove(player varchar(1),choise varchar(1),cards varchar(10))
+BEGIN 
+	/*player = ο παίκτης που παίζει αυτόν τον γύρο
+    choise = η κίνηση που θα κάνει ο παίκτης
+    cards = οι κάρτες που θα ρίξει ο παίκτης 
+    Declared Number = ο αριθμός που δηλώνει στην αρχή του γύρου*/
+	IF (choise = '1') call move(cards);
+    ELSEIF (choise = '2')
+	update game_status set p_turn=if(p_turn='1','2','1');
+    when choise = '2' and cards=null call pass();
+    when choise = '3' and cards=null call bluffOnCard(DeclaredNumber);
+END $$
 
 /* Auto ekteleitai gia na epistrefei thn parapanw, opou DeclaredNumber to 1 h 2
 CALL checkVictory(DeclaredNumber,@TotalSum); 
