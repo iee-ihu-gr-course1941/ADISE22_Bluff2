@@ -3,60 +3,6 @@
 SET SQL_SAFE_UPDATES = 0;
 
 DELIMITER $$
-CREATE OR REPLACE PROCEDURE new_game_status()
-BEGIN 
-DROP TABLE IF EXISTS game_status;
-CREATE TABLE `game_status` (
-  `status` enum('not active','initialized','started','ended','aborded') NOT NULL DEFAULT 'not active',
-  `p_turn` enum('1','2') DEFAULT NULL,
-  `result` enum('Equal','Win','Defeat') DEFAULT NULL,
-  `declared_number` enum ('1','2','3','4','5','6','7','8','9','10','J','Q','K')
-  `last_change` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-);
-
-INSERT INTO `game_status`(`status`,`p_turn`,`result`,`last_change`) VALUES ('not active','1',null,null,current_timestamp())
-END $$
-
-call new_game_status();
-
-
-DELIMITER $$
-CREATE OR REPLACE PROCEDURE new_players()
-BEGIN 
-drop table IF EXISTS `players`;
-CREATE TABLE `players` (
-  `username` varchar(20) DEFAULT NULL,
-  `side` enum('1','2') NOT NULL,
-  `token` varchar(100) DEFAULT NULL,
-  `last_action` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`side`)
-);
-END $$
-call new_players();
-
-
-
-DELIMITER $$
-CREATE OR REPLACE PROCEDURE new_tablo()
-BEGIN 
-drop table IF EXISTS tablo;
-CREATE OR REPLACE TABLE tablo(
-   tablocard_id INT PRIMARY KEY AUTO_INCREMENT,
-   cardNumber enum ('1','2','3','4','5','6','7','8','9','10','J','Q','K') not null, 
-   card tinyint,
-   pos enum ('1','2','3','4')
-);
-END $$
-call new_tablo();
-
-	
-DELIMITER $$
-  CREATE OR REPLACE PROCEDURE create_Card(in num varchar(1), IN symbol VARCHAR(8), IN eikona VARCHAR(20))
-  BEGIN 
-  INSERT INTO trapoula (card_number,card_symbol, card_icon) VALUES (num,symbol, eikona);
-  END $$
-
-DELIMITER $$
 CREATE OR REPLACE PROCEDURE createtrapoulaTable()
 BEGIN
 CREATE OR REPLACE TABLE  trapoula(
@@ -65,9 +11,14 @@ CREATE OR REPLACE TABLE  trapoula(
   card_symbol enum ('clubs','diamonds','spades','hearts') NOT NULL,
   card_icon VARCHAR(20) NOT NULL
 );
- END $$
- call createtrapoulaTable();
- 
+END $$
+
+DELIMITER $$
+CREATE OR REPLACE PROCEDURE create_Card(in num varchar(1), IN symbol VARCHAR(8), IN eikona VARCHAR(20))
+BEGIN 
+INSERT INTO trapoula (card_number,card_symbol, card_icon) VALUES (num,symbol, eikona);
+END $$
+
 DELIMITER $$
 CREATE OR REPLACE PROCEDURE new_trapoula()
 BEGIN 
@@ -128,7 +79,60 @@ CALL create_Card('Q','diamonds', 'queen_of_hearts2');
 CALL create_Card('K','diamonds', 'king_of_hearts2'); 
 END $$
 
-CALL new_trapoula();
+call createtrapoulaTable();
+call new_trapoula();
+ 
+/*Δημιουργία του πίνακα τράπουλα και γέμισμα μεχρι τωρα*/
+
+DELIMITER $$
+CREATE OR REPLACE PROCEDURE new_tablo()
+BEGIN 
+drop table IF EXISTS tablo;
+CREATE OR REPLACE TABLE tablo(
+   tablocard_id INT PRIMARY KEY AUTO_INCREMENT,
+   cardNumber enum ('1','2','3','4','5','6','7','8','9','10','J','Q','K') not null, 
+   card tinyint,
+   pos enum ('1','2','3','4')
+);
+END $$
+call new_tablo();
+
+/*Δημιουργία του ταμπλό*/
+
+DELIMITER $$
+CREATE OR REPLACE PROCEDURE new_game_status()
+BEGIN 
+DROP TABLE IF EXISTS game_status;
+CREATE TABLE `game_status` (
+  `status` enum('not active','initialized','started','ended','aborded') NOT NULL DEFAULT 'not active',
+  `p_turn` enum('1','2') DEFAULT NULL,
+  `result` enum('Equal','Win','Defeat') DEFAULT NULL,
+  `declared_number` enum ('1','2','3','4','5','6','7','8','9','10','J','Q','K'),
+  `last_change` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+);
+INSERT INTO `game_status`(`status`,`p_turn`,`result`,`declared_number`,`last_change`) VALUES ('not active','1',null,null,current_timestamp());
+
+END $$
+
+call new_game_status();
+
+
+DELIMITER $$
+CREATE OR REPLACE PROCEDURE new_players()
+BEGIN 
+drop table IF EXISTS `players`;
+CREATE TABLE `players` (
+  `username` varchar(20) DEFAULT NULL,
+  `side` enum('1','2') NOT NULL,
+  `token` varchar(100) DEFAULT NULL,
+  `last_action` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`side`)
+);
+END $$
+call new_players();
+
+
+
 
 
 DELIMITER $$
