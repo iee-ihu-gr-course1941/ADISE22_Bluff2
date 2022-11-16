@@ -106,11 +106,10 @@ DROP TABLE IF EXISTS game_status;
 CREATE TABLE `game_status` (
   `status` enum('not active','initialized','started','ended','aborded') NOT NULL DEFAULT 'not active',
   `p_turn` enum('1','2') DEFAULT NULL,
-  `result` enum('Equal','Win','Defeat') DEFAULT NULL,
   `declared_number` enum ('1','2','3','4','5','6','7','8','9','10','J','Q','K'),
   `last_change` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 );
-INSERT INTO `game_status`(`status`,`p_turn`,`result`,`declared_number`,`last_change`) VALUES ('not active','1',null,null,current_timestamp());
+INSERT INTO `game_status`(`status`,`p_turn`,`declared_number`,`last_change`) VALUES ('not active','1',null,current_timestamp());
 
 END $$
 
@@ -125,6 +124,7 @@ CREATE TABLE `players` (
   `username` varchar(20) DEFAULT NULL,
   `side` enum('1','2') NOT NULL,
   `token` varchar(100) DEFAULT NULL,
+  `result` enum('Equal','Win','Defeat') DEFAULT NULL,
   `last_action` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`side`)
 );
@@ -234,7 +234,7 @@ BEGIN
 	DECLARE sum DECIMAL(10,2) DEFAULT 0;
 	SELECT COUNT(*) INTO sum FROM tablo WHERE pos = player;
 	IF sum = 0 THEN
-	update game_status set status='Win';
+	update `players` set status='Win' where player=;
 	set stat = '1';
 	ELSE
 	set stat = '0';
