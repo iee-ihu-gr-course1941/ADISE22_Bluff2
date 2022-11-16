@@ -151,8 +151,8 @@ function yourTurn(cardsDown, lastCardsOfEnemey){
 		$("#announce").remove();	
 		$("#announceArea").append('<span id = "announce"><span class=\"announce\" style = "color:green">' + 'Your turn' + ': </span><span class=\"message-text\">' + cardsDown + ' 🃛 cards down. Opponent thrown ' + lastCardsOfEnemey + ' cards!</span>'+
 		'<br>');
-		for (var i=0;i<cardsDown-lastCardsOfEnemey;i++) {$("#announce").append('<img src="https://legendmod.ml/adise/card_backside.jpg" alt="" style="margin:1px;width:40px;height:50px;">');}
-		for (var i=0;i<lastCardsOfEnemey;i++) {$("#announce").append('<img src="https://legendmod.ml/adise/card_backside.jpg" alt="" style="margin:1px;width:40px;height:50px;transform:rotate(10deg);">');}
+		for (var i=0;i<cardsDown-lastCardsOfEnemey;i++) {$("#announce").append('<img src="https://legendmod.ml/adise/card_backside.jpg" alt="" style="margin-left:1px;width:40px;height:50px;">');}
+		for (var i=0;i<lastCardsOfEnemey;i++) {$("#announce").append('<img src="https://legendmod.ml/adise/card_backside.jpg" alt="" style="margin-left:-10px;width:40px;height:50px;transform:rotate(10deg);">');}
 		
 		$("#announceArea").append('</span>');
 	}
@@ -160,14 +160,14 @@ function yourTurn(cardsDown, lastCardsOfEnemey){
 		$("#announce").remove();
 		
 		$("#announceArea").append('<span id = "announce"><span class=\"announce\" style = "color:green">' + 'Your turn' + ': </span><span class=\"message-text\">' + cardsDown + ' 🃛 cards down. Opponent passed!</span><br>' );
-		for (var i=0;i<cardsDown;i++) {$("#announce").append('<img src="https://legendmod.ml/adise/card_backside.jpg" alt="" style="margin:1px;width:40px;height:50px;">');}
+		for (var i=0;i<cardsDown;i++) {$("#announce").append('<img src="https://legendmod.ml/adise/card_backside.jpg" alt="" style="margin-left:1px;width:40px;height:50px;">');}
 		$("#announceArea").append('</span>');
 	}
 	else{
 		$("#announce").remove();	
 		
 		$("#announceArea").append('<span id = "announce"><span class=\"announce\" style = "color:green">' + 'Your turn' + ': </span><span class=\"message-text\">0 cards down. Opponent passed!</span><br>' );
-		for (var i=0;i<lastCardsOfEnemey;i++) {$("#announce").append('<img src="https://legendmod.ml/adise/card_backside.jpg" alt="" style="margin:1px;width:40px;height:50px;transform:rotate(10deg);">');}
+		for (var i=0;i<lastCardsOfEnemey;i++) {$("#announce").append('<img src="https://legendmod.ml/adise/card_backside.jpg" alt="" style="margin-left:-10px;width:40px;height:50px;transform:rotate(10deg);">');}
 		$("#announceArea").append('</span>');
 	}	
 	canPlay = true;	
@@ -215,10 +215,10 @@ function initButtons(){
 						|| 	(callTheNumber=='Q' && window.OpenedCards[i].includes("queen_of"))
 						|| 	(callTheNumber=='K' && window.OpenedCards[i].includes("king_of"))
 						){
-							$("#announce").append('<img src="https://legendmod.ml/adise/' + window.OpenedCards[i] + '.png" alt="" style="margin:1px;width:70px;height:80px;transform:rotate(10deg);">');
+							$("#announce").append('<img src="https://legendmod.ml/adise/' + window.OpenedCards[i] + '.png" alt="" style="margin-top:10px;margin-left:-15px;width:70px;height:80px;transform:rotate(10deg);">');
 							}					
 						else{
-							$("#announce").append('<img src="https://legendmod.ml/adise/' + window.OpenedCards[i] + '.png" alt="" style="margin:1px;width:70px;height:80px;transform:rotate(10deg);filter: blur(5px);">');
+							$("#announce").append('<img src="https://legendmod.ml/adise/' + window.OpenedCards[i] + '.png" alt="" style="margin-top:10px;margin-left:-15px;width:70px;height:80px;transform:rotate(10deg);filter: blur(5px);">');
 							
 						}
 					}
