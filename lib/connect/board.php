@@ -1,14 +1,15 @@
 <?php
 
 
-function read_board() {
+
+function show_board() {
 	global $mysqli;
-	$sql = 'select * from board';
+	
+	$sql = 'select * from board ';
 	$st = $mysqli->prepare($sql);
 	$st->execute();
 	$res = $st->get_result();
-	return($res->fetch_all(MYSQLI_ASSOC));
+	header('Content-type: application/json');
+	print json_encode($res->fetch_all(MYSQLI_ASSOC), JSON_PRETTY_PRINT);
 }
-
-
 ?>
