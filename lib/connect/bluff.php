@@ -1,7 +1,7 @@
 <?php
 
-require_once "../lib/dbconnect.php"; 
-require_once "../lib/board.php";
+require_once "dbconnect.php"; 
+require_once "board.php";
 
 
 $method = $_SERVER['REQUEST_METHOD'];
@@ -12,7 +12,7 @@ $input = json_decode(file_get_contents('php://input'),true);
 switch ($r=array_shift($request)) {
     case 'board' : 
 	switch ($b=array_shift($request)) {
-		case '': 
+		case '': break;
 		case null: handle_board($method);break;
 		case 'piece': 
 					break;
