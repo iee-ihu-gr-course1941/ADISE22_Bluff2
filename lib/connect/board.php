@@ -1,8 +1,10 @@
 <?php
+
+
 function show_board() {
     global $mysqli;
 	
-	$sql = 'select * from board';
+	$sql = 'select * from tablo';
 	$st = $mysqli->prepare($sql);
 
 	$st->execute();
