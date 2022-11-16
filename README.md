@@ -7,6 +7,6 @@
 
 Συγγραφείς: Σκαρλάτος Στράτος, Κυριακίδης Δημήτριος
 
-Website: [ADISE22_Bluff2](https://users.iee.ihu.gr/~it032378/ADISE22_Bluff2/)
+Website: [ADISE22_Bluff2](https://195.251.123.31/~it032378/ADISE22_Bluff2/)
 
 ###### [Bluff GitHub Library](https://github.com/iee-ihu-gr-course1941/ADISE22_Bluff2)
