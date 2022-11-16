@@ -14,11 +14,11 @@ try
 {
 
 	SESSION_START();
-    $username = $_REQUEST['HELLO'];
-    $password = $_REQUEST['HELLO1'];
+    //$username = $_REQUEST['HELLO'];
+    //$password = $_REQUEST['HELLO1'];
 	
-    if (empty($username) && empty($password))
-        throw new Exception("What's up?", 200);	
+    //if (empty($username) && empty($password))
+        //throw new Exception("What's up?", 200);	
     if ($_REQUEST['REQUEST_METHOD'] == "GET")
     {
         $data = 0;
