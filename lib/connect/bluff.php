@@ -14,6 +14,7 @@ switch ($r=array_shift($request)) {
 	switch ($b=array_shift($request)) {
 		case '': break;
 		case null: handle_board($method);break;
+        case '1': handle_board($method);break;
 		case 'piece': 
 					break;
 		case 'player': 
