@@ -215,6 +215,7 @@ DELIMITER $$
 	Η αλλαγή σειράς θα γίνεται στην επιλογή της κίνησης
     */
  END $$
+ DELIMITER $$
  
  /*h endMoves kalleite gia ka8e paikth otan teliwsei na rixnei kartes*/
  DELIMITER $$
@@ -261,7 +262,11 @@ CALL checkVictory(DeclaredNumber,@TotalSum);
 SELECT @TotalSum;
 */
    
-
+DELIMITER $$
+CREATE OR REPLACE PROCEDURE show_boardForMe(player varchar(1))
+BEGIN 
+	select * from tablo where pos = player;
+END $$
 select * from tablo;
 select * from trapoula;
 
