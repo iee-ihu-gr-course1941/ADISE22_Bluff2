@@ -12,12 +12,14 @@ CREATE OR REPLACE TABLE  trapoula(
   card_icon VARCHAR(20) NOT NULL
 );
 END $$
+DELIMITER ;
 
 DELIMITER $$
 CREATE OR REPLACE PROCEDURE create_Card(in num varchar(1), IN symbol VARCHAR(8), IN eikona VARCHAR(20))
 BEGIN 
 INSERT INTO trapoula (card_number,card_symbol, card_icon) VALUES (num,symbol, eikona);
 END $$
+DELIMITER ;
 
 DELIMITER $$
 CREATE OR REPLACE PROCEDURE new_trapoula()
@@ -78,6 +80,7 @@ CALL create_Card('J','diamonds', 'jack_of_hearts2');
 CALL create_Card('Q','diamonds', 'queen_of_hearts2');
 CALL create_Card('K','diamonds', 'king_of_hearts2'); 
 END $$
+DELIMITER ;
 
 call createtrapoulaTable();
 call new_trapoula();
@@ -96,6 +99,7 @@ CREATE OR REPLACE TABLE tablo(
 );
 END $$
 call new_tablo();
+DELIMITER ;
 
 /*Δημιουργία του ταμπλό*/
 
@@ -105,14 +109,16 @@ BEGIN
 DROP TABLE IF EXISTS game_status;
 CREATE TABLE `game_status` (
   `status` enum('not active','initialized','started','ended','aborded') NOT NULL DEFAULT 'not active',
-  `p_turn` enum('1','2') DEFAULT NULL,
+  `p_turn` enum('1','2') DEFAULT null,
+  `moves_left` enum('0','1','2','3','4') DEFAULT null,
   `declared_number` enum ('1','2','3','4','5','6','7','8','9','10','J','Q','K'),
   `last_change` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 );
-INSERT INTO `game_status`(`status`,`p_turn`,`declared_number`,`last_change`) VALUES ('not active','1',null,current_timestamp());
-
+INSERT INTO `game_status`(`status`,`p_turn`,`moves_left`,`declared_number`,`last_change`) VALUES ('not active','1',"0",null,current_timestamp());
 END $$
+DELIMITER ;
 
+/* UPDATE game_status SET moves_left='4'; */
 call new_game_status();
 
 
@@ -130,7 +136,7 @@ CREATE TABLE `players` (
 );
 END $$
 call new_players();
-
+DELIMITER ;
 
 
 
@@ -171,7 +177,8 @@ DELIMITER $$
    END LOOP simple_loop;
    call new_trapoula(); 
  END $$
- 
+DELIMITER ;
+
 call shuffleAll();
 
 DELIMITER $$
@@ -181,26 +188,29 @@ DELIMITER $$
   DELETE FROM tablo WHERE pos = 3;
   DELETE FROM tablo WHERE pos = 4;
  END $$  
- 
+DELIMITER ;
+
 DELIMITER $$
   CREATE OR REPLACE PROCEDURE takeBackAll(playerID varchar(1)) /*Dinei ston paikth ola ta fylla pou einai katw*/
   BEGIN
 	UPDATE tablo SET pos = playerID WHERE pos = '3';
 	UPDATE tablo SET pos = playerID WHERE pos = '4';
-  update game_status set p_turn=if(p_turn='1','2','1');
+    update game_status set p_turn=if(p_turn='1','2','1');
  END $$  
- 
+ DELIMITER ;
   /*Parametros einai o arithmos pou dhlwse o paikths sthn arxh toy guroy*/
 
 
 DELIMITER $$
-CREATE OR REPLACE PROCEDURE bluffOnCard(DeclaredNumber varchar(1)) 
+CREATE OR REPLACE PROCEDURE bluffOnCard() 
 BEGIN
+	DECLARE DeclaredNumber varchar(1);
+	SELECT `declared_number` into DeclaredNumber from game_status;
 	select ( sum(cardNumber <> DeclaredNumber) ) as metablhth
 	from tablo
 	where pos='4';
 END $$
-
+DELIMITER ;
 
 DELIMITER $$
   CREATE OR REPLACE PROCEDURE move(cardd tinyint)
@@ -215,7 +225,7 @@ DELIMITER $$
 	Η αλλαγή σειράς θα γίνεται στην επιλογή της κίνησης
     */
  END $$
- DELIMITER $$
+DELIMITER ;
  
  /*h endMoves kalleite gia ka8e paikth otan teliwsei na rixnei kartes*/
  DELIMITER $$
@@ -223,50 +233,93 @@ DELIMITER $$
   BEGIN
 	update tablo set pos = '3' WHERE pos = '4';
   END $$ 
-  
+ DELIMITER ;
+ 
 DELIMITER $$
 CREATE OR REPLACE PROCEDURE checkVictory(out stat int)
 READS SQL DATA
 DETERMINISTIC
 BEGIN
-   DECLARE Message varchar(20);
-  DECLARE player varchar(1);
-  SELECT `p_turn` into player from game_status ;
-	DECLARE sum DECIMAL(10,2) DEFAULT 0;
+    DECLARE Message varchar(20);
+    DECLARE player varchar(1);
+    DECLARE sum DECIMAL(10,2) DEFAULT 0;
+    SELECT `p_turn` into player from game_status;	
 	SELECT COUNT(*) INTO sum FROM tablo WHERE pos = player;
 	IF sum = 0 THEN
-	update `players` set status='Win' where player=;
-	set stat = '1';
+		call bluffOnCard(); /*LOL*/
+		SELECT COUNT(*) INTO sum FROM tablo WHERE pos = player;
+		IF sum = 0 THEN
+			update `players` set status='Win' where player=p_turn;
+			set stat = '1';
+		END IF;
 	ELSE
 	set stat = '0';
 	END IF;
 END $$
 DELIMITER ;
 
-DELIMITER $$
-CREATE OR REPLACE PROCEDURE playerMove(player varchar(1),choise varchar(1),cards varchar(10))
-BEGIN 
-	/*player = ο παίκτης που παίζει αυτόν τον γύρο
-    choise = η κίνηση που θα κάνει ο παίκτης
-    cards = οι κάρτες που θα ρίξει ο παίκτης 
-    Declared Number = ο αριθμός που δηλώνει στην αρχή του γύρου*/
-	IF (choise = '1') call move(cards);
-    ELSEIF (choise = '2')
-	update game_status set p_turn=if(p_turn='1','2','1');
-    when choise = '2' and cards=null call pass();
-    when choise = '3' and cards=null call bluffOnCard(DeclaredNumber);
-END $$
 
 /* Auto ekteleitai gia na epistrefei thn parapanw, opou DeclaredNumber to 1 h 2
-CALL checkVictory(DeclaredNumber,@TotalSum); 
+CALL checkVictory(@TotalSum); 
 SELECT @TotalSum;
 */
+
+
+
+DELIMITER $$
+CREATE OR REPLACE PROCEDURE manyMoves(declaredN varchar(1), card1 varchar(1),card2 varchar(1),card3 varchar(1),card4 varchar(1))
+BEGIN 
+	DECLARE moves varchar(1);
+	IF (card2 = NULL AND card3 = NULL AND card4 = NULL) THEN SET moves='1'; 
+	ELSEIF (card3 = NULL AND card4 = NULL) THEN SET moves='2'; 
+	ELSEIF (card3 = NULL) THEN SET moves='3'; 
+	ELSE SET moves='4'; 
+	END IF;
+	UPDATE game_status SET declared_number = declaredN;	
+	UPDATE game_status SET moves_left=moves;
+    SET @a = 0;
+      simple_loop: LOOP
+		 call playerMove(1,card1);
+		 SET moves = moves-1;
+         IF @a=moves THEN
+            LEAVE simple_loop;
+         END IF;
+    END LOOP simple_loop;
+	CALL checkVictory(@TotalSum); 
+	SET @b = @TotalSum;
+	IF @b = 1 THEN
+		UPDATE game_status SET status = 'ended';
+	END IF;
+	update game_status set p_turn=if(p_turn='1','2','1');	
+END $$
+DELIMITER ;
+
+DELIMITER $$
+CREATE OR REPLACE PROCEDURE playerMove(choice varchar(1),cards varchar(10))
+BEGIN 
+	/*player = ο παίκτης που παίζει αυτόν τον γύρο
+    choice = η κίνηση που θα κάνει ο παίκτης
+    cards = οι κάρτες που θα ρίξει ο παίκτης 
+    Declared Number = ο αριθμός που δηλώνει στην αρχή του γύρου*/
+
+	IF (choice = '1') THEN call move(cards);
+    ELSEIF (choice = '2' and cards=null) THEN
+	call pass();	
+	
+	ELSEIF (choice = '3' and cards=null) THEN
+    call bluffOnCard();
+	END IF;
+END $$
+DELIMITER ;
+
    
 DELIMITER $$
 CREATE OR REPLACE PROCEDURE show_boardForMe(player varchar(1))
 BEGIN 
 	select * from tablo where pos = player;
 END $$
+DELIMITER ;
+
 select * from tablo;
 select * from trapoula;
 
