@@ -1,8 +1,13 @@
+var serverName = 'http://localhost/Bluff2/lib/bluff.php/';
+var functionFlag=null;
+var functionFlag2=null;
+var functionFlag3=null;
+var functionFlag4=null;
 var canPlay=false;
-	window.OpenedCards = [];
-	window.CardOfPlayer = [];
-
-	window.CardTypes = [
+window.OpenedCards = [];
+window.CardOfPlayer = [];
+window.CardOfPlayerPlay = [];
+window.CardTypes = [
 	{ name: "ace_of_spades", image: "https://legendmod.ml/adise/ace_of_spades.png" },
 	{ name: "2_of_spades", image: "https://legendmod.ml/adise/2_of_spades.png" },
 	{ name: "3_of_spades", image: "https://legendmod.ml/adise/3_of_spades.png" },
@@ -62,12 +67,43 @@ var canPlay=false;
 	
 
 function userCards(){	
-	window.CardOfPlayerPlay = JSON.parse(JSON.stringify(window.CardTypes)); //den einai ayta, alla auta pou dinei o server
+	functionFlag2='userCards';
+	getCards(1);
+	//window.CardOfPlayerPlay = JSON.parse(JSON.stringify(window.CardTypes)); //to window.CardTypes to 8elw sta8ero
+	//window.CardOfPlayer = JSON.parse(JSON.stringify(window.CardOfPlayerPlay)); //den einai ayta, alla auta pou dinei o server	
+}	
+function userCards2(){	
+	DOMContentLoaded2();
+	functionFlag2=null;
+	console.log('step userCards');	
+	window.CardOfPlayer = JSON.parse(JSON.stringify(window.CardOfPlayerPlay)); //den einai ayta, alla auta pou dinei o server	
+}	
+function userCardsTheRest(){
+	functionFlag3='userCardsTheRest';
+	getCards(1);
+	//window.CardOfPlayer = JSON.parse(JSON.stringify(window.CardOfPlayerPlay)); //den einai ayta, alla auta pou dinei o server	
+	
+}	
+function userCardsTheRest2(){
+	startBluff2();
+	functionFlag3=null;
+	console.log('step userCardsTheRest');
 	window.CardOfPlayer = JSON.parse(JSON.stringify(window.CardOfPlayerPlay)); //den einai ayta, alla auta pou dinei o server
 }	
-function userCardsTheRest(){	
-	window.CardOfPlayer = JSON.parse(JSON.stringify(window.CardOfPlayerPlay)); //den einai ayta, alla auta pou dinei o server
-}	
+function DOMContentLoaded2(){
+		$("#announce").remove();
+		$("#bluff").show();
+		$("#pass").show();
+		$("#cardsss").show();
+		$("#throwCards").show();
+		$("#quitGame").show();
+		$("#newGame").hide();
+		$("#time").show();			
+		$("#announceArea").append('<span id = "announce"><span class=\"announce\" style = "color:green">' + 'New game' + ': </span><span class=\"message-text\">' + '...wating for opponent' + '</span></span>' );	
+		startBluff(); 
+		toastr.info('New game hosted by client'); 
+		canPlay=false;	
+}
 document.addEventListener('DOMContentLoaded', function() {
    //addBluffArea();
    toastr.options.positionClass = 'toast-bottom-left';
@@ -81,19 +117,9 @@ document.addEventListener('DOMContentLoaded', function() {
 		$("#app").remove();
 		addBluffArea();
 		window.OpenedCards = [];
+		
 		userCards();
-		$("#announce").remove();
-		$("#bluff").show();
-		$("#pass").show();
-		$("#cardsss").show();
-		$("#throwCards").show();
-		$("#quitGame").show();
-		$("#newGame").hide();
-		$("#time").show();			
-		$("#announceArea").append('<span id = "announce"><span class=\"announce\" style = "color:green">' + 'New game' + ': </span><span class=\"message-text\">' + '...wating for opponent' + '</span></span>' );	
-		startBluff(); 
-		toastr.info('New game hosted by client'); 
-		canPlay=false;
+
 	}); 
 	$("#quitGame").click(function() {
 		window.OpenedCards = [];
@@ -283,9 +309,11 @@ function addBluffArea(){
 
 	initButtons();
 }
-
 function startBluff(){
 	userCardsTheRest();
+}
+function startBluff2(){
+
    $("#time").show();
    window.BluffGAME = new Vue({
       el: "#app",
@@ -374,48 +402,77 @@ function loadScript(script) {
     s.src = script;
     $("body").append(s);
 }
-//postUsers("https://lmsettings.snez.org/", userid, "LMSettings", escape($('#export-settings').val()));
-//getUsers("https://lmsettings.snez.org/", userid, "LMSettings");
-
-var xhttp = new XMLHttpRequest();
-function postUsers(server, username, password, data) {
-
-	xhttp.open("POST", server, false);
-    xhttp.setRequestHeader("username", username);
-    xhttp.setRequestHeader("password", password);
-    xhttp.send(data);
-	
-	/*xhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-            console.log(this.responseText);
-        }
-    };*/
-}
-function getUsers(server, username, password) {
-    xhttp.open("GET", server, false);
-    xhttp.setRequestHeader("username", username);
-    xhttp.setRequestHeader("password", password);
-    xhttp.send();
-	xhttp.onreadystatechange = xhttpOnComplete;
-	//var response = xhttp.response;
-}
-
-function xhttpOnComplete(){
-	if (xhttp.readyState ==4){
-		console.log(this.responseText);		
-	}
-}
-function getUserss(){ //auto douleuei, ta alla oxi
+function getUserss(whatever){ //auto douleuei, ta alla oxi
 	$.ajax({
 		type: "GET",
-		url: 'http://localhost/api.php',
+		url: serverName + whatever,
 		headers: {
-			'HELLO':'Basicxxxxxxxxxxxxx',
-			//'X-CSRF-TOKEN':'xxxxxxxxxxxxxxxxxxxx',
-			'HELLO1':'wqwqwwq'
 		},		
 		success: function(data){
-        alert(data);
+        handleGetUsers(data);
 		}
 	});
+}
+function postUserss(whatever){ //auto douleuei, ta alla oxi
+	$.ajax({
+		type: "POST",
+		url: serverName + whatever,
+		headers: {
+		},		
+		success: function(data){
+        handleGetUsers(data);
+		}
+	});
+}
+function Userss(type,whatever){ //auto douleuei, ta alla oxi
+	if(type=='GET'){
+		getUserss(whatever);
+	}
+	else if(type=='POST'){
+		postUserss(whatever);
+	} 
+	else{
+		alert('fatal error on call');
+	}
+}
+//getUserss('board/show/1'); 
+//postUserss('board/show/');
+//window.returnedFromUsers
+function handleGetUsers(data){
+	window.returnedFromUsers = data;
+	if(functionFlag=='getCards'){
+		getCards2();
+	}
+	else if(functionFlag4=='SuffleCards'){
+		functionFlag4=null;
+		getCards(1); // AYTO 8ELEI ALLAGH!
+	}
+}
+
+function SuffleCards(){
+	functionFlag4='SuffleCards';
+	postUserss('board/show/');
+}
+function getCards(player){
+	functionFlag='getCards';
+	getUserss('board/show/'+ player); 
+}
+
+function getCards2(){
+	window.CardOfPlayerPlay = [];
+	for (var i=0;i<window.returnedFromUsers.length;i++){
+		for (var x=0;x<window.CardTypes.length;x++){
+			if (( window.returnedFromUsers[i].card + 1 ) == x ){
+
+				console.log(window.returnedFromUsers[i].card + 1 + " " + window.CardTypes[x].name);
+				var temp = { name:  window.CardTypes[x].name, image: "https://legendmod.ml/adise/" + window.CardTypes[x].name + ".png" }
+				window.CardOfPlayerPlay.push(temp);
+			}
+		}
+	}
+	functionFlag=null;	
+	if(functionFlag2=='userCards')
+		userCards2();
+	else if(functionFlag3=='userCardsTheRest')
+		userCardsTheRest2();	
 }
