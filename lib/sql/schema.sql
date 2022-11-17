@@ -327,6 +327,8 @@ DELIMITER ;
 
 /*call manyMoves('J',1,2,NULL,NULL);*/
 
+SELECT * FROM game_status
+
 DELIMITER $$
 CREATE OR REPLACE PROCEDURE playerMove(choice varchar(1),cards varchar(10))
 BEGIN 
@@ -334,14 +336,13 @@ BEGIN
     choice = η κίνηση που θα κάνει ο παίκτης
     cards = οι κάρτες που θα ρίξει ο παίκτης 
     Declared Number = ο αριθμός που δηλώνει στην αρχή του γύρου*/
-
+	DECLARE movesfinal INT;
 	IF (choice = '1') THEN call move(cards);
-	update game_status set got_passed=1;
-	DECLARE movesFinal INT;
-	UPDATE game_status SET moves = moves + 1;
-	SELECT moves into movesFinal from game_status;
-		IF (moves='1') UPDATE game_status SET status = 'started';
-		END IF;
+	update game_status SET got_passed=1;
+	/*movesfinal = movesfinal + 1;*/
+	UPDATE game_status SET moves = movesFinal;
+		/*IF (movesfinal='1') UPDATE game_status SET status = 'started';
+		END IF;*/
     ELSEIF (choice = '2' and cards=null) THEN
 	call pass();	
 	update game_status set p_turn=if(p_turn='1','2','1');
