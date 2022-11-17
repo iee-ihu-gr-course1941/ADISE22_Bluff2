@@ -23,20 +23,20 @@ function reset_board() {
 function move($properties,$properties2) {
 	global $mysqli;
 	
-	$sql = 'call playerMove('. $properties . ',1,'. $properties2 . ')';
+	$sql = 'call playerMove(1,' . $properties2 . ')';
 	$mysqli->query($sql);
 	//show_board();
 }
 function pass($properties,$properties2) {
 	global $mysqli;
 	
-	$sql = 'call playerMove('. $properties . ',2,null)';
+	$sql = 'call playerMove(2,null)';
 	$mysqli->query($sql);
 	//show_board();
 }
 function bluff($properties,$properties2) {
     global $mysqli;	
-	$sql = 'call playerMove('. $properties . ',3,null)';
+	$sql = 'call playerMove(3,null)';
 	
 	$st = $mysqli->prepare($sql);
 	$st->execute();
