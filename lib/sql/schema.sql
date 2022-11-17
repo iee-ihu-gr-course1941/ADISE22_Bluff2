@@ -1,5 +1,5 @@
 
-/* */
+/* 8elei ta initialized, ktpl elegxous, elegxo me timestamp aborted */
 SET SQL_SAFE_UPDATES = 0;
 
 DELIMITER $$
@@ -112,15 +112,17 @@ CREATE TABLE `game_status` (
   `p_turn` enum('1','2') DEFAULT null,
   `moves_left` enum('0','1','2','3','4') DEFAULT null,
   `declared_number` enum ('1','2','3','4','5','6','7','8','9','10','J','Q','K'),
+  `got_Passed` enum('0','1') DEFAULT null,
+   moves int,
   `last_change` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 );
-INSERT INTO `game_status`(`status`,`p_turn`,`moves_left`,`declared_number`,`last_change`) VALUES ('not active','1',"0",null,current_timestamp());
+INSERT INTO `game_status`(`status`,`p_turn`,`moves_left`,`declared_number`,`got_Passed`,`moves`,`last_change`) VALUES ('not active','1',"0",null,'0',"0",current_timestamp());
 END $$
 DELIMITER ;
 
 /* UPDATE game_status SET moves_left='4'; */
 call new_game_status();
-
+,
 
 DELIMITER $$
 CREATE OR REPLACE PROCEDURE new_players()
@@ -191,10 +193,12 @@ DELIMITER $$
 DELIMITER ;
 
 DELIMITER $$
-  CREATE OR REPLACE PROCEDURE takeBackAll(playerID varchar(1)) /*Dinei ston paikth ola ta fylla pou einai katw*/
+  CREATE OR REPLACE PROCEDURE takeBackAll() /*Dinei ston paikth ola ta fylla pou einai katw*/
   BEGIN
-	UPDATE tablo SET pos = playerID WHERE pos = '3';
-	UPDATE tablo SET pos = playerID WHERE pos = '4';
+	DECLARE player varchar(1);
+	SELECT p_turn into player from game_status;	
+	UPDATE tablo SET pos = player WHERE pos = '3';
+	UPDATE tablo SET pos = player WHERE pos = '4';
     update game_status set p_turn=if(p_turn='1','2','1');
  END $$  
  DELIMITER ;
@@ -205,33 +209,51 @@ DELIMITER $$
 CREATE OR REPLACE PROCEDURE bluffOnCard() 
 BEGIN
 	DECLARE DeclaredNumber varchar(1);
+	DECLARE metablhth varchar(1);
 	SELECT `declared_number` into DeclaredNumber from game_status;
 	select ( sum(cardNumber <> DeclaredNumber) ) as metablhth
-	from tablo
-	where pos='4';
+	from tablo	
+	where pos='4';	
+	IF (metablhth > 0) THEN 
+	update game_status set p_turn=if(p_turn='1','2','1');
+	CALL takeBackAll();
+	ELSE
+	CALL takeBackAll();
+	END IF;
 END $$
 DELIMITER ;
 
 DELIMITER $$
-  CREATE OR REPLACE PROCEDURE move(cardd tinyint)
+  CREATE OR REPLACE PROCEDURE move(cardd tinyint) /* DEN DOYLEYEI SWSTA GIA MEGALA NOUMERA, 8ELEI AUTOCOMMIT 0, ELEGXO STHN PHP KAI RETURN sthn manyMoves*/
   BEGIN 
   /*
   H Καρτα που μετακινούμε πρέπει να ανήκει στον παίκτη που παίζει
   */
   DECLARE player varchar(1);
-  SELECT `p_turn` into player from game_status ;
-	UPDATE tablo SET pos = '4' WHERE card = cardd and player=pos; 
+  SELECT p_turn into player from game_status ;
+	UPDATE tablo SET pos = '4' WHERE card = cardd; 
+	/*UPDATE tablo SET pos = '4' WHERE card = cardd and pos=player;    -> auth bgainei la8os, den kserw giati*/
 	/*Εβγαλα απο την move την αλλαγή σειράς γιατί θα καλείτε σε κάθε κάρτα που αλλάζει θέση
 	Η αλλαγή σειράς θα γίνεται στην επιλογή της κίνησης
     */
  END $$
 DELIMITER ;
  
+ 
+ 
  /*h endMoves kalleite gia ka8e paikth otan teliwsei na rixnei kartes*/
+ 
+ 
  DELIMITER $$
   CREATE OR REPLACE PROCEDURE pass() 
   BEGIN
-	update tablo set pos = '3' WHERE pos = '4';
+  DECLARE passed varchar(1);
+  SELECT got_passed into passed from game_status;
+  IF (passed='1') THEN 
+	call passFinal();
+  ELSE UPDATE game_status set got_passed='1';
+  END IF;
+  update tablo set pos = '3' WHERE pos = '4';
   END $$ 
  DELIMITER ;
  
@@ -269,22 +291,31 @@ SELECT @TotalSum;
 DELIMITER $$
 CREATE OR REPLACE PROCEDURE manyMoves(declaredN varchar(1), card1 varchar(1),card2 varchar(1),card3 varchar(1),card4 varchar(1))
 BEGIN 
-	DECLARE moves varchar(1);
-	IF (card2 = NULL AND card3 = NULL AND card4 = NULL) THEN SET moves='1'; 
-	ELSEIF (card3 = NULL AND card4 = NULL) THEN SET moves='2'; 
-	ELSEIF (card3 = NULL) THEN SET moves='3'; 
-	ELSE SET moves='4'; 
+	DECLARE moves INT;
+	IF (card2 = NULL AND card3 = NULL AND card4 = NULL) THEN SET moves=1; 
+	ELSEIF (card3 = NULL AND card4 = NULL) THEN SET moves=2; 
+	ELSEIF (card3 = NULL) THEN SET moves=3; 
+	ELSE SET moves=4; 
 	END IF;
+	call pass();
 	UPDATE game_status SET declared_number = declaredN;	
 	UPDATE game_status SET moves_left=moves;
-    SET @a = 0;
       simple_loop: LOOP
-		 call playerMove(1,card1);
+		IF (moves=4) THEN
+			call playerMove(1,card4);
+		ELSEIF (moves=3) THEN
+			call playerMove(1,card3);
+		ELSEIF (moves=2) THEN
+			call playerMove(1,card2);
+		ELSEIF (moves=1) THEN
+			call playerMove(1,card1);
+		END IF;		
 		 SET moves = moves-1;
-         IF @a=moves THEN
+         IF moves=0 THEN
             LEAVE simple_loop;
          END IF;
     END LOOP simple_loop;
+	UPDATE game_status SET moves_left='0';
 	CALL checkVictory(@TotalSum); 
 	SET @b = @TotalSum;
 	IF @b = 1 THEN
@@ -293,6 +324,8 @@ BEGIN
 	update game_status set p_turn=if(p_turn='1','2','1');	
 END $$
 DELIMITER ;
+
+/*call manyMoves('J',1,2,NULL,NULL);*/
 
 DELIMITER $$
 CREATE OR REPLACE PROCEDURE playerMove(choice varchar(1),cards varchar(10))
@@ -303,11 +336,19 @@ BEGIN
     Declared Number = ο αριθμός που δηλώνει στην αρχή του γύρου*/
 
 	IF (choice = '1') THEN call move(cards);
+	update game_status set got_passed=1;
+	DECLARE movesFinal INT;
+	UPDATE game_status SET moves = moves + 1;
+	SELECT moves into movesFinal from game_status;
+		IF (moves='1') UPDATE game_status SET status = 'started';
+		END IF;
     ELSEIF (choice = '2' and cards=null) THEN
 	call pass();	
-	
+	update game_status set p_turn=if(p_turn='1','2','1');
+	update game_status set got_passed=1;	
 	ELSEIF (choice = '3' and cards=null) THEN
     call bluffOnCard();
+	update game_status set got_passed=1;
 	END IF;
 END $$
 DELIMITER ;
