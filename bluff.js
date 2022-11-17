@@ -114,10 +114,7 @@ document.addEventListener('DOMContentLoaded', function() {
    $("#cardsss").hide();
    $("#throwCards").hide();   
 	$("#newGame").click(function() {
-		$("#app").remove();
-		addBluffArea();
-		window.OpenedCards = [];
-		
+		refreshInit();	
 		userCards();
 
 	}); 
@@ -145,6 +142,11 @@ document.addEventListener('DOMContentLoaded', function() {
    startBluff(); */
 });
 
+function refreshInit(){
+	$("#app").remove();
+	addBluffArea();		
+	startBluff();	
+}
 function becomeBluffedSucceeded(cards){
 	window.TakenCardsAsArray = Object.assign([], cards);
 	for (var i=0;i<CardTypes.length;i++){
@@ -167,9 +169,7 @@ function becomeBluffedSucceeded(cards){
 	toastr.info('You got bluffed. Cards added: ' + newCards); 
 	
 	window.OpenedCards = [];
-	$("#app").remove();
-	addBluffArea();		
-	startBluff();	
+	//refreshInit();
 	canPlay=false;	
 }
 function yourTurn(cardsDown, lastCardsOfEnemey){
@@ -261,9 +261,7 @@ function initButtons(){
 					}						
 				}
 				//energeies
-				$("#app").remove();
-				addBluffArea();		
-				startBluff();				
+				refreshInit();				
 			}
 			else if(window.OpenedCards.length>=5){
 				toastr.info('Too many cards chosen'); 
@@ -445,7 +443,10 @@ function handleGetUsers(data){
 	}
 	else if(functionFlag4=='SuffleCards'){
 		functionFlag4=null;
+		functionFlag3='userCardsTheRest'
 		getCards(1); // AYTO 8ELEI ALLAGH!
+		refreshInit();
+
 	}
 }
 
@@ -464,7 +465,7 @@ function getCards2(){
 		for (var x=0;x<window.CardTypes.length;x++){
 			if (( window.returnedFromUsers[i].card + 1 ) == x ){
 
-				console.log(window.returnedFromUsers[i].card + 1 + " " + window.CardTypes[x].name);
+				//console.log(window.returnedFromUsers[i].card + 1 + " " + window.CardTypes[x].name);
 				var temp = { name:  window.CardTypes[x].name, image: "https://legendmod.ml/adise/" + window.CardTypes[x].name + ".png" }
 				window.CardOfPlayerPlay.push(temp);
 			}
