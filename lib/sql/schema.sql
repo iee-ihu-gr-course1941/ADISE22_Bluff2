@@ -122,7 +122,7 @@ DELIMITER ;
 
 /* UPDATE game_status SET moves_left='4'; */
 call new_game_status();
-,
+
 
 DELIMITER $$
 CREATE OR REPLACE PROCEDURE new_players()
@@ -289,7 +289,7 @@ SELECT @TotalSum;
 
 
 DELIMITER $$
-CREATE OR REPLACE PROCEDURE manyMoves(declaredN varchar(1), card1 varchar(1),card2 varchar(1),card3 varchar(1),card4 varchar(1))
+CREATE OR REPLACE PROCEDURE manyMoves(declaredN varchar(1), card1 varchar(10),card2 varchar(10),card3 varchar(10),card4 varchar(10))
 BEGIN 
 	DECLARE moves INT;
 	IF (card2 = NULL AND card3 = NULL AND card4 = NULL) THEN SET moves=1; 
