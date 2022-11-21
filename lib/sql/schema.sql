@@ -351,6 +351,8 @@ BEGIN
     call bluffOnCard();
 	update game_status set got_passed=1;
 	END IF;
+	/*DECLARE previousPlayer;
+	SET previousPlayer = SELECT p_turn FROM game_status;*/
 END $$
 DELIMITER ;
 
@@ -362,6 +364,15 @@ BEGIN
 END $$
 DELIMITER ;
 
+DELIMITER $$
+CREATE OR REPLACE PROCEDURE show_board_For_Active_Player()
+BEGIN 
+	SELECT *
+	FROM tablo t, game_status g
+	WHERE t.pos = g.p_turn;
+END $$
+DELIMITER ; 	
+	
 select * from tablo;
 select * from trapoula;
 
