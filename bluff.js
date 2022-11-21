@@ -449,7 +449,7 @@ function handleGetUsers(data){
 
 	}
 }
-
+//getUserss('board/throw/"J"/5/6/7/8');
 function SuffleCards(){
 	functionFlag4='SuffleCards';
 	postUserss('board/show/');
