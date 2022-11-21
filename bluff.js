@@ -437,6 +437,7 @@ function Userss(type,whatever){ //auto douleuei, ta alla oxi
 //postUserss('board/show/');
 //window.returnedFromUsers
 function handleGetUsers(data){
+	console.log("handleGetUsers " + functionFlag)
 	window.returnedFromUsers = data;
 	if(functionFlag=='getCards'){
 		getCards2();
