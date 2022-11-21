@@ -25,12 +25,13 @@ switch ($r=array_shift($request)) {
 			$c=array_shift($request);
 			handle_main($method, $c);break;			
 		break;
-		case 'throw': 
+		case 'throw': //http://localhost/Bluff2/lib/bluff.php/board/throw/"J"/5/6/7/8         //http://localhost/Bluff2/lib/bluff.php/board/throw/%22Q%22/9/10/NULL/NULL
 			$c=array_shift($request);
 			$d=array_shift($request);
 			$e=array_shift($request);
 			$f=array_shift($request);
-			handle_throw($method, $c, $d,null,null,null);
+			$g=array_shift($request);
+			handle_throw($method, $c, $d, $e, $f, $g);
 		break;	
 		default: header("HTTP/1.1 404 Not Found");
 				break;
@@ -57,20 +58,10 @@ function handle_main($method, $properties) {
         header('HTTP/1.1405 Method Not Allowed');      
 	}
 }
+
 function handle_throw($method, $properties0, $properties, $properties2, $properties3, $properties4) {
     if($method=='GET') {
-		if ($properties2==null && $properties3==null && $properties4==null){
-			move($properties0, $properties);
-		}
-		else if ($properties3==null && $properties4==null){
-			//header('HTTP/1.1405 Method Not Allowed - GET needs 2 parameters');   
-		}
-		else if ($properties4==null){
-			//header('HTTP/1.1405 Method Not Allowed - GET needs 2 parameters');   
-		}	
-		else {
-			header('HTTP/1.1405 Method Not Allowed - GET needs 1-5 parameters');      
-		}		
+		manyMoves($properties0, $properties, $properties2, $properties3, $properties4);
 	}
 	else {
         header('HTTP/1.1405 Method Not Allowed');      
