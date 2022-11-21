@@ -13,8 +13,7 @@ function show_board($properties) {
 }
 
 function reset_board() {
-	global $mysqli;
-	
+	global $mysqli;	
 	$sql = 'call shuffleAll()';
 	
 	$mysqli->query($sql);
@@ -22,10 +21,22 @@ function reset_board() {
 }
 function move($properties,$properties2) {
 	global $mysqli;
-	
 	$sql = 'call playerMove(1,' . $properties2 . ')';
-	$mysqli->query($sql);
-	//show_board();
+	$st = $mysqli->prepare($sql);
+	$st->execute();
+	$res = $st->get_result();
+	header('Content-type: application/json');
+	print json_encode($res->fetch_all(MYSQLI_ASSOC), JSON_PRETTY_PRINT);
+}
+function manyMoves($properties,$properties0,$properties2,$properties3,$properties4) {
+	global $mysqli;
+	//call manyMoves('J',1,2,NULL,NULL);
+	$sql = 'call manyMoves(' . $properties . ',' . $properties0 . ',' . $properties2 . ',' . $properties3 . ',' . $properties4 . ')';
+	$st = $mysqli->prepare($sql);
+	$st->execute();
+	$res = $st->get_result();
+	header('Content-type: application/json');
+	print json_encode($res->fetch_all(MYSQLI_ASSOC), JSON_PRETTY_PRINT);
 }
 function pass($properties,$properties2) {
 	global $mysqli;
