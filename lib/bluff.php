@@ -21,9 +21,11 @@ switch ($r=array_shift($request)) {
 		case '': break;
 		case null: handle_main($method,null);break;
 		//http://localhost/Bluff2/lib/bluff.php/board/show/1
+		case 'start':handle_start($method,null);break;
         case 'show' : //show and start
-			$c=array_shift($request);
-			handle_main($method, $c);break;			
+			//$c=array_shift($request);
+			//handle_main($method, $c);break;	
+			handle_main($method);break;				
 		break;
 		case 'throw': //http://localhost/Bluff2/lib/bluff.php/board/throw/"J"/5/6/7/8         //http://localhost/Bluff2/lib/bluff.php/board/throw/%22Q%22/9/10/NULL/NULL
 			$c=array_shift($request);
@@ -33,6 +35,15 @@ switch ($r=array_shift($request)) {
 			$g=array_shift($request);
 			handle_throw($method, $c, $d, $e, $f, $g);
 		break;	
+		case 'find':
+			findPlayerTurn();
+		break;
+		case 'pass':
+			handle_pass($method);
+		break;		
+		case 'bluff':
+			handle_bluff($method);
+		break;				
 		default: header("HTTP/1.1 404 Not Found");
 				break;
 	}
@@ -42,14 +53,11 @@ switch ($r=array_shift($request)) {
 	exit;
 }
 
-function handle_main($method, $properties) {
+//function handle_main($method, $properties) {
+function handle_main($method) {	
     if($method=='GET') {
-		if ($properties!=null){
-			show_board($properties);
-			}
-		else{
-			//header('HTTP/1.1405 Method Not Allowed - GET needs 2 parameters');   
-		}
+		//show_board($properties);
+		show_board();
 	}
 	else if ($method=='POST') {
            reset_board();
@@ -65,6 +73,30 @@ function handle_throw($method, $properties0, $properties, $properties2, $propert
 	}
 	else {
         header('HTTP/1.1405 Method Not Allowed');      
+	}
+}
+function handle_start($method) {
+    if($method=='GET') {
+		start();
+	}
+	else {
+        header('HTTP/1.1405 Method Not Allowed');      
+	}
+}
+function handle_pass($method){
+    if($method=='GET') {
+		pass();
+	}
+	else {
+        pass();      
+	}
+}
+function handle_bluff($method){
+    if($method=='GET') {
+		bluff();
+	}
+	else {
+        bluff();      
 	}
 }
 ?>
