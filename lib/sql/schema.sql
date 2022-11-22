@@ -15,7 +15,7 @@ END $$
 DELIMITER ;
 
 DELIMITER $$
-CREATE OR REPLACE PROCEDURE create_Card(in num varchar(1), IN symbol VARCHAR(8), IN eikona VARCHAR(20))
+CREATE OR REPLACE PROCEDURE create_Card(in num varchar(2), IN symbol VARCHAR(8), IN eikona VARCHAR(20))
 BEGIN 
 INSERT INTO trapoula (card_number,card_symbol, card_icon) VALUES (num,symbol, eikona);
 END $$
@@ -76,9 +76,9 @@ CALL create_Card('7','diamonds', '7_of_diamonds');
 CALL create_Card('8','diamonds', '8_of_diamonds');
 CALL create_Card('9','diamonds', '9_of_diamonds');
 CALL create_Card('10','diamonds', '10_of_diamonds');
-CALL create_Card('J','diamonds', 'jack_of_hearts2');
-CALL create_Card('Q','diamonds', 'queen_of_hearts2');
-CALL create_Card('K','diamonds', 'king_of_hearts2'); 
+CALL create_Card('J','diamonds', 'jack_of_diamonds2');
+CALL create_Card('Q','diamonds', 'queen_of_diamonds2');
+CALL create_Card('K','diamonds', 'king_of_diamonds2'); 
 END $$
 DELIMITER ;
 
@@ -108,15 +108,15 @@ CREATE OR REPLACE PROCEDURE new_game_status()
 BEGIN 
 DROP TABLE IF EXISTS game_status;
 CREATE TABLE `game_status` (
-  `status` enum('not active','initialized','started','ended','aborded') NOT NULL DEFAULT 'not active',
+  `status` enum('not_active','player_1_waiting','initialized','started','ended','aborded') NOT NULL DEFAULT 'not_active',
   `p_turn` enum('1','2') DEFAULT null,
   `moves_left` enum('0','1','2','3','4') DEFAULT null,
   `declared_number` enum ('1','2','3','4','5','6','7','8','9','10','J','Q','K'),
-  `got_Passed` enum('0','1') DEFAULT null,
+  `got_Passed` enum('0','1') DEFAULT '0',
    moves int,
   `last_change` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 );
-INSERT INTO `game_status`(`status`,`p_turn`,`moves_left`,`declared_number`,`got_Passed`,`moves`,`last_change`) VALUES ('not active','1',"0",null,'0',"0",current_timestamp());
+INSERT INTO `game_status`(`status`,`p_turn`,`moves_left`,`declared_number`,`got_Passed`,`moves`,`last_change`) VALUES ('not_active','1',"0",null,'0',"0",current_timestamp());
 END $$
 DELIMITER ;
 
@@ -144,10 +144,10 @@ DELIMITER ;
 
 
 DELIMITER $$
-  CREATE OR REPLACE PROCEDURE shuffle(poss VARCHAR(1))
+  CREATE OR REPLACE PROCEDURE shuffle(poss VARCHAR(2))
   BEGIN
   Declare card1 tinyint;  
-  Declare card2 varchar(1);  
+  Declare card2 varchar(2);  
   set card1 :=(SELECT card_id FROM trapoula ORDER BY RAND() LIMIT 1 );
   set card2 :=(SELECT card_number FROM trapoula where card_id=card1 );
 
@@ -189,6 +189,7 @@ DELIMITER $$
 
   DELETE FROM tablo WHERE pos = 3;
   DELETE FROM tablo WHERE pos = 4;
+  UPDATE game_status set got_passed=0;
  END $$  
 DELIMITER ;
 
@@ -208,8 +209,8 @@ DELIMITER $$
 DELIMITER $$
 CREATE OR REPLACE PROCEDURE bluffOnCard() 
 BEGIN
-	DECLARE DeclaredNumber varchar(1);
-	DECLARE metablhth varchar(1);
+	DECLARE DeclaredNumber varchar(2);
+	DECLARE metablhth varchar(2);
 	SELECT `declared_number` into DeclaredNumber from game_status;
 	select ( sum(cardNumber <> DeclaredNumber) ) as metablhth
 	from tablo	
@@ -251,7 +252,7 @@ DELIMITER ;
   SELECT got_passed into passed from game_status;
   IF (passed='1') THEN 
 	call passFinal();
-  ELSE UPDATE game_status set got_passed='1';
+  ELSE UPDATE game_status set got_passed=1;
   END IF;
   update tablo set pos = '3' WHERE pos = '4';
   END $$ 
@@ -289,7 +290,7 @@ SELECT @TotalSum;
 
 
 DELIMITER $$
-CREATE OR REPLACE PROCEDURE manyMoves(declaredN varchar(1), card1 varchar(10),card2 varchar(10),card3 varchar(10),card4 varchar(10))
+CREATE OR REPLACE PROCEDURE manyMoves(declaredN varchar(2), card1 varchar(10),card2 varchar(10),card3 varchar(10),card4 varchar(10))
 BEGIN 
 	DECLARE moves INT;
 	IF (card2 = NULL AND card3 = NULL AND card4 = NULL) THEN SET moves=1; 
@@ -338,21 +339,21 @@ BEGIN
     Declared Number = ο αριθμός που δηλώνει στην αρχή του γύρου*/
 	DECLARE movesfinal INT;
 	IF (choice = '1') THEN call move(cards);
-	update game_status SET got_passed=1;
+	update game_status SET got_passed=0;
 	/*movesfinal = movesfinal + 1;*/
 	UPDATE game_status SET moves = movesFinal;
 		/*IF (movesfinal='1') UPDATE game_status SET status = 'started';
 		END IF;*/
-    ELSEIF (choice = '2' and cards=null) THEN
+    ELSEIF (choice = '2') THEN
 	call pass();	
 	update game_status set p_turn=if(p_turn='1','2','1');
-	update game_status set got_passed=1;	
-	ELSEIF (choice = '3' and cards=null) THEN
+	ELSEIF (choice = '3') THEN
     call bluffOnCard();
-	update game_status set got_passed=1;
+	update game_status set got_passed=0;
 	END IF;
-	/*DECLARE previousPlayer;
-	SET previousPlayer = SELECT p_turn FROM game_status;*/
+	/*update game_status set p_turn=if(p_turn='1','2','1');
+	call show_board_For_Active_Player();
+	update game_status set p_turn=if(p_turn='1','2','1'); auto einai fake*/
 END $$
 DELIMITER ;
 
@@ -372,7 +373,33 @@ BEGIN
 	WHERE t.pos = g.p_turn;
 END $$
 DELIMITER ; 	
-	
+
+
+DELIMITER $$
+CREATE OR REPLACE PROCEDURE start()
+BEGIN 
+  Declare STATUS2 varchar(20); 
+  SELECT status into STATUS2 from game_status;	  
+  IF (STATUS2="not_active") THEN UPDATE game_status set status="player_1_waiting";
+  ELSEIF (STATUS2="ended") THEN UPDATE game_status set status="player_1_waiting";
+  ELSEIF (STATUS2="player_1_waiting") THEN UPDATE game_status set status="initialized";  
+  END IF;
+  CALL startReturn();   
+END $$
+DELIMITER ;
+
+DELIMITER $$
+CREATE OR REPLACE PROCEDURE startReturn()
+BEGIN 
+  SELECT STATUS from game_status;	  
+END $$
+DELIMITER ;
+
+CALL start();
+
+
+
+DELIMITER ;	
 select * from tablo;
 select * from trapoula;
 
