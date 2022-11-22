@@ -68,27 +68,31 @@ window.CardTypes = [
 
 function userCards(){	
 	functionFlag2='userCards';
-	getCards(1);
+	//getCards(1);
+	console.log('step userCards');
 	//window.CardOfPlayerPlay = JSON.parse(JSON.stringify(window.CardTypes)); //to window.CardTypes to 8elw sta8ero
-	//window.CardOfPlayer = JSON.parse(JSON.stringify(window.CardOfPlayerPlay)); //den einai ayta, alla auta pou dinei o server	
+	window.CardOfPlayer = JSON.parse(JSON.stringify(window.CardOfPlayerPlay)); //den einai ayta, alla auta pou dinei o server	
 }	
 function userCards2(){	
 	DOMContentLoaded2();
 	functionFlag2=null;
-	console.log('step userCards');	
+	console.log('step userCards2');	
+	//getCards(1);
 	window.CardOfPlayer = JSON.parse(JSON.stringify(window.CardOfPlayerPlay)); //den einai ayta, alla auta pou dinei o server	
 }	
 function userCardsTheRest(){
 	functionFlag3='userCardsTheRest';
 	getCards(1);
-	//window.CardOfPlayer = JSON.parse(JSON.stringify(window.CardOfPlayerPlay)); //den einai ayta, alla auta pou dinei o server	
+	window.CardOfPlayer = JSON.parse(JSON.stringify(window.CardOfPlayerPlay)); //den einai ayta, alla auta pou dinei o server	
 	
 }	
 function userCardsTheRest2(){
+	//window.CardOfPlayer = JSON.parse(JSON.stringify(window.CardOfPlayerPlay));
 	startBluff2();
 	functionFlag3=null;
-	console.log('step userCardsTheRest');
-	window.CardOfPlayer = JSON.parse(JSON.stringify(window.CardOfPlayerPlay)); //den einai ayta, alla auta pou dinei o server
+	console.log('step userCardsTheRest2');
+	//getCards(1);
+	//window.CardOfPlayer = JSON.parse(JSON.stringify(window.CardOfPlayerPlay)); //den einai ayta, alla auta pou dinei o server
 }	
 function DOMContentLoaded2(){
 		$("#announce").remove();
@@ -201,6 +205,7 @@ function yourTurn(cardsDown, lastCardsOfEnemey){
 function initButtons(){
 		$("#bluff").click(function() {
 		//if (canPlay){
+		setBluff();
 		$("#announce").remove();	
 		$("#announceArea").append('<span id = "announce"><span class=\"announce\" style = "color:green">' + 'Result' + ': </span><span class=\"message-text\">' + 'call bluff!' + '</span></span>' );
 		//energeies
@@ -211,7 +216,7 @@ function initButtons(){
 		$("#pass").click(function() {
 			//if (canPlay){
 			//energeies	
-			
+			setPass();
 			$("#announce").remove();	
 			$("#announceArea").append('<span id = "announce"><span class=\"announce\" style = "color:green">' + 'Result' + ': </span><span class=\"message-text\">' + 'passed!' + '</span></span>' );
 			window.OpenedCards = [];
@@ -249,8 +254,25 @@ function initButtons(){
 						}
 					}
 				$("#announceArea").append('</span>' );
-
+				
+				
+				var temp = [];
+				var iz=0;
+				temp[0]=null; temp[1]=null; temp[2]=null; temp[3]=null;
 				for (var i=0;i<window.OpenedCards.length;i++){
+					for (var x=0;x<window.CardTypes.length;x++){
+						if (( window.OpenedCards[i]) == window.CardTypes[x].name ){
+						temp[iz]=x+1;
+						iz++;
+						console.log(window.CardTypes[x].name);
+
+						}
+					}
+				}
+				//getCardsAfterThrow();
+				getUserss('board/throw/'+ '"' + callTheNumber + '"' + '/' + temp[0] + '/' + temp[1] + '/' + temp[2]+ '/' + temp[3]);
+				getCardsAfterThrow();
+				/*for (var i=0;i<window.OpenedCards.length;i++){
 					for (var x=0;x<window.CardOfPlayerPlay.length;x++){
 						if (window.CardOfPlayerPlay[x] && window.CardOfPlayerPlay[x].name==window.OpenedCards[i]){	
 							//console.log(window.OpenedCards[i]);
@@ -259,9 +281,9 @@ function initButtons(){
 							});		
 						}	
 					}						
-				}
+				}*/
 				//energeies
-				refreshInit();				
+				//refreshInit();				
 			}
 			else if(window.OpenedCards.length>=5){
 				toastr.info('Too many cards chosen'); 
@@ -275,14 +297,6 @@ function initButtons(){
 			//}
 		}); 
 		
-}
-
-function MakeOpenCardsObject(){
-	window.OpenedCardsAsObject = Object.assign({}, window.OpenedCards); //metatrepei ton pinaka se Object gia apostolh me JSON
-	//Object.assign([], DedomenaApoJSON); //metatrepei to JSON Object se pinaka gia na ginei epeksergasia
-	//JSON.parse(window.OpenedCards);
-	//JSON.stringify(window.OpenedCards)
-	//Object.assign({}, ['a','b','c']);
 }	
 
 function addBluffArea(){
@@ -440,39 +454,65 @@ function handleGetUsers(data){
 	console.log("handleGetUsers " + functionFlag)
 	window.returnedFromUsers = data;
 	if(functionFlag=='getCards'){
+		functionFlag=null;
 		getCards2();
 	}
 	else if(functionFlag4=='SuffleCards'){
 		functionFlag4=null;
-		functionFlag3='userCardsTheRest'
-		getCards(1); // AYTO 8ELEI ALLAGH!
-		refreshInit();
-
-	}
+		refreshing();
+	}			
 }
+function refreshing(){
+	functionFlag3='userCardsTheRest'
+	getCards2(); // AYTO 8ELEI ALLAGH!
+	//refreshInit();	
+}
+function refreshing2(){
+	functionFlag3='userCardsTheRest'
+	getCards2(); // AYTO 8ELEI ALLAGH!
+	refreshInit();	
+}
+function getCardsAfterThrow(){
+	//functionFlag4='SendCards';
+	setTimeout(function() {refreshing2();}, 2000);
+}
+
 //getUserss('board/throw/"J"/5/6/7/8');
 function SuffleCards(){
 	functionFlag4='SuffleCards';
 	postUserss('board/show/');
+	setTimeout(function() {refreshing2();}, 2000);
+	
 }
-function getCards(player){
+function setPass(){
+	functionFlag4='SuffleCards';
+	postUserss('board/pass');
+}
+function setBluff(){
+	functionFlag4='SuffleCards';
+	postUserss('board/bluff');
+}
+function getCards(){
 	functionFlag='getCards';
-	getUserss('board/show/'+ player); 
+	getUserss('board/show/'); 
 }
-
 function getCards2(){
+	//refreshInit();
+	var before = window.CardOfPlayerPlay.length;
 	window.CardOfPlayerPlay = [];
 	for (var i=0;i<window.returnedFromUsers.length;i++){
 		for (var x=0;x<window.CardTypes.length;x++){
-			if (( window.returnedFromUsers[i].card + 1 ) == x ){
+			if (( window.returnedFromUsers[i].card)-1 == x ){
 
-				//console.log(window.returnedFromUsers[i].card + 1 + " " + window.CardTypes[x].name);
+				//console.log(window.returnedFromUsers[i].card + 1 + " " + window.CardTypes[x].name + ", " + window.returnedFromUsers[i].cardNumber);
 				var temp = { name:  window.CardTypes[x].name, image: "https://legendmod.ml/adise/" + window.CardTypes[x].name + ".png" }
 				window.CardOfPlayerPlay.push(temp);
 			}
 		}
 	}
-	functionFlag=null;	
+	var after = window.CardOfPlayerPlay.length;
+	console.log(after-before);
+	//functionFlag=null;	
 	if(functionFlag2=='userCards')
 		userCards2();
 	else if(functionFlag3=='userCardsTheRest')
