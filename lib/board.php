@@ -5,8 +5,8 @@
 function show_board() {	
     global $mysqli;	
 	//$sql = 'CALL show_boardForMe('. $properties . ')'; //. einai to +
-//	$sql = 'CALL show_board_For_Active_Player()'; //. einai to +
-	$sql = 'select * from board;';	
+	$sql = 'CALL show_board_For_Active_Player()'; //. einai to +
+	
 	$st = $mysqli->prepare($sql);
 	$st->execute();
 	$res = $st->get_result();
