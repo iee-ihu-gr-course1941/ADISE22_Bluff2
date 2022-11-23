@@ -18,7 +18,7 @@ if(gethostname()=='users.iee.ihu.gr' || gethostname()=='legendmod.ml/adise') {
 
 if ($mysqli->connect_errno) {
     var i = gethostname();
-    echo i
+    echo i;
     echo "Failed to connect to MySQL: (" . 
     $mysqli->connect_errno . ") " . $mysqli->connect_error;
 }?>
