@@ -154,6 +154,7 @@ DELIMITER $$
   INSERT INTO tablo (cardNumber,card,pos) VALUES (card2,card1,poss);
   delete from trapoula where card_id=card1;
   END $$
+DELIMITER;
 
 DELIMITER $$
   CREATE OR REPLACE PROCEDURE shuffleAll()
@@ -328,7 +329,7 @@ DELIMITER ;
 
 /*call manyMoves('J',1,2,NULL,NULL);*/
 
-SELECT * FROM game_status
+SELECT * FROM game_status;
 
 DELIMITER $$
 CREATE OR REPLACE PROCEDURE playerMove(choice varchar(1),cards varchar(10))
@@ -399,7 +400,7 @@ CALL start();
 
 
 
-DELIMITER ;	
+	
 select * from tablo;
 select * from trapoula;
 
