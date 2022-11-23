@@ -1,5 +1,5 @@
 //var serverName = 'http://localhost/Bluff2/lib/bluff.php/';
-var serverName =  '/lib/bluff.php/';
+var serverName =  './lib/bluff.php/';
 var functionFlag=null;
 var functionFlag2=null;
 var functionFlag3=null;
