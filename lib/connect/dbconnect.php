@@ -9,8 +9,16 @@ $user=$DB_USER;
 $pass=$DB_PASS;
 
 
-
+/*
 if(gethostname()=='users.iee.ihu.gr' || gethostname()=='legendmod.ml/adise') {
+	$mysqli = new mysqli($host, $user, $pass, $db,null,'~/mysql/run/mysql.sock');
+    // '/home/student/it/2003/it032378/mysql/run/mysql.sock'
+} else {
+        //test
+		$pass=null;
+        $mysqli = new mysqli($host, $user, $pass, $db);
+}*/
+if(gethostname()=='users.iee.ihu.gr') {
 	$mysqli = new mysqli($host, $user, $pass, $db,null,'~/mysql/run/mysql.sock');
     // '/home/student/it/2003/it032378/mysql/run/mysql.sock'
 } else {
