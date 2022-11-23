@@ -7,7 +7,7 @@ header("Access-Control-Allow-Headers: HELLO, HELLO1");
 //http://localhost/Bluff2/lib/bluff.php/board/show/1 ka8e fora pou kanw allh elegxw gia debug
 
 require_once "./connect/dbconnect.php"; 
-require_once "./lib/board.php";
+require_once "board.php";
 
 
 $method = $_SERVER['REQUEST_METHOD'];
