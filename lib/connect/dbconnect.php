@@ -1,6 +1,6 @@
 <?php
-//$host='localhost';
-$host='users.iee.ihu.gr';
+$host='localhost';
+//$host='users.iee.ihu.gr';
 require_once "db_upass.php";
 
 $user=$DB_USER;
