@@ -13,6 +13,7 @@ session_start();
 $_SESSION['player1']=session_id();
 session_regenerate_id(true);
 $_SESSION['player2']=session_id();
+$activePlayer = 1;
 
 $method = $_SERVER['REQUEST_METHOD'];
 $request = explode('/', trim($_SERVER['PATH_INFO'],'/'));
@@ -33,11 +34,10 @@ switch ($r=array_shift($request)) {
 	else{
 		errorMsg('2 players already playing.');
 	}
-
-	//errorMsg($_SESSION['player1']);
-	//errorMsg($_SESSION['player2']);
 	break;
 	case 'board' : 
+	$z=array_shift($request);
+	if ((sqlreturnoneitem('select * from game_status;', 'p_turn')=="1" && $_SESSION['player1'] == $z) || (sqlreturnoneitem('select * from game_status;', 'p_turn')=="2" && $_SESSION['player2'] == $z)){ 	
 	switch ($b=array_shift($request)) {
 		case '': break;
 		case null: handle_main($method,null);break;
@@ -69,6 +69,10 @@ switch ($r=array_shift($request)) {
 		errorMsg('Wrong command');
 		//header("HTTP/1.1 404 Not Found");
 				break;
+	}
+	}
+	else {
+		errorMsg('Wrong sessionId');
 	}
 	break;
     default: 
