@@ -118,7 +118,7 @@ CREATE TABLE `game_status` (
    moves int,
   `last_change` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 );
-INSERT INTO `game_status`(`status`,`p_turn`,`moves_left`,`declared_number`,`got_Passed`,`moves`,`last_change`) VALUES ('not_active','1',"0",null,'0',"0",current_timestamp());
+INSERT INTO `game_status`(`status`,`p_turn`,`session1`,`session2`,`moves_left`,`declared_number`,`got_Passed`,`moves`,`last_change`) VALUES ('not_active','1',null,null,"0",null,'0',"0",current_timestamp());
 END $$
 DELIMITER ;
 
