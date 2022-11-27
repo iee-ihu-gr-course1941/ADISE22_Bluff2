@@ -9,14 +9,29 @@ header("Access-Control-Allow-Headers: HELLO, HELLO1");
 require_once "./connect/dbconnect.php"; 
 require_once "board.php";
 
+session_start();
+$_SESSION['player1']=session_id();
+session_regenerate_id(true);
+$_SESSION['player2']=session_id();
 
 $method = $_SERVER['REQUEST_METHOD'];
 $request = explode('/', trim($_SERVER['PATH_INFO'],'/'));
 
 $input = json_decode(file_get_contents('php://input'),true);
 
+
 switch ($r=array_shift($request)) {
-    case 'board' : 
+    case 'startuser':
+	//$temp = sqlreturnoneitem('select status from game_status;',"status")
+	//errorMsg($temp['status']);
+	//if (sqlreturnoneitem('select status from game_status;')==`{"status":"initialized"}`) errorMsg(sqlreturnoneitem('fuck u'));
+	errorMsg(sqlreturnoneitem('select status from game_status;'));
+	//errorMsg(sqlreturnoneitem('select status from game_status;','status'))
+	//if (sqlreturnoneitem("select * from tablo;"))
+	//errorMsg($_SESSION['player1']);
+	//errorMsg($_SESSION['player2']);
+	break;
+	case 'board' : 
 	switch ($b=array_shift($request)) {
 		case '': break;
 		case null: handle_main($method,null);break;
@@ -44,15 +59,21 @@ switch ($r=array_shift($request)) {
 		case 'bluff':
 			handle_bluff($method);
 		break;				
-		default: header("HTTP/1.1 404 Not Found");
+		default: 
+		errorMsg('Wrong command');
+		//header("HTTP/1.1 404 Not Found");
 				break;
 	}
 	break;
-    default: 	
-	header("HTTP/1.1 404 Not Found");
+    default: 
+	errorMsg('HTTP/1.1 404 Not Found');
+	break;
 	exit;
 }
-
+function errorMsg($msg){
+		header('Content-type: application/json');
+		print json_encode(['errormesg' => $msg]);	
+}
 //function handle_main($method, $properties) {
 function handle_main($method) {	
     if($method=='GET') {
@@ -63,7 +84,8 @@ function handle_main($method) {
            reset_board();
     } 
 	else {
-        header('HTTP/1.1405 Method Not Allowed');      
+		errorMsg('HTTP/1.1405 Method Not Allowed');
+        //header('HTTP/1.1405 Method Not Allowed');      
 	}
 }
 
@@ -72,15 +94,15 @@ function handle_throw($method, $properties0, $properties, $properties2, $propert
 		manyMoves($properties0, $properties, $properties2, $properties3, $properties4);
 	}
 	else {
-        header('HTTP/1.1405 Method Not Allowed');      
+        errorMsg('HTTP/1.1405 Method Not Allowed');  
 	}
 }
 function handle_start($method) {
     if($method=='GET') {
 		start();
 	}
-	else {
-        header('HTTP/1.1405 Method Not Allowed');      
+	else {		 
+        errorMsg('HTTP/1.1405 Method Not Allowed');    
 	}
 }
 function handle_pass($method){
