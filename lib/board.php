@@ -2,78 +2,57 @@
 
 
 //function show_board($properties) {
-function show_board() {	
-    global $mysqli;	
-	//$sql = 'CALL show_boardForMe('. $properties . ')'; //. einai to +
-	$sql = 'CALL show_board_For_Active_Player()'; //. einai to +
-	//$sql = 'select * from tablo;';
+function sqlreturnoneitem($sql){ //mporei na dextei kai panw apo ena pedia
+	global $mysqli;	
 	$st = $mysqli->prepare($sql);
 	$st->execute();
 	$res = $st->get_result();
-	header('Content-type: application/json');
-	print json_encode($res->fetch_all(MYSQLI_ASSOC), JSON_PRETTY_PRINT);
+	if ($res->num_rows > 0) {
+		$row = $res->fetch_assoc();
+		//echo $row;
+		echo $row["status"];
+		
+		//$row = $res->fetch_assoc();
+	}
+	//return $row[$item];
 }
-
-function reset_board() {
+function sqlreturner($sql){
 	global $mysqli;	
-	$sql = 'call shuffleAll()';
-	
-	$mysqli->query($sql);
-	//show_board();
-}
-function start() {	
-    global $mysqli;	
-	//$sql = 'CALL show_boardForMe('. $properties . ')'; //. einai to +
-	$sql = 'CALL start()'; //. einai to +
-	
 	$st = $mysqli->prepare($sql);
 	$st->execute();
 	$res = $st->get_result();
 	header('Content-type: application/json');
 	print json_encode($res->fetch_all(MYSQLI_ASSOC), JSON_PRETTY_PRINT);	
 }
+function sqlwithoutreturn($sql){
+	global $mysqli;	
+	$mysqli->query($sql);
+}
+function show_board() {	
+	sqlreturner('CALL show_board_For_Active_Player()');
+}
+
+function reset_board() {
+	sqlwithoutreturn('call shuffleAll()');
+}
+function start() {	
+	sqlreturner('CALL start()');	
+}
 function move($properties,$properties2) {
-	global $mysqli;
 	$sql = 'call playerMove(1,' . $properties2 . ')';
-	$st = $mysqli->prepare($sql);
-	$st->execute();
-	$res = $st->get_result();
-	header('Content-type: application/json');
-	print json_encode($res->fetch_all(MYSQLI_ASSOC), JSON_PRETTY_PRINT);
+	sqlreturner($sql);	
 }
 function manyMoves($properties,$properties0,$properties2,$properties3,$properties4) {
-	global $mysqli;
-	//call manyMoves('J',1,2,NULL,NULL);
 	$sql = 'call manyMoves(' . $properties . ',' . $properties0 . ',' . $properties2 . ',' . $properties3 . ',' . $properties4 . ')';
-	$st = $mysqli->prepare($sql);
-	$st->execute();
-	$res = $st->get_result();
-	header('Content-type: application/json');
-	print json_encode($res->fetch_all(MYSQLI_ASSOC), JSON_PRETTY_PRINT);
+	sqlreturner($sql);	
 }
-function pass() {
-	global $mysqli;	
-	$sql = 'call playerMove(2,null)';
-	$mysqli->query($sql);
-	//show_board();
+function pass() {	
+	sqlwithoutreturn('call playerMove(2,null)');
 }
 function bluff() {
-    global $mysqli;	
-	$sql = 'call playerMove(3,null)';
-	
-	$st = $mysqli->prepare($sql);
-	$st->execute();
-	$res = $st->get_result();
-	header('Content-type: application/json');
-	print json_encode($res->fetch_all(MYSQLI_ASSOC), JSON_PRETTY_PRINT);
+	sqlreturner('call playerMove(3,null)');
 }
 function findPlayerTurn() {
-	global $mysqli;
-	$sql = 'SELECT p_turn FROM game_status';
-	$st = $mysqli->prepare($sql);
-	$st->execute();
-	$res = $st->get_result();
-	header('Content-type: application/json');
-	print json_encode($res->fetch_all(MYSQLI_ASSOC), JSON_PRETTY_PRINT);
+	sqlreturner('SELECT p_turn FROM game_status');
 }
 ?>
