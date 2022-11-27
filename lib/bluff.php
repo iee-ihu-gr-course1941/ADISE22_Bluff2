@@ -41,7 +41,7 @@ switch ($r=array_shift($request)) {
 	switch ($b=array_shift($request)) {
 		case '': break;
 		case null: handle_main($method,null);break;
-		//http://localhost/Bluff2/lib/bluff.php/board/show/1
+		//http://localhost/Bluff2/lib/bluff.php/board/"sessionId"/show
 		case 'start':handle_start($method,null);break;
         case 'show' : //show and start
 			//$c=array_shift($request);
