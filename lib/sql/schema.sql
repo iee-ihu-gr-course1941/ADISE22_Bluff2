@@ -110,6 +110,8 @@ DROP TABLE IF EXISTS game_status;
 CREATE TABLE `game_status` (
   `status` enum('not_active','player_1_waiting','initialized','started','ended','aborded') NOT NULL DEFAULT 'not_active',
   `p_turn` enum('1','2') DEFAULT null,
+  `session1` varchar(50),
+  `session2` varchar(50),
   `moves_left` enum('0','1','2','3','4') DEFAULT null,
   `declared_number` enum ('1','2','3','4','5','6','7','8','9','10','J','Q','K'),
   `got_Passed` enum('0','1') DEFAULT '0',
