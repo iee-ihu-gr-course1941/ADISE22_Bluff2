@@ -22,15 +22,10 @@ $input = json_decode(file_get_contents('php://input'),true);
 
 switch ($r=array_shift($request)) {
     case 'startuser':
-	//$temp = sqlreturnoneitem('select status from game_status;',"status")
-	//errorMsg($temp['status']);
-	//if (sqlreturnoneitem('select status from game_status;')==`{"status":"initialized"}`) errorMsg(sqlreturnoneitem('fuck u'));
-	//errorMsg(sqlreturnoneitem('select * from game_status;', 'status'));
-	if (sqlreturnoneitem('select * from game_status;', 'status')=='initialized'){
-		errorMsg('hello');
+	if (sqlreturnoneitem('select * from game_status;', 'status')=='not_active'){
+		successMsg($_SESSION['player1']);
 	}
-	//errorMsg(sqlreturnoneitem('select status from game_status;','status'))
-	//if (sqlreturnoneitem("select * from tablo;"))
+
 	//errorMsg($_SESSION['player1']);
 	//errorMsg($_SESSION['player2']);
 	break;
@@ -76,6 +71,10 @@ switch ($r=array_shift($request)) {
 function errorMsg($msg){
 		header('Content-type: application/json');
 		print json_encode(['errormesg' => $msg]);	
+}
+function successMsg($msg){
+		header('Content-type: application/json');
+		print json_encode(['successmesg' => $msg]);	
 }
 //function handle_main($method, $properties) {
 function handle_main($method) {	
