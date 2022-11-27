@@ -1,7 +1,7 @@
 <?php
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST');
-header("Access-Control-Allow-Headers: X-Requested-With");
+//header("Access-Control-Allow-Headers: X-Requested-With");
 
 header("Access-Control-Allow-Headers: HELLO, HELLO1");
 //http://localhost/Bluff2/lib/bluff.php/board/show/1 ka8e fora pou kanw allh elegxw gia debug
@@ -25,7 +25,10 @@ switch ($r=array_shift($request)) {
 	//$temp = sqlreturnoneitem('select status from game_status;',"status")
 	//errorMsg($temp['status']);
 	//if (sqlreturnoneitem('select status from game_status;')==`{"status":"initialized"}`) errorMsg(sqlreturnoneitem('fuck u'));
-	errorMsg(sqlreturnoneitem('select status from game_status;'));
+	//errorMsg(sqlreturnoneitem('select * from game_status;', 'status'));
+	if (sqlreturnoneitem('select * from game_status;', 'status')=='initialized'){
+		errorMsg('hello');
+	}
 	//errorMsg(sqlreturnoneitem('select status from game_status;','status'))
 	//if (sqlreturnoneitem("select * from tablo;"))
 	//errorMsg($_SESSION['player1']);
