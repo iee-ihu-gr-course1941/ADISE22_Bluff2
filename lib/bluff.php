@@ -10,16 +10,9 @@ require_once "./connect/dbconnect.php";
 require_once "board.php";
 
 session_start();
-//$_SESSION['player1']=session_id();
-//session_regenerate_id(true);
-//$_SESSION['player2']=session_id();
-
-$sesionID1=session_id();
+if ($sesionID1==null){ $sesionID1=session_id();}
 session_regenerate_id(true);
-$sesionID2=session_id();
-if($_SESSION['player1']==null){$_SESSION['player1']=$sesionID1;}
-if($_SESSION['player2']==null){$_SESSION['player2']=$sesionID2;}
-
+if ($sesionID2==null){ $sesionID2=session_id();}
 
 $activePlayer = 1;
 
@@ -34,19 +27,21 @@ switch ($r=array_shift($request)) {
 		findPlayerTurn();
 	break;	
 	case 'cheatSession1': //mono gia debugging
-		successMsg($_SESSION['player1']);
+		successMsg($sesionID1);
 	break;
 	case 'cheatSession2': //mono gia debugging
-		successMsg($_SESSION['player2']);
+		successMsg($sesionID2);
 	break;	
     case 'startuser':
 	if (sqlreturnoneitem('select * from game_status;', 'status')=='not_active'){
 		sqlwithoutreturn('update game_status SET status = \'player_1_waiting\';');
-		successMsg($_SESSION['player1']);
+		successMsg($sesionID1);
+		//['successmesg' => $msg]
 	}
 	else if (sqlreturnoneitem('select * from game_status;', 'status')=='player_1_waiting'){
 		sqlwithoutreturn('update game_status SET status = \'initialized\';');
-		successMsg($_SESSION['player2']);
+		successMsg($sesionID2);
+
 	}
 	else{
 		errorMsg('2 players already playing.');
@@ -54,7 +49,7 @@ switch ($r=array_shift($request)) {
 	break;
 	case 'board' : 
 	$z=array_shift($request);
-	if ((sqlreturnoneitem('select * from game_status;', 'p_turn')=='1' && $_SESSION['player1'] == $z) || (sqlreturnoneitem('select * from game_status;', 'p_turn')=="2" && $_SESSION['player2'] == $z) || $z ="cheat"){ 	
+	if ((sqlreturnoneitem('select * from game_status;', 'p_turn')=='1' && $sesionID1 == $z) || (sqlreturnoneitem('select * from game_status;', 'p_turn')=="2" && $sesionID2 == $z) || $z ="cheat"){ 	
 	switch ($b=array_shift($request)) {
 		case '': break;
 		case null: handle_main($method,null);break;
@@ -96,11 +91,11 @@ switch ($r=array_shift($request)) {
 }
 function errorMsg($msg){
 		header('Content-type: application/json');
-		print json_encode(['errormesg' => $msg]);	
+		print json_encode(['errormesg' => $msg], JSON_PRETTY_PRINT);	
 }
 function successMsg($msg){
 		header('Content-type: application/json');
-		print json_encode(['successmesg' => $msg]);	
+		print json_encode(['successmesg' => $msg], JSON_PRETTY_PRINT);	
 }
 //function handle_main($method, $properties) {
 function handle_main($method) {	
