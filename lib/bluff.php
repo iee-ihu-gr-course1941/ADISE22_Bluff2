@@ -1,8 +1,6 @@
 <?php
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST');
-//header("Access-Control-Allow-Headers: X-Requested-With");
-
 header("Access-Control-Allow-Headers: HELLO, HELLO1");
 //http://localhost/Bluff2/lib/bluff.php/board/show/1 ka8e fora pou kanw allh elegxw gia debug
 
@@ -10,11 +8,18 @@ require_once "./connect/dbconnect.php";
 require_once "board.php";
 
 session_start();
-if ($sesionID1==null){ $sesionID1=session_id();}
-session_regenerate_id(true);
-if ($sesionID2==null){ $sesionID2=session_id();}
+$sessionID1 = null;
+$sessionID2 = null;
+if (sqlreturnoneitem('select * from game_status;', 'session1')==null){
+	$sessionID1=session_id();
+	sqlwithoutreturn('update game_status set `session1` =' . $sessionID1 . ';');
+}
 
-$activePlayer = 1;
+if (sqlreturnoneitem('select * from game_status;', 'session2')==null){
+	session_regenerate_id(true);
+	$sessionID2=session_id();
+	sqlwithoutreturn('update game_status set `session2` =' . $sessionID2 . ';');
+}
 
 $method = $_SERVER['REQUEST_METHOD'];
 $request = explode('/', trim($_SERVER['PATH_INFO'],'/'));
@@ -27,10 +32,10 @@ switch ($r=array_shift($request)) {
 		findPlayerTurn();
 	break;	
 	case 'cheatSession1': //mono gia debugging
-		successMsg($sesionID1);
+		successMsg($sessionID1);
 	break;
 	case 'cheatSession2': //mono gia debugging
-		successMsg($sesionID2);
+		successMsg($sessionID2);
 	break;	
     case 'startuser':
 	if (sqlreturnoneitem('select * from game_status;', 'status')=='not_active'){
