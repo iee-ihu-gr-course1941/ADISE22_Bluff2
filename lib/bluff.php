@@ -22,6 +22,15 @@ $input = json_decode(file_get_contents('php://input'),true);
 
 
 switch ($r=array_shift($request)) {
+	case 'find':
+		findPlayerTurn();
+	break;	
+	case 'cheatSession1': //mono gia debugging
+		successMsg($_SESSION['player1']);
+	break;
+	case 'cheatSession2': //mono gia debugging
+		successMsg($_SESSION['player2']);
+	break;	
     case 'startuser':
 	if (sqlreturnoneitem('select * from game_status;', 'status')=='not_active'){
 		sqlwithoutreturn('update game_status SET status = \'player_1_waiting\';');
@@ -56,9 +65,6 @@ switch ($r=array_shift($request)) {
 			$g=array_shift($request);
 			handle_throw($method, $c, $d, $e, $f, $g);
 		break;	
-		case 'find':
-			findPlayerTurn();
-		break;
 		case 'pass':
 			handle_pass($method);
 		break;		
