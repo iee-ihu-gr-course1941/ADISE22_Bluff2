@@ -2,7 +2,7 @@
 
 
 //function show_board($properties) {
-function sqlreturnoneitem($sql){ //mporei na dextei kai panw apo ena pedia
+function sqlreturnoneitem($sql, $commandd){ //mporei na dextei kai panw apo ena pedia
 	global $mysqli;	
 	$st = $mysqli->prepare($sql);
 	$st->execute();
@@ -10,7 +10,7 @@ function sqlreturnoneitem($sql){ //mporei na dextei kai panw apo ena pedia
 	if ($res->num_rows > 0) {
 		$row = $res->fetch_assoc();
 		//echo $row;
-		echo $row["status"];
+		return $row[$commandd];
 		
 		//$row = $res->fetch_assoc();
 	}
