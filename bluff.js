@@ -117,7 +117,12 @@ document.addEventListener('DOMContentLoaded', function() {
    $("#pass").hide();
    $("#bluff").hide();
    $("#cardsss").hide();
-   $("#throwCards").hide();   
+   $("#throwCards").hide(); 
+	//auta ta kanei apo thn arxh
+
+	window.functionFlag5="GetUser";
+	getUserss('startuser');
+	
 	$("#newGame").click(function() {
 		refreshInit();	
 		userCards();
@@ -418,7 +423,7 @@ function loadScript(script) {
 function getUserss(whatever){ //auto douleuei, ta alla oxi
 	$.ajax({
 		type: "GET",
-		url: serverName + whatever,
+		url: serverName + whatever.replace("//", "/"),
 		headers: {
 		},		
 		success: function(data){
@@ -461,7 +466,12 @@ function handleGetUsers(data){
 	else if(functionFlag4=='SuffleCards'){
 		functionFlag4=null;
 		refreshing();
-	}			
+	}
+	else if(functionFlag5=='GetUser'){
+		console.log('a');
+		functionFlag5=null;
+		window.sessionID = data;
+	}
 }
 function refreshing(){
 	functionFlag3='userCardsTheRest'
