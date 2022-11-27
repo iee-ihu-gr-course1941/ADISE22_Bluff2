@@ -23,6 +23,7 @@ $input = json_decode(file_get_contents('php://input'),true);
 switch ($r=array_shift($request)) {
     case 'startuser':
 	if (sqlreturnoneitem('select * from game_status;', 'status')=='not_active'){
+		sqlwithoutreturn('update game_status SET status = 'player_1_waiting'');
 		successMsg($_SESSION['player1']);
 	}
 
