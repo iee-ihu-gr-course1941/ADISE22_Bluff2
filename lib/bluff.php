@@ -12,13 +12,13 @@ $sessionID1 = null;
 $sessionID2 = null;
 if (sqlreturnoneitem('select * from game_status;', 'session1')==null){
 	$sessionID1=session_id();
-	sqlwithoutreturn('update game_status set `session1` =' . $sessionID1 . ';');
+	sqlwithoutreturn('update game_status set session1 ="' . $sessionID1 . '"');
 }
 
 if (sqlreturnoneitem('select * from game_status;', 'session2')==null){
 	session_regenerate_id(true);
 	$sessionID2=session_id();
-	sqlwithoutreturn('update game_status set `session2` =' . $sessionID2 . ';');
+	sqlwithoutreturn('update game_status set session2 ="' . $sessionID2 . '"');
 }
 
 $method = $_SERVER['REQUEST_METHOD'];
