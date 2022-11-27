@@ -10,9 +10,17 @@ require_once "./connect/dbconnect.php";
 require_once "board.php";
 
 session_start();
-$_SESSION['player1']=session_id();
+//$_SESSION['player1']=session_id();
+//session_regenerate_id(true);
+//$_SESSION['player2']=session_id();
+
+$sesionID1=session_id();
 session_regenerate_id(true);
-$_SESSION['player2']=session_id();
+$sesionID2=session_id();
+if($_SESSION['player1']==null){$_SESSION['player1']=$sesionID1;}
+if($_SESSION['player2']==null){$_SESSION['player2']=$sesionID2;}
+
+
 $activePlayer = 1;
 
 $method = $_SERVER['REQUEST_METHOD'];
@@ -46,7 +54,7 @@ switch ($r=array_shift($request)) {
 	break;
 	case 'board' : 
 	$z=array_shift($request);
-	if ((sqlreturnoneitem('select * from game_status;', 'p_turn')=="1" && $_SESSION['player1'] == $z) || (sqlreturnoneitem('select * from game_status;', 'p_turn')=="2" && $_SESSION['player2'] == $z)){ 	
+	if ((sqlreturnoneitem('select * from game_status;', 'p_turn')=='1' && $_SESSION['player1'] == $z) || (sqlreturnoneitem('select * from game_status;', 'p_turn')=="2" && $_SESSION['player2'] == $z)){ 	
 	switch ($b=array_shift($request)) {
 		case '': break;
 		case null: handle_main($method,null);break;
