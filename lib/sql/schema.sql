@@ -401,7 +401,6 @@ DELIMITER ;
 CALL start();
 
 
-
 	
 select * from tablo;
 select * from trapoula;
