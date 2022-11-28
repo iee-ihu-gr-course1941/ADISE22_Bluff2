@@ -1,3 +1,4 @@
+
 var serverName = 'http://localhost/Bluff2/lib/bluff.php/';
 //var serverName =  '~public_html/ADISE22_Bluff2/lib/bluff.php/';
 var functionFlag=null;
@@ -83,12 +84,12 @@ function userCards2(){
 }	
 function userCardsTheRest(){
 	functionFlag3='userCardsTheRest';
-	getCards(1);
+	getCards();
 	window.CardOfPlayer = JSON.parse(JSON.stringify(window.CardOfPlayerPlay)); //den einai ayta, alla auta pou dinei o server	
 	
 }	
 function userCardsTheRest2(){
-	//window.CardOfPlayer = JSON.parse(JSON.stringify(window.CardOfPlayerPlay));
+	window.CardOfPlayer = JSON.parse(JSON.stringify(window.CardOfPlayerPlay));
 	startBluff2();
 	functionFlag3=null;
 	console.log('step userCardsTheRest2');
@@ -120,13 +121,12 @@ document.addEventListener('DOMContentLoaded', function() {
    $("#throwCards").hide(); 
 	//auta ta kanei apo thn arxh
 
-	window.functionFlag5="GetUser";
-	getUserss('startuser');
-	
-	$("#newGame").click(function() {
-		refreshInit();	
-		userCards();
+	startUsers();
 
+	
+	$("#newGame").click(function() {		
+		userCards();
+		refreshInit();
 	}); 
 	$("#quitGame").click(function() {
 		window.OpenedCards = [];
@@ -209,6 +209,10 @@ function yourTurn(cardsDown, lastCardsOfEnemey){
 	canPlay = true;	
 }
 function initButtons(){
+		$("#crashRefresh").click(function() {	
+			userCards();
+			refreshInit();			
+		});
 		$("#bluff").click(function() {
 		//if (canPlay){
 		setBluff();
@@ -235,8 +239,6 @@ function initButtons(){
 				var callTheNumber = $("#cardsss").val();
 				$("#announce").remove();
 				$("#announceArea").append('<span id = "announce"><span class=\"announce\" style = "color:green">' + 'Result' + ': </span><span class=\"message-text\">' + window.OpenedCards.length + ' card thrown down!' + '</span><br>' );
-				//for (var i=0;i<window.OpenedCards.length;i++) {$("#announce").append('<img src="https://legendmod.ml/adise/card_backside.jpg" alt="" style="margin:1px;width:70px;height:80px;transform:rotate(10deg);">');}
-				
 					for (var i=0;i<window.OpenedCards.length;i++) {
 						if ((callTheNumber=='A' && window.OpenedCards[i].includes("ace_of"))
 						|| 	(callTheNumber=='2' && window.OpenedCards[i].includes("2_of"))
@@ -275,21 +277,9 @@ function initButtons(){
 						}
 					}
 				}
-				//getCardsAfterThrow();
-				getUserss('board/throw/'+ '"' + callTheNumber + '"' + '/' + temp[0] + '/' + temp[1] + '/' + temp[2]+ '/' + temp[3]);
-				getCardsAfterThrow();
-				/*for (var i=0;i<window.OpenedCards.length;i++){
-					for (var x=0;x<window.CardOfPlayerPlay.length;x++){
-						if (window.CardOfPlayerPlay[x] && window.CardOfPlayerPlay[x].name==window.OpenedCards[i]){	
-							//console.log(window.OpenedCards[i]);
-							window.CardOfPlayerPlay = window.CardOfPlayerPlay.filter(function(item) { //afairei tis kartes pou pesan
-							return item.name !== window.OpenedCards[i];
-							});		
-						}	
-					}						
-				}*/
-				//energeies
-				//refreshInit();				
+
+				getUserss('board/' + window.sessionID + '/throw/'+ '"' + callTheNumber + '"' + '/' + temp[0] + '/' + temp[1] + '/' + temp[2]+ '/' + temp[3]);
+				getCardsAfterThrow();				
 			}
 			else if(window.OpenedCards.length>=5){
 				toastr.info('Too many cards chosen'); 
@@ -299,8 +289,7 @@ function initButtons(){
 			}
 			window.OpenedCards = [];
 			canPlay=false;
-			
-			//}
+
 		}); 
 		
 }	
@@ -314,8 +303,9 @@ function addBluffArea(){
     '<option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="J">J</option><option value="5">5</option><option value="Q">Q</option><option value="K">K</option>'+
     '</select>'+
 	'<button class="button" id="throwCards">Throw Cards</button>'+
+	'<button class="button" id="crashRefresh">Refresh</button>'+
 	//'<button class="button" id="quitGame" @click="resetGame()">Quit Game</button>'+
-	'<div class="info"><div id="time"><span class="label">Time:</span><span class="value">{{ time }}</span></div></div>'+
+	'<div class="info"><div id="player"><span class="player">Player: ' + window.player + '</span></div><div id="uid"><span class="uid">uid: <input id="UserProfileUID1"></span></div><div id="time"><span class="label">Time:</span><span class="value">{{ time }}</span></div></div>'+
 	'<div class="cards">'+
     '<div class="card" v-for="card in cards" :class="{ flipped: card.flipped, found: card.found }" @click="flipCard(card)">'+
     '<div class="back"></div>'+
@@ -323,10 +313,15 @@ function addBluffArea(){
     '</div></div>'+
     '<div class="splash" v-if="showSplash"> </div>'+
 	'</div>');	
+	$("#UserProfileUID1").val(window.sessionID);
+	$("#UserProfileUID1").change(function(){ 
+		checkSessionId($("#UserProfileUID1").val());		
+	});
 	$("#time").hide();	
 
 	initButtons();
 }
+
 function startBluff(){
 	userCardsTheRest();
 }
@@ -457,21 +452,54 @@ function Userss(type,whatever){ //auto douleuei, ta alla oxi
 //postUserss('board/show/');
 //window.returnedFromUsers
 function handleGetUsers(data){
-	console.log("handleGetUsers " + functionFlag)
+	console.log("handleGetUsers " + functionFlag + " , " + functionFlag4 + " , " + functionFlag5);
 	window.returnedFromUsers = data;
-	if(functionFlag=='getCards'){
+	if (data.errormesg){
+		if (data.errormesg == "2 players already playing."){
+			toastr.error('Seems that other players are bluffing right now. Do you want to terminate them and start new game?' + '</br> <button id=enableshortcuts1 class="btn btn-sm btn-primary btn-play btn-enable-shortcuts" onclick="destroygame();" style="width: 100%;margin-top: 10px;border-color: darkblue;">' + 'yes, yes, do your best' + '</button><br><button class="btn btn-sm btn-warning btn-spectate btn-play btn-enable-shortcuts" style="width: 100%;margin-top: 10px;">' + 'oh no no, let them play' + '</button>', "", {
+                        timeOut: 15000,
+                        extendedTimeOut: 15000
+                    }).css("width", "300px")			
+		}
+		/*else if (data.errormesg == "Wrong sessionId or not your turn"){
+			refreshInit();	
+			userCards();
+		}*/
+		else toastr.error(data.errormesg);
+	}	
+	else if(functionFlag=='getCards'){
 		functionFlag=null;
-		getCards2();
+		getCards2();	
+		//startBluff2();
 	}
 	else if(functionFlag4=='SuffleCards'){
 		functionFlag4=null;
 		refreshing();
 	}
 	else if(functionFlag5=='GetUser'){
-		console.log('a');
 		functionFlag5=null;
-		window.sessionID = data;
+		if (data.successmesg){
+			var temp = JSON.parse(data.successmesg)		
+			window.sessionID = temp[0];
+			window.player = temp[1];
+		}
 	}
+	else if(functionFlag5=='CheckSessionId'){
+		functionFlag5=null;
+		if (data.successmesg){
+			window.sessionID = $("#UserProfileUID1").val();		
+			var temp = JSON.parse(data.successmesg);
+			window.player = temp[1];
+			toastr.info('UID found. Player: ' + window.player); 			
+			userCards();
+			refreshInit();
+		}
+	}		
+}
+function destroygame(){
+	functionFlag5='destroy';
+	postUserss('destroy');
+	location.reload();
 }
 function refreshing(){
 	functionFlag3='userCardsTheRest'
@@ -491,21 +519,29 @@ function getCardsAfterThrow(){
 //getUserss('board/throw/"J"/5/6/7/8');
 function SuffleCards(){
 	functionFlag4='SuffleCards';
-	postUserss('board/show/');
+	postUserss('show/');
 	setTimeout(function() {refreshing2();}, 2000);
 	
 }
+function checkSessionId(whatever){
+	window.functionFlag5="CheckSessionId";
+	getUserss('checkSessionId/'+ whatever);
+}
+function startUsers(){
+	window.functionFlag5="GetUser";
+	getUserss('startuser');
+}
 function setPass(){
 	functionFlag4='SuffleCards';
-	postUserss('board/pass');
+	postUserss('board/'+ window.sessionID + '/pass');
 }
 function setBluff(){
 	functionFlag4='SuffleCards';
-	postUserss('board/bluff');
+	postUserss('board/'+ window.sessionID + '/bluff');
 }
 function getCards(){
 	functionFlag='getCards';
-	getUserss('board/show/'); 
+	getUserss('show/'+ window.sessionID); 
 }
 function getCards2(){
 	//refreshInit();
