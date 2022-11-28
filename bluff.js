@@ -454,7 +454,8 @@ function Userss(type,whatever){ //auto douleuei, ta alla oxi
 //postUserss('board/show/');
 //window.returnedFromUsers
 function handleGetUsers(data){
-	console.log("handleGetUsers " + functionFlag + " , " + functionFlag4 + " , " + functionFlag5);
+	console.log("handleGetUsers " + functionFlag + " , " + functionFlag4 + " , " + functionFlag5 + " , " + functionFlag6);
+	console.log(data);
 	window.returnedFromUsers = data;
 	if (data.errormesg){
 		if (data.errormesg == "2 players already playing."){
@@ -463,14 +464,15 @@ function handleGetUsers(data){
                         extendedTimeOut: 15000
                     }).css("width", "300px")			
 		}
-		/*else if (data.errormesg == "Wrong sessionId or not your turn"){
-			refreshInit();	
-			userCards();
-		}*/
+		else if (data.errormesg == "Wrong sessionId"){
+			toastr.error(data.errormesg);
+			functionFlag=null;
+			functionFlag5=null;
+		}
 		else toastr.error(data.errormesg);
 	}	
 	else if(functionFlag=='getCards'){
-		functionFlag=null;
+		functionFlag5=null;
 		getCards2();	
 		//startBluff2();
 	}
