@@ -56,7 +56,7 @@ switch ($r=array_shift($request)) {
 		reset_board();
 	break;
 	case 'checkSessionId':
-		$z=array_shift($request);
+		$z=rawurldecode(array_shift($request));
 		if (sqlreturnoneitem('select * from game_status;', 'session1') == $z){
 			successMsg(json_encode(["true","1"]));
 		}
@@ -64,7 +64,7 @@ switch ($r=array_shift($request)) {
 			successMsg(json_encode(["true","2"]));
 		}
 		else{
-			errorMsg("No such session");
+			errorMsg("No such session " . $z);
 		}
 	break;
     case 'show' : 
