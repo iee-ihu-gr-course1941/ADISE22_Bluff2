@@ -193,3 +193,10 @@ body {
 	min-height:90px;
 	max-height:90px;
 }
+#UserProfileUID1{
+	display: inline-block;
+    background: black;
+    color: white;
+	width: 150px;
+	font-size: 12;
+}
