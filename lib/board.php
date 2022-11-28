@@ -28,8 +28,10 @@ function sqlwithoutreturn($sql){
 	global $mysqli;	
 	$mysqli->query($sql);
 }
-function show_board() {	
-	sqlreturner('CALL show_board_For_Active_Player()');
+function show_board($item) {
+	$sql = 'call show_boardForMe(' . $item . ')';
+	sqlreturner($sql);
+	//sqlreturner('CALL show_board_For_Active_Player()');
 }
 
 function reset_board() {
