@@ -98,9 +98,9 @@ CREATE OR REPLACE TABLE tablo(
    pos enum ('1','2','3','4')
 );
 END $$
-call new_tablo();
-DELIMITER ;
 
+DELIMITER ;
+call new_tablo();
 /*Δημιουργία του ταμπλό*/
 
 DELIMITER $$

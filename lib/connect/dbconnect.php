@@ -8,7 +8,7 @@ $pass=$DB_PASS;
 
 if(gethostname()=='users.iee.ihu.gr' || gethostname()=='legendmod.ml/adise') {
 	//$mysqli = new mysqli($host, $user, $pass, $db,null,'~/mysql/run/mysql.sock');
-    $mysqli = new mysqli('users.iee.ihu.gr', $user, $pass,'bluff',null,'~/mysql/run/mysql.sock');
+    $mysqli = new mysqli('localhost', $user, $pass,'bluff',null,'/home/student/it/2017/it174940/mysql/run/mysql.sock');
     // '/home/student/it/2003/it032378/mysql/run/mysql.sock'
 } else {
         //test
