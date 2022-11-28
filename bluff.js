@@ -5,6 +5,8 @@ var functionFlag=null;
 var functionFlag2=null;
 var functionFlag3=null;
 var functionFlag4=null;
+var functionFlag5=null;
+var functionFlag6=null;
 var canPlay=false;
 window.OpenedCards = [];
 window.CardOfPlayer = [];
@@ -315,7 +317,7 @@ function addBluffArea(){
 	'</div>');	
 	$("#UserProfileUID1").val(window.sessionID);
 	$("#UserProfileUID1").change(function(){ 
-		checkSessionId($("#UserProfileUID1").val());		
+		checkSessionId(encodeURIComponent($("#UserProfileUID1").val()));		
 	});
 	$("#time").hide();	
 
@@ -484,8 +486,8 @@ function handleGetUsers(data){
 			window.player = temp[1];
 		}
 	}
-	else if(functionFlag5=='CheckSessionId'){
-		functionFlag5=null;
+	else if(functionFlag6=='CheckSessionId'){
+		functionFlag6=null;
 		if (data.successmesg){
 			window.sessionID = $("#UserProfileUID1").val();		
 			var temp = JSON.parse(data.successmesg);
@@ -524,7 +526,7 @@ function SuffleCards(){
 	
 }
 function checkSessionId(whatever){
-	window.functionFlag5="CheckSessionId";
+	window.functionFlag6="CheckSessionId";
 	getUserss('checkSessionId/'+ whatever);
 }
 function startUsers(){
