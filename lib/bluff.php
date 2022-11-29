@@ -115,6 +115,7 @@ switch ($r=array_shift($request)) {
 }
 function errorMsg($msg, $commander){
 		header('Content-type: application/json');
+		//header("HTTP/1.1 400 Bad Request");
 		print json_encode(['errormesg' => $msg, 'commander' => $commander], JSON_PRETTY_PRINT);	
 }
 function successMsg($msg, $commander){
