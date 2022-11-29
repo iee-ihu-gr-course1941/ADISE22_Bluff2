@@ -1,18 +1,18 @@
 <?php
 	$CurPageURL = $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
-	if (str_contains($CurPageURL, 'it174940')) {
+	if (preg_match('/\bit174940\b/', $CurPageURL)) {
 		$DB_PASS = 's8umaCRu*';
 		$DB_USER = 'root';
 		$dbUsers = "/home/student/it/2017/it174940/mysql/run/mysql.sock";
 		$db = 'bluff';
 	}
-	else if (str_contains($CurPageURL, 'it032378')) {
+	else if (preg_match('/\bit032378\b/', $CurPageURL)) {
 		$DB_PASS = '';
 		$DB_USER = 'it032378';
 		$dbUsers = "/home/student/it/2003/it032378/mysql/run/mysql.sock";
 		$db = 'test';
 	}	
-	else{
+	else if (preg_match('/\blocalhost\b/', $CurPageURL)) {
 		$DB_PASS = '';
 		$DB_USER = 'root';
 		$db = 'test';
