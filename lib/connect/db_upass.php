@@ -13,6 +13,8 @@
 		$db = 'test';
 	}	
 	else{
+		$DB_PASS = '';
+		$DB_USER = 'root';
 		$db = 'test';
 	}
 	//echo $CurPageURL;
