@@ -410,4 +410,16 @@ CALL start();
 select * from tablo;
 select * from trapoula;
 
+/*
+DELIMITER $$
+CREATE TRIGGER checklastaction BEFORE UPDATE ON game_status
+       FOR EACH ROW
+       BEGIN
+           IF OLD.last_change  >= DATE_SUB(NOW(), INTERVAL 5 MINUTE) THEN
+               SET NEW.status = 'aborted';
+           END IF;
+       END $$
+delimiter ;   
+*/
+
 
