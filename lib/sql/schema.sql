@@ -142,6 +142,11 @@ END $$
 DELIMITER ;
 
 call new_players();
+<<<<<<< Updated upstream
+=======
+
+
+>>>>>>> Stashed changes
 
 
 
