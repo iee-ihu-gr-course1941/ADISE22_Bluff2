@@ -139,9 +139,9 @@ CREATE TABLE `players` (
   PRIMARY KEY (`side`)
 );
 END $$
-call new_players();
 DELIMITER ;
 
+call new_players();
 
 
 
