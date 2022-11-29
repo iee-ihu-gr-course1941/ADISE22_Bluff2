@@ -1,7 +1,10 @@
-
-var serverName = 'http://localhost/Bluff2/lib/bluff.php/';
-console.log(window.location.href);
-//var serverName =  './lib/bluff.php/';
+var serverName;
+if (location.href.includes("http://localhost/") || location.href.includes("file:///C:/")){
+	serverName = 'http://localhost/Bluff2/lib/bluff.php/';
+}
+else{
+	serverName =  './lib/bluff.php/';
+}
 //var functionFlag=null;
 var functionFlag2=null;
 var functionFlag3=null;
