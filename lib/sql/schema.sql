@@ -1,3 +1,4 @@
+/*it174940@users:~/public_html/ADISE22_Bluff2$ mysql -u root -p bluff < lib/sql/schema.sql*/
 
 /* 8elei ta initialized, ktpl elegxous, elegxo me timestamp aborted */
 SET SQL_SAFE_UPDATES = 0;
