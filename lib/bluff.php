@@ -23,10 +23,10 @@ switch ($r=array_shift($request)) {
 		findPlayerTurn();
 	break;	
 	case 'cheatSession1': //mono gia debugging
-		successMsg($sessionID1);
+		successMsg($sessionID1, 'cheatSession1');
 	break;
 	case 'cheatSession2': //mono gia debugging
-		successMsg($sessionID2);
+		successMsg($sessionID2, 'cheatSession2');
 	break;	
     case 'startuser':
 	if (sqlreturnoneitem('select * from game_status;', 'status')=='not_active'){
@@ -35,7 +35,7 @@ switch ($r=array_shift($request)) {
 			sqlwithoutreturn('update game_status set session1 ="' . $sessionID1 . '"');
 		}
 		sqlwithoutreturn('update game_status SET status = \'player_1_waiting\';');			
-		successMsg(json_encode([$sessionID1,"1"]));
+		successMsg(json_encode([$sessionID1,"1"]),'startuser');
 	}
 	else if (sqlreturnoneitem('select * from game_status;', 'status')=='player_1_waiting'){
 		if ($sessionID2==null){
@@ -44,10 +44,10 @@ switch ($r=array_shift($request)) {
 			sqlwithoutreturn('update game_status set session2 ="' . $sessionID2 . '"');
 		}		
 		sqlwithoutreturn('update game_status SET status = \'initialized\';');	
-		successMsg(json_encode([$sessionID2,"2"]));
+		successMsg(json_encode([$sessionID2,"2"]),'startuser');
 	}
 	else{
-		errorMsg('2 players already playing.');
+		errorMsg('2 players already playing.','startuser');
 	}
 	break;
 	case 'destroy':
@@ -58,20 +58,20 @@ switch ($r=array_shift($request)) {
 	case 'checkSessionId':
 		$z=rawurldecode(array_shift($request));
 		if (sqlreturnoneitem('select * from game_status;', 'session1') == $z){
-			successMsg(json_encode(["true","1"]));
+			successMsg(json_encode(["true","1"]),'checkSessionId');
 		}
 		else if (sqlreturnoneitem('select * from game_status;', 'session2') == $z){
-			successMsg(json_encode(["true","2"]));
+			successMsg(json_encode(["true","2"]),'checkSessionId');
 		}
 		else{
-			errorMsg("No such session " . $z);
+			errorMsg("No such session " . $z,'checkSessionId');
 		}
 	break;
     case 'show' : 
 		$z=array_shift($request);
 		if ($sessionID1 == $z) handle_main($method,1);
 		else if ($sessionID2 == $z) handle_main($method,2); 
-		else errorMsg('Wrong sessionId');
+		else errorMsg('Wrong sessionId','show');
 	break; 
 	case 'board' : 
 	$z=array_shift($request);
@@ -99,27 +99,27 @@ switch ($r=array_shift($request)) {
 			handle_bluff($method);
 		break;				
 		default: 
-		errorMsg('Wrong command');
+		errorMsg('Wrong command','board');
 		//header("HTTP/1.1 404 Not Found");
 				break;
 		}
 	}
 	else {
-		errorMsg('Wrong sessionId or not your turn');
+		errorMsg('Wrong sessionId or not your turn','board');
 	}	
 	break;
     default: 
-	errorMsg('HTTP/1.1 404 Not Found');
+	errorMsg('HTTP/1.1 404 Not Found',"");
 	break;
 	exit;
 }
-function errorMsg($msg){
+function errorMsg($msg, $commander){
 		header('Content-type: application/json');
-		print json_encode(['errormesg' => $msg], JSON_PRETTY_PRINT);	
+		print json_encode(['errormesg' => $msg, 'commander' => $commander], JSON_PRETTY_PRINT);	
 }
-function successMsg($msg){
+function successMsg($msg, $commander){
 		header('Content-type: application/json');
-		print json_encode(['successmesg' => $msg], JSON_PRETTY_PRINT);	
+		print json_encode(['successmesg' => $msg, 'commander' => $commander], JSON_PRETTY_PRINT);	
 }
 //function handle_main($method, $properties) {
 function handle_main($method,$item) {	
@@ -131,7 +131,7 @@ function handle_main($method,$item) {
            reset_board();
     } 
 	else {
-		errorMsg('HTTP/1.1405 Method Not Allowed');
+		errorMsg('HTTP/1.1405 Method Not Allowed','board');
         //header('HTTP/1.1405 Method Not Allowed');      
 	}
 }
@@ -141,7 +141,7 @@ function handle_throw($method, $properties0, $properties, $properties2, $propert
 		manyMoves($properties0, $properties, $properties2, $properties3, $properties4);
 	}
 	else {
-        errorMsg('HTTP/1.1405 Method Not Allowed');  
+        errorMsg('HTTP/1.1405 Method Not Allowed','board');  
 	}
 }
 function handle_start($method) {
@@ -149,7 +149,7 @@ function handle_start($method) {
 		start();
 	}
 	else {		 
-        errorMsg('HTTP/1.1405 Method Not Allowed');    
+        errorMsg('HTTP/1.1405 Method Not Allowed','board');    
 	}
 }
 function handle_pass($method){
