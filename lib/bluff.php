@@ -20,7 +20,8 @@ $input = json_decode(file_get_contents('php://input'),true);
 
 switch ($r=array_shift($request)) {
 	case 'find':
-		findPlayerTurn();
+		//findPlayerTurn();
+		echo 'aaaaaaaaaaaaaaa';
 	break;	
 	case 'cheatSession1': //mono gia debugging
 		successMsg($sessionID1, 'cheatSession1');
