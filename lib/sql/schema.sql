@@ -122,6 +122,7 @@ INSERT INTO `game_status`(`status`,`p_turn`,`session1`,`session2`,`moves_left`,`
 END $$
 DELIMITER ;
 
+
 /* UPDATE game_status SET moves_left='4'; */
 call new_game_status();
 
@@ -142,11 +143,6 @@ END $$
 DELIMITER ;
 
 call new_players();
-<<<<<<< Updated upstream
-=======
-
-
->>>>>>> Stashed changes
 
 
 
