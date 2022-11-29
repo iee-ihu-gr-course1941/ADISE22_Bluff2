@@ -1,12 +1,12 @@
 
 var serverName = 'http://localhost/Bluff2/lib/bluff.php/';
 //var serverName =  '~public_html/ADISE22_Bluff2/lib/bluff.php/';
-var functionFlag=null;
+//var functionFlag=null;
 var functionFlag2=null;
 var functionFlag3=null;
 var functionFlag4=null;
 var functionFlag5=null;
-var functionFlag6=null;
+//var functionFlag6=null;
 var canPlay=false;
 window.OpenedCards = [];
 window.CardOfPlayer = [];
@@ -454,9 +454,9 @@ function Userss(type,whatever){ //auto douleuei, ta alla oxi
 //postUserss('board/show/');
 //window.returnedFromUsers
 function handleGetUsers(data){
-	console.log("handleGetUsers " + functionFlag + " , " + functionFlag4 + " , " + functionFlag5 + " , " + functionFlag6);
+	console.log("handleGetUsers " + functionFlag4 + " , " + functionFlag5);
 	console.log(data);
-	window.returnedFromUsers = data;
+	
 	if (data.errormesg){
 		if (data.errormesg == "2 players already playing."){
 			toastr.error('Seems that other players are bluffing right now. Do you want to terminate them and start new game?' + '</br> <button id=enableshortcuts1 class="btn btn-sm btn-primary btn-play btn-enable-shortcuts" onclick="destroygame();" style="width: 100%;margin-top: 10px;border-color: darkblue;">' + 'yes, yes, do your best' + '</button><br><button class="btn btn-sm btn-warning btn-spectate btn-play btn-enable-shortcuts" style="width: 100%;margin-top: 10px;">' + 'oh no no, let them play' + '</button>', "", {
@@ -466,13 +466,19 @@ function handleGetUsers(data){
 		}
 		else if (data.errormesg == "Wrong sessionId"){
 			toastr.error(data.errormesg);
-			functionFlag=null;
+			//functionFlag=null;
+			functionFlag4=null;
 			functionFlag5=null;
 		}
 		else toastr.error(data.errormesg);
 	}	
-	else if(functionFlag=='getCards'){
-		functionFlag5=null;
+	else if(data.successmesg && data.commander && data.commander == 'show_board') { 
+	//else if(functionFlag=='getCards'){
+		//functionFlag5=null;
+		window.returnedFromUsers = JSON.parse(data.successmesg);
+		//if (window.returnedFromUsers.scalar) window.returnedFromUsers = JSON.parse(window.returnedFromUsers.scalar); //weird bug fix
+		//else window.returnedFromUsers = JSON.parse(window.returnedFromUsers)
+		//console.log(window.returnedFromUsers);
 		getCards2();	
 		//startBluff2();
 	}
@@ -480,16 +486,16 @@ function handleGetUsers(data){
 		functionFlag4=null;
 		refreshing();
 	}
-	else if(functionFlag5=='GetUser'){
-		functionFlag5=null;
-		if (data.successmesg){
+	else if(data.successmesg && data.commander && data.commander == 'startuser') { 
+	//else if(functionFlag5=='GetUser'){
+		//functionFlag5=null;
 			var temp = JSON.parse(data.successmesg)		
 			window.sessionID = temp[0];
 			window.player = temp[1];
-		}
 	}
-	else if(functionFlag6=='CheckSessionId'){
-		functionFlag6=null;
+	else if(data.successmesg && data.commander && data.commander == 'checkSessionId') { 
+	//else if(functionFlag6=='CheckSessionId'){
+		//functionFlag6=null;
 		if (data.successmesg){
 			window.sessionID = $("#UserProfileUID1").val();		
 			var temp = JSON.parse(data.successmesg);
@@ -528,11 +534,11 @@ function SuffleCards(){
 	
 }
 function checkSessionId(whatever){
-	window.functionFlag6="CheckSessionId";
+	//window.functionFlag6="CheckSessionId";
 	getUserss('checkSessionId/'+ whatever);
 }
 function startUsers(){
-	window.functionFlag5="GetUser";
+	//window.functionFlag5="GetUser";
 	getUserss('startuser');
 }
 function setPass(){
@@ -544,7 +550,7 @@ function setBluff(){
 	postUserss('board/'+ window.sessionID + '/bluff');
 }
 function getCards(){
-	functionFlag='getCards';
+	//functionFlag='getCards';
 	getUserss('show/'+ window.sessionID); 
 }
 function getCards2(){
