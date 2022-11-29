@@ -1,6 +1,5 @@
 <?php
-	$protocol = ((!emptyempty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";  
-	$CurPageURL = $protocol . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];  
+	$CurPageURL = $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 	if (str_contains($CurPageURL, 'it174940')) {
 		$DB_PASS = 's8umaCRu*';
 		$DB_USER = 'root';
@@ -16,9 +15,10 @@
 	else{
 		$db = 'test';
 	}
+	//echo $CurPageURL;
+	//localhost/Bluff2/lib/connect/db_upass.php
 	/*if(gethostname()=='users.iee.ihu.gr' || gethostname()=='legendmod.ml/adise') {
 		$db = 'bluff';
 	} else {
-	    $db = 'test';*/
-}	
+	    $db = 'test';*/	
 ?>
