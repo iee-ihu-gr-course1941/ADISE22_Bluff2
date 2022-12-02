@@ -243,10 +243,11 @@ function initButtons(){
 			//if (canPlay){	
 			if(window.OpenedCards && window.OpenedCards.length>0 && window.OpenedCards.length<5){
 				var callTheNumber = $("#cardsss").val();
+				if (callTheNumber=='A') callTheNumber="1";
 				$("#announce").remove();
 				$("#announceArea").append('<span id = "announce"><span class=\"announce\" style = "color:green">' + 'Result' + ': </span><span class=\"message-text\">' + window.OpenedCards.length + ' card thrown down!' + '</span><br>' );
 					for (var i=0;i<window.OpenedCards.length;i++) {
-						if ((callTheNumber=='A' && window.OpenedCards[i].includes("ace_of"))
+						if ((callTheNumber=='1' && window.OpenedCards[i].includes("ace_of"))
 						|| 	(callTheNumber=='2' && window.OpenedCards[i].includes("2_of"))
 						|| 	(callTheNumber=='3' && window.OpenedCards[i].includes("3_of"))
 						|| 	(callTheNumber=='4' && window.OpenedCards[i].includes("4_of"))

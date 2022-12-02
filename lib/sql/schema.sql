@@ -300,12 +300,13 @@ BEGIN
 	DECLARE moves INT;
 	IF (card2 = NULL AND card3 = NULL AND card4 = NULL) THEN SET moves=1; 
 	ELSEIF (card3 = NULL AND card4 = NULL) THEN SET moves=2; 
-	ELSEIF (card3 = NULL) THEN SET moves=3; 
+	ELSEIF (card4 = NULL) THEN SET moves=3; 
 	ELSE SET moves=4; 
 	END IF;
-	call pass();
+	
 	UPDATE game_status SET declared_number = declaredN;	
 	UPDATE game_status SET moves_left=moves;
+	call pass();
       simple_loop: LOOP
 		IF (moves=4) THEN
 			call playerMove(1,card4);
