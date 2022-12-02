@@ -115,11 +115,11 @@ CREATE TABLE `game_status` (
   `session2` varchar(50),
   `moves_left` enum('0','1','2','3','4') DEFAULT null,
   `declared_number` enum ('1','2','3','4','5','6','7','8','9','10','J','Q','K'),
-  `got_Passed` enum('0','1') DEFAULT '0',
+  `got_passed` enum('0','1') DEFAULT '0',
    moves int,
   `last_change` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 );
-INSERT INTO `game_status`(`status`,`p_turn`,`session1`,`session2`,`moves_left`,`declared_number`,`got_Passed`,`moves`,`last_change`) VALUES ('not_active','1',null,null,"0",null,'0',"0",current_timestamp());
+INSERT INTO `game_status`(`status`,`p_turn`,`session1`,`session2`,`moves_left`,`declared_number`,`got_passed`,`moves`,`last_change`) VALUES ('not_active','1',null,null,"0",null,'0',"0",current_timestamp());
 END $$
 DELIMITER ;
 
@@ -194,7 +194,7 @@ DELIMITER $$
 
   DELETE FROM tablo WHERE pos = 3;
   DELETE FROM tablo WHERE pos = 4;
-  UPDATE game_status set got_passed=0;
+  UPDATE game_status set got_passed='0';
  END $$  
 DELIMITER ;
 
@@ -257,7 +257,7 @@ DELIMITER ;
   SELECT got_passed into passed from game_status;
   IF (passed='1') THEN 
 	call passFinal();
-  ELSE UPDATE game_status set got_passed=1;
+  ELSE UPDATE game_status set got_passed='1';
   END IF;
   update tablo set pos = '3' WHERE pos = '4';
   END $$ 
@@ -345,7 +345,7 @@ BEGIN
     Declared Number = ο αριθμός που δηλώνει στην αρχή του γύρου*/
 	DECLARE movesfinal INT;
 	IF (choice = '1') THEN call move(cards);
-	update game_status SET got_passed=0;
+	update game_status SET got_passed='0';
 	/*movesfinal = movesfinal + 1;*/
 	UPDATE game_status SET moves = movesFinal;
 		/*IF (movesfinal='1') UPDATE game_status SET status = 'started';
@@ -355,7 +355,7 @@ BEGIN
 	update game_status set p_turn=if(p_turn='1','2','1');
 	ELSEIF (choice = '3') THEN
     call bluffOnCard();
-	update game_status set got_passed=0;
+	update game_status set got_passed='0';
 	END IF;
 	/*update game_status set p_turn=if(p_turn='1','2','1');
 	call show_board_For_Active_Player();
