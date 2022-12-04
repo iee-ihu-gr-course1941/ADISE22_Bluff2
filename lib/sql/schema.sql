@@ -93,7 +93,7 @@ CREATE OR REPLACE PROCEDURE new_tablo()
 BEGIN 
 drop table IF EXISTS tablo;
 CREATE OR REPLACE TABLE tablo(
-   tablocard_id INT PRIMARY KEY AUTO_INCREMENT,
+   /*tablocard_id INT PRIMARY KEY AUTO_INCREMENT,*/
    cardNumber enum ('1','2','3','4','5','6','7','8','9','10','J','Q','K') not null, 
    card tinyint,
    pos enum ('1','2','3','4')
@@ -113,13 +113,15 @@ CREATE TABLE `game_status` (
   `p_turn` enum('1','2') DEFAULT null,
   `session1` varchar(50),
   `session2` varchar(50),
+  `notes1` varchar(50),
+  `notes2` varchar(50),
   `moves_left` enum('0','1','2','3','4') DEFAULT null,
   `declared_number` enum ('1','2','3','4','5','6','7','8','9','10','J','Q','K'),
   `got_passed` enum('0','1') DEFAULT '0',
-   moves int,
+  `total_moves` int,
   `last_change` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 );
-INSERT INTO `game_status`(`status`,`p_turn`,`session1`,`session2`,`moves_left`,`declared_number`,`got_passed`,`moves`,`last_change`) VALUES ('not_active','1',null,null,"0",null,'0',"0",current_timestamp());
+INSERT INTO game_status(`status`,`p_turn`,`session1`,`session2`,`notes1`,`notes2`,`moves_left`,`declared_number`,`got_passed`,`total_moves`,`last_change`) VALUES ('not_active','1',null,null,'Welcome player 1','Welome player 2',"0",null,'0',0,current_timestamp());
 END $$
 DELIMITER ;
 
@@ -153,8 +155,7 @@ DELIMITER $$
   Declare card1 tinyint;  
   Declare card2 varchar(2);  
   set card1 :=(SELECT card_id FROM trapoula ORDER BY RAND() LIMIT 1 );
-  set card2 :=(SELECT card_number FROM trapoula where card_id=card1 );
-
+  set card2 :=(SELECT card_number FROM trapoula where card_id=card1 ); 
   INSERT INTO tablo (cardNumber,card,pos) VALUES (card2,card1,poss);
   delete from trapoula where card_id=card1;
   END $$
@@ -163,6 +164,8 @@ DELIMITER;
 DELIMITER $$
   CREATE OR REPLACE PROCEDURE shuffleAll()
   BEGIN
+  
+	  
 	  drop table if exists tablo;
       call new_tablo();
 	  call new_trapoula();
@@ -182,6 +185,7 @@ DELIMITER $$
             LEAVE simple_loop;
          END IF;
    END LOOP simple_loop;
+   ALTER TABLE tablo ORDER BY cardNumber;
    call new_trapoula(); 
  END $$
 DELIMITER ;
@@ -202,6 +206,7 @@ DELIMITER $$
   CREATE OR REPLACE PROCEDURE takeBackAll() /*Dinei ston paikth ola ta fylla pou einai katw*/
   BEGIN
 	DECLARE player varchar(1);
+	UPDATE game_status set got_passed='0';
 	SELECT p_turn into player from game_status;	
 	UPDATE tablo SET pos = player WHERE pos = '3';
 	UPDATE tablo SET pos = player WHERE pos = '4';
@@ -214,16 +219,25 @@ DELIMITER $$
 DELIMITER $$
 CREATE OR REPLACE PROCEDURE bluffOnCard() 
 BEGIN
+	DECLARE player varchar(1);	
 	DECLARE DeclaredNumber varchar(2);
 	DECLARE metablhth varchar(2);
-	SELECT `declared_number` into DeclaredNumber from game_status;
+	SELECT p_turn into player from game_status;
+	
+	SELECT declared_number into DeclaredNumber from game_status;
 	select ( sum(cardNumber <> DeclaredNumber) ) as metablhth
 	from tablo	
 	where pos='4';	
-	IF (metablhth > 0) THEN 
-	update game_status set p_turn=if(p_turn='1','2','1');
+	IF (metablhth = 0) THEN 
+		IF (player=1) THEN UPDATE game_status SET notes1 = CONCAT('player ',player, ' bluffed on card ', DeclaredNumber, ' and won');
+		ELSEIF (player=2) THEN UPDATE game_status SET notes2 = CONCAT('player ',player, ' bluffed on card ', DeclaredNumber, ' and won');
+		END IF;	
 	CALL takeBackAll();
-	ELSE
+	ELSE 
+		IF (player=1) THEN UPDATE game_status SET notes1 = CONCAT('player ',player, ' bluffed on card ', DeclaredNumber, ' and lost');
+		ELSEIF (player=2) THEN UPDATE game_status SET notes2 = CONCAT('player ',player, ' bluffed on card ', DeclaredNumber, ' and lost');
+		END IF;	
+	update game_status set p_turn=if(p_turn='1','2','1');
 	CALL takeBackAll();
 	END IF;
 END $$
@@ -286,6 +300,17 @@ BEGIN
 END $$
 DELIMITER ;
 
+/*
+DELIMITER $$
+  CREATE OR REPLACE PROCEDURE stat() 
+  BEGIN
+  CREATE VIEW stats 
+SELECT COUNT(*) FROM tablo WHERE pos=1
+UNION
+SELECT COUNT(*) FROM tablo WHERE pos=2
+  END $$ 
+ DELIMITER ;
+*/
 
 /* Auto ekteleitai gia na epistrefei thn parapanw, opou DeclaredNumber to 1 h 2
 CALL checkVictory(@TotalSum); 
@@ -297,38 +322,48 @@ SELECT @TotalSum;
 DELIMITER $$
 CREATE OR REPLACE PROCEDURE manyMoves(declaredN varchar(2), card1 varchar(10),card2 varchar(10),card3 varchar(10),card4 varchar(10))
 BEGIN 
-	DECLARE moves INT;
-	IF (card2 = NULL AND card3 = NULL AND card4 = NULL) THEN SET moves=1; 
-	ELSEIF (card3 = NULL AND card4 = NULL) THEN SET moves=2; 
-	ELSEIF (card4 = NULL) THEN SET moves=3; 
-	ELSE SET moves=4; 
+	DECLARE moves2 INT;
+    DECLARE player varchar(1);
+    SELECT p_turn into player from game_status;	
+	
+	IF (card2 IS NULL) THEN SET moves2=1;
+	ELSEIF (card3 IS NULL) THEN SET moves2=2;
+	ELSEIF (card4 IS NULL) THEN SET moves2=3;
+	ELSE SET moves2=4;
 	END IF;
 	
+	IF (player=1) THEN UPDATE game_status SET notes1 = CONCAT('player ',player, ' thrown ', moves2, ' cards on table');
+	ELSEIF (player=2) THEN UPDATE game_status SET notes2 = CONCAT('player ',player, ' thrown ', moves2, ' cards on table');
+	END IF;
+		
 	UPDATE game_status SET declared_number = declaredN;	
-	UPDATE game_status SET moves_left=moves;
-	call pass();
+	UPDATE game_status SET moves_left=moves2;
+	update tablo set pos = '3' WHERE pos = '4';
       simple_loop: LOOP
-		IF (moves=4) THEN
+		IF (moves2=4) THEN
 			call playerMove(1,card4);
-		ELSEIF (moves=3) THEN
+		ELSEIF (moves2=3) THEN
 			call playerMove(1,card3);
-		ELSEIF (moves=2) THEN
+		ELSEIF (moves2=2) THEN
 			call playerMove(1,card2);
-		ELSEIF (moves=1) THEN
+		ELSEIF (moves2=1) THEN
 			call playerMove(1,card1);
 		END IF;		
-		 SET moves = moves-1;
-         IF moves=0 THEN
+		 SET moves2 = moves2-1;
+         IF moves2=0 THEN	
             LEAVE simple_loop;
          END IF;
     END LOOP simple_loop;
-	UPDATE game_status SET moves_left='0';
+	/*UPDATE game_status SET moves_left='0';*/
 	CALL checkVictory(@TotalSum); 
 	SET @b = @TotalSum;
 	IF @b = 1 THEN
 		UPDATE game_status SET status = 'ended';
 	END IF;
-	update game_status set p_turn=if(p_turn='1','2','1');	
+	update game_status set p_turn=if(p_turn='1','2','1');
+	UPDATE game_status SET total_moves = total_moves+1;		
+	/*update game_status set notes1='wtf';
+	update game_status set p_turn=if(p_turn='1','2','1');	*/
 END $$
 DELIMITER ;
 
@@ -343,23 +378,21 @@ BEGIN
     choice = η κίνηση που θα κάνει ο παίκτης
     cards = οι κάρτες που θα ρίξει ο παίκτης 
     Declared Number = ο αριθμός που δηλώνει στην αρχή του γύρου*/
-	DECLARE movesfinal INT;
+	DECLARE player varchar(1);
+	SELECT p_turn into player from game_status;
+	
 	IF (choice = '1') THEN call move(cards);
-	update game_status SET got_passed='0';
-	/*movesfinal = movesfinal + 1;*/
-	UPDATE game_status SET moves = movesFinal;
-		/*IF (movesfinal='1') UPDATE game_status SET status = 'started';
-		END IF;*/
+	update game_status SET got_passed='0';		
     ELSEIF (choice = '2') THEN
-	call pass();	
-	update game_status set p_turn=if(p_turn='1','2','1');
+		IF (player=1) THEN UPDATE game_status SET notes1 = CONCAT('player ',player, ' passed');
+		ELSEIF (player=2) THEN UPDATE game_status SET notes2 = CONCAT('player ',player, ' passed');
+		END IF;	
+	call pass();
+	update game_status set p_turn=if(p_turn='1','2','1');	
 	ELSEIF (choice = '3') THEN
     call bluffOnCard();
-	update game_status set got_passed='0';
+	update game_status set got_passed='0';	
 	END IF;
-	/*update game_status set p_turn=if(p_turn='1','2','1');
-	call show_board_For_Active_Player();
-	update game_status set p_turn=if(p_turn='1','2','1'); auto einai fake*/
 END $$
 DELIMITER ;
 
