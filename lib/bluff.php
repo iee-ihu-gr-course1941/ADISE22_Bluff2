@@ -73,6 +73,9 @@ switch ($r=array_shift($request)) {
 		else if ($sessionID2 == $z) handle_main($method,2); 
 		else errorMsg('Wrong sessionId','show');
 	break; 
+    case 'status' : 
+		handle_status($method);
+	break; 	
 	case 'board' : 
 	$z=array_shift($request);
 	if ((sqlreturnoneitem('select * from game_status;', 'p_turn')=='1' && $sessionID1 == $z) || (sqlreturnoneitem('select * from game_status;', 'p_turn')=="2" && $sessionID2 == $z) || $z == "cheat"){ 	
@@ -136,7 +139,14 @@ function handle_main($method,$item) {
         //header('HTTP/1.1405 Method Not Allowed');      
 	}
 }
-
+function handle_status($method) {	
+    if($method=='GET') {
+		game_status();
+	}
+	else {
+		errorMsg('HTTP/1.1405 Method Not Allowed','status');  
+	}
+}
 function handle_throw($method, $properties0, $properties, $properties2, $properties3, $properties4) {
     if($method=='GET') {
 		manyMoves($properties0, $properties, $properties2, $properties3, $properties4);

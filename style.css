@@ -200,3 +200,10 @@ body {
 	width: 150px;
 	font-size: 12;
 }
+#notes1, #notes2, #last_change {
+  display: inline-block;
+  width: 400px;
+}
+.player{
+  color: green;
+}

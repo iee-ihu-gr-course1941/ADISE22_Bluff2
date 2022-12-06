@@ -115,13 +115,17 @@ CREATE TABLE `game_status` (
   `session2` varchar(50),
   `notes1` varchar(50),
   `notes2` varchar(50),
+  `totalcards1` int, /*arithmos xartiwn paikth 1*/
+  `totalcards2` int, /*arithmos xartiwn paikth 1*/
+  `totalmpaza` int, /*arithmos xartiwn paikth teleutaia poy phksan*/
+  `totallast` int, /*arithmos xartiwn paikth 1*/
   `moves_left` enum('0','1','2','3','4') DEFAULT null,
   `declared_number` enum ('1','2','3','4','5','6','7','8','9','10','J','Q','K'),
   `got_passed` enum('0','1') DEFAULT '0',
   `total_moves` int,
   `last_change` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 );
-INSERT INTO game_status(`status`,`p_turn`,`session1`,`session2`,`notes1`,`notes2`,`moves_left`,`declared_number`,`got_passed`,`total_moves`,`last_change`) VALUES ('not_active','1',null,null,'Welcome player 1','Welome player 2',"0",null,'0',0,current_timestamp());
+INSERT INTO game_status(`status`,`p_turn`,`session1`,`session2`,`notes1`,`notes2`,`totalcards1`,`totalcards2`,`totalmpaza`,`totallast`, `moves_left`,`declared_number`,`got_passed`,`total_moves`,`last_change`) VALUES ('not_active','1',null,null,'Welcome player 1','Welome player 2',0,0,0,0,"0",null,'0',0,current_timestamp());
 END $$
 DELIMITER ;
 
@@ -129,6 +133,24 @@ DELIMITER ;
 /* UPDATE game_status SET moves_left='4'; */
 call new_game_status();
 
+DELIMITER $$
+CREATE OR REPLACE PROCEDURE cardNumberCount()
+BEGIN 
+	Declare count1 int;
+	Declare count2 int;
+	Declare count3 int;
+	Declare count4 int;
+	SELECT COUNT(*) into count1 from tablo where pos = "1";
+	SELECT COUNT(*) into count2 from tablo where pos = "2";
+	SELECT COUNT(*) into count3 from tablo where pos = "3";
+	SELECT COUNT(*) into count4 from tablo where pos = "4";
+	update game_status set totalcards1 = count1;
+	update game_status set totalcards2 = count2;
+	update game_status set totalmpaza = count3;
+	update game_status set totallast = count4;
+	
+END $$
+DELIMITER ;
 
 DELIMITER $$
 CREATE OR REPLACE PROCEDURE new_players()
@@ -187,6 +209,7 @@ DELIMITER $$
    END LOOP simple_loop;
    ALTER TABLE tablo ORDER BY cardNumber;
    call new_trapoula(); 
+   call cardNumberCount();
  END $$
 DELIMITER ;
 
@@ -199,6 +222,7 @@ DELIMITER $$
   DELETE FROM tablo WHERE pos = 3;
   DELETE FROM tablo WHERE pos = 4;
   UPDATE game_status set got_passed='0';
+  call cardNumberCount();
  END $$  
 DELIMITER ;
 
@@ -211,6 +235,7 @@ DELIMITER $$
 	UPDATE tablo SET pos = player WHERE pos = '3';
 	UPDATE tablo SET pos = player WHERE pos = '4';
     update game_status set p_turn=if(p_turn='1','2','1');
+	call cardNumberCount();
  END $$  
  DELIMITER ;
   /*Parametros einai o arithmos pou dhlwse o paikths sthn arxh toy guroy*/
@@ -229,13 +254,13 @@ BEGIN
 	from tablo	
 	where pos='4';	
 	IF (metablhth = 0) THEN 
-		IF (player=1) THEN UPDATE game_status SET notes1 = CONCAT('player ',player, ' bluffed on card ', DeclaredNumber, ' and won');
-		ELSEIF (player=2) THEN UPDATE game_status SET notes2 = CONCAT('player ',player, ' bluffed on card ', DeclaredNumber, ' and won');
+		IF (player=1) THEN UPDATE game_status SET notes1 = CONCAT('player ',player, ' bluffed on card ', DeclaredNumber, ' and lost');
+		ELSEIF (player=2) THEN UPDATE game_status SET notes2 = CONCAT('player ',player, ' bluffed on card ', DeclaredNumber, ' and lost');
 		END IF;	
 	CALL takeBackAll();
 	ELSE 
-		IF (player=1) THEN UPDATE game_status SET notes1 = CONCAT('player ',player, ' bluffed on card ', DeclaredNumber, ' and lost');
-		ELSEIF (player=2) THEN UPDATE game_status SET notes2 = CONCAT('player ',player, ' bluffed on card ', DeclaredNumber, ' and lost');
+		IF (player=1) THEN UPDATE game_status SET notes1 = CONCAT('player ',player, ' bluffed on card ', DeclaredNumber, ' and won');
+		ELSEIF (player=2) THEN UPDATE game_status SET notes2 = CONCAT('player ',player, ' bluffed on card ', DeclaredNumber, ' and won');
 		END IF;	
 	update game_status set p_turn=if(p_turn='1','2','1');
 	CALL takeBackAll();
@@ -274,6 +299,7 @@ DELIMITER ;
   ELSE UPDATE game_status set got_passed='1';
   END IF;
   update tablo set pos = '3' WHERE pos = '4';
+  call cardNumberCount();
   END $$ 
  DELIMITER ;
  
@@ -362,6 +388,7 @@ BEGIN
 	END IF;
 	update game_status set p_turn=if(p_turn='1','2','1');
 	UPDATE game_status SET total_moves = total_moves+1;		
+	call cardNumberCount();
 	/*update game_status set notes1='wtf';
 	update game_status set p_turn=if(p_turn='1','2','1');	*/
 END $$

@@ -42,7 +42,10 @@ function show_board($item) {
 	sqlreturner($sql,'show_board');
 	//sqlreturner('CALL show_board_For_Active_Player()');
 }
-
+function game_status() {
+	$sql = 'select * from game_status';
+	sqlreturner($sql,'game_status');
+}
 function reset_board() {
 	sqlwithoutreturn('call shuffleAll()','reset_board');
 }

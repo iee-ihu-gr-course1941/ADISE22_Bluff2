@@ -111,7 +111,7 @@ function DOMContentLoaded2(){
 		$("#quitGame").show();
 		$("#newGame").hide();
 		$("#time").show();			
-		$("#announceArea").append('<span id = "announce"><span class=\"announce\" style = "color:green">' + 'New game' + ': </span><span class=\"message-text\">' + '...wating for opponent' + '</span></span>' );	
+		//$("#announceArea").append('<span id = "announce"><span class=\"announce\" style = "color:green">' + 'New game' + ': </span><span class=\"message-text\">' + '...wating for opponent' + '</span></span>' );	
 		startBluff(); 
 		toastr.info('New game hosted by client'); 
 		canPlay=false;	
@@ -133,6 +133,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	$("#newGame").click(function() {		
 		userCards();
 		refreshInit();
+		var myInterval = setInterval(setStatus, 3000);
 	}); 
 	$("#quitGame").click(function() {
 		window.OpenedCards = [];
@@ -149,8 +150,9 @@ document.addEventListener('DOMContentLoaded', function() {
 		$("#cardsss").hide();
 		$("#time").hide();	
 		toastr.info('Game ended by client'); 
-		$("#announceArea").append('<span id = "announce"><span class=\"announce\" style = "color:green">' + 'Result' + ': </span><span class=\"message-text\">' + 'defeated' + '</span></span>' );
+		//$("#announceArea").append('<span id = "announce"><span class=\"announce\" style = "color:green">' + 'Result' + ': </span><span class=\"message-text\">' + 'defeated' + '</span></span>' );
 		canPlay=false;
+		clearInterval(myInterval);
 	}); 
    //auto 8a kanri refresh ka8e fora pou exoume nea fylla
    /* $("#app").remove();
@@ -191,8 +193,9 @@ function becomeBluffedSucceeded(cards){
 function yourTurn(cardsDown, lastCardsOfEnemey){
 	if (cardsDown && lastCardsOfEnemey){
 		$("#announce").remove();	
-		$("#announceArea").append('<span id = "announce"><span class=\"announce\" style = "color:green">' + 'Your turn' + ': </span><span class=\"message-text\">' + cardsDown + ' 🃛 cards down. Opponent thrown ' + lastCardsOfEnemey + ' cards!</span>'+
-		'<br>');
+		$("#announceArea").append('<span id = "announce">');
+		//$("#announceArea").append('<span id = "announce"><span class=\"announce\" style = "color:green">' + 'Your turn' + ': </span><span class=\"message-text\">' + cardsDown + ' 🃛 cards down. Opponent thrown ' + lastCardsOfEnemey + ' cards!</span>'+
+		//'<br>');
 		for (var i=0;i<cardsDown-lastCardsOfEnemey;i++) {$("#announce").append('<img src="https://legendmod.ml/adise/card_backside.jpg" alt="" style="margin-left:1px;width:40px;height:50px;">');}
 		for (var i=0;i<lastCardsOfEnemey;i++) {$("#announce").append('<img src="https://legendmod.ml/adise/card_backside.jpg" alt="" style="margin-left:-10px;width:40px;height:50px;transform:rotate(10deg);">');}
 		
@@ -200,15 +203,15 @@ function yourTurn(cardsDown, lastCardsOfEnemey){
 	}
 	else if(cardsDown){
 		$("#announce").remove();
-		
-		$("#announceArea").append('<span id = "announce"><span class=\"announce\" style = "color:green">' + 'Your turn' + ': </span><span class=\"message-text\">' + cardsDown + ' 🃛 cards down. Opponent passed!</span><br>' );
+		$("#announceArea").append('<span id = "announce">');
+		//$("#announceArea").append('<span id = "announce"><span class=\"announce\" style = "color:green">' + 'Your turn' + ': </span><span class=\"message-text\">' + cardsDown + ' 🃛 cards down. Opponent passed!</span><br>' );
 		for (var i=0;i<cardsDown;i++) {$("#announce").append('<img src="https://legendmod.ml/adise/card_backside.jpg" alt="" style="margin-left:1px;width:40px;height:50px;">');}
 		$("#announceArea").append('</span>');
 	}
 	else{
 		$("#announce").remove();	
-		
-		$("#announceArea").append('<span id = "announce"><span class=\"announce\" style = "color:green">' + 'Your turn' + ': </span><span class=\"message-text\">0 cards down. Opponent passed!</span><br>' );
+		$("#announceArea").append('<span id = "announce">');
+		//$("#announceArea").append('<span id = "announce"><span class=\"announce\" style = "color:green">' + 'Your turn' + ': </span><span class=\"message-text\">0 cards down. Opponent passed!</span><br>' );
 		for (var i=0;i<lastCardsOfEnemey;i++) {$("#announce").append('<img src="https://legendmod.ml/adise/card_backside.jpg" alt="" style="margin-left:-10px;width:40px;height:50px;transform:rotate(10deg);">');}
 		$("#announceArea").append('</span>');
 	}	
@@ -222,8 +225,8 @@ function initButtons(){
 		$("#bluff").click(function() {
 		//if (canPlay){
 		setBluff();
-		$("#announce").remove();	
-		$("#announceArea").append('<span id = "announce"><span class=\"announce\" style = "color:green">' + 'Result' + ': </span><span class=\"message-text\">' + 'call bluff!' + '</span></span>' );
+		//$("#announce").remove();	
+		//$("#announceArea").append('<span id = "announce"><span class=\"announce\" style = "color:green">' + 'Result' + ': </span><span class=\"message-text\">' + 'call bluff!' + '</span></span>' );
 		//energeies
 		window.OpenedCards = [];
 		canPlay=false;
@@ -233,8 +236,8 @@ function initButtons(){
 			//if (canPlay){
 			//energeies	
 			setPass();
-			$("#announce").remove();	
-			$("#announceArea").append('<span id = "announce"><span class=\"announce\" style = "color:green">' + 'Result' + ': </span><span class=\"message-text\">' + 'passed!' + '</span></span>' );
+			//$("#announce").remove();	
+			//$("#announceArea").append('<span id = "announce"><span class=\"announce\" style = "color:green">' + 'Result' + ': </span><span class=\"message-text\">' + 'passed!' + '</span></span>' );
 			window.OpenedCards = [];
 			canPlay=false;			
 		//}
@@ -245,7 +248,8 @@ function initButtons(){
 				var callTheNumber = $("#cardsss").val();
 				if (callTheNumber=='A') callTheNumber="1";
 				$("#announce").remove();
-				$("#announceArea").append('<span id = "announce"><span class=\"announce\" style = "color:green">' + 'Result' + ': </span><span class=\"message-text\">' + window.OpenedCards.length + ' card thrown down!' + '</span><br>' );
+				$("#announceArea").append('<span id = "announce">');
+				//$("#announceArea").append('<span id = "announce"><span class=\"announce\" style = "color:green">' + 'Result' + ': </span><span class=\"message-text\">' + window.OpenedCards.length + ' card thrown down!' + '</span><br>' );
 					for (var i=0;i<window.OpenedCards.length;i++) {
 						if ((callTheNumber=='1' && window.OpenedCards[i].includes("ace_of"))
 						|| 	(callTheNumber=='2' && window.OpenedCards[i].includes("2_of"))
@@ -311,8 +315,11 @@ function addBluffArea(){
     '</select>'+
 	'<button class="button" id="throwCards">Throw Cards</button>'+
 	'<button class="button" id="crashRefresh">Refresh</button>'+
-	//'<button class="button" id="quitGame" @click="resetGame()">Quit Game</button>'+
-	'<div class="info"><div id="player"><span class="player">Player: ' + window.player + '</span></div><div id="uid"><span class="uid">uid: <input id="UserProfileUID1"></span></div><div id="time"><span class="label">Time:</span><span class="value">{{ time }}</span></div></div>'+
+
+	'<div class="info"><div id="notes1">Player 1 notes: <span class="notes1"></span></div><div id="notes2">Player 2 notes: <span class="notes2"></div></span> <div id="last_change">Last change: <span class="last_change"></span></div>'+
+	'<br><div>Status: <span class="status"></span></div> <div id="player">Player: <span class="player">' + window.player + '</span></div><div id="uid"><span class="uid">UID: <input id="UserProfileUID1"></span></div><div id="time"><span class="label">Time:</span><span class="value">{{ time }}</span></div> <div>Total moves: <span class="total_moves"></span></div>'+
+	'<br><div>Turn: <span class="p_turn"></span></div> <div>Player 1: <span class="totalcards1"></span></div> <div>Player 2: <span class="totalcards2"></span></div> <div>Mpaza: <span class="totalmpaza"></span></div> <div>Last thrown: <span class="totallast"></span></div> <div>Declared: <span class="declared_number"></span></div> <div>Passed: <span class="got_passed"></span></div>'+
+	'</div>'+
 	'<div class="cards">'+
     '<div class="card" v-for="card in cards" :class="{ flipped: card.flipped, found: card.found }" @click="flipCard(card)">'+
     '<div class="back"></div>'+
@@ -509,7 +516,40 @@ function handleGetUsers(data){
 			userCards();
 			refreshInit();
 		}
-	}		
+	}	
+	else if(data.successmesg && data.commander && data.commander == 'game_status') { 
+		if (data.successmesg){
+			var temp = JSON.parse(data.successmesg);
+			$(".status").text(temp[0].status);
+			$(".total_moves").text(temp[0].total_moves);		 
+			//$(".p_turn").text(temp[0].p_turn);
+			if (window.player && window.player==temp[0].p_turn){ 
+				$(".p_turn").css('color', 'green');
+				$(".p_turn").text("Your");
+			}
+			else if (window.player){
+				$(".p_turn").css('color', 'red');
+				$(".p_turn").text("Opponent's");
+			}
+			$(".last_change").text(temp[0].last_change);
+			$(".totalcards1").text(temp[0].totalcards1);
+			$(".totalcards2").text(temp[0].totalcards2);
+			$(".totalmpaza").text(temp[0].totalmpaza);
+			$(".totallast").text(temp[0].totallast);
+			$(".declared_number").text(temp[0].declared_number);
+			$(".got_passed").text(temp[0].got_passed);
+			$(".notes1").text(temp[0].notes1);
+			if (window.player && window.player==1){ 
+				$(".notes1").css('color', 'green');
+				$(".notes2").css('color', 'red');
+			}
+			else if (window.player){
+				$(".notes1").css('color', 'red');
+				$(".notes2").css('color', 'green');
+			}
+			$(".notes2").text(temp[0].notes2);
+		}
+	}	
 }
 function destroygame(){
 	functionFlag5='destroy';
@@ -579,4 +619,7 @@ function getCards2(){
 		userCards2();
 	else if(functionFlag3=='userCardsTheRest')
 		userCardsTheRest2();	
+}
+function setStatus(){
+	getUserss('status');	
 }
