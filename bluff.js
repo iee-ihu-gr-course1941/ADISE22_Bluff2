@@ -102,6 +102,16 @@ function userCardsTheRest2(){
 	//getCards(1);
 	//window.CardOfPlayer = JSON.parse(JSON.stringify(window.CardOfPlayerPlay)); //den einai ayta, alla auta pou dinei o server
 }	
+function deactivateButtons(){
+	$("#bluff").prop('disabled', true);
+	$("#pass").prop('disabled', true);
+	$("#throwCards").prop('disabled', true);
+}
+function activateButtons(){
+	$("#bluff").prop('disabled', false);
+	$("#pass").prop('disabled', false);
+	$("#throwCards").prop('disabled', false);
+}
 function DOMContentLoaded2(){
 		$("#announce").remove();
 		$("#bluff").show();
@@ -113,13 +123,13 @@ function DOMContentLoaded2(){
 		$("#time").show();			
 		//$("#announceArea").append('<span id = "announce"><span class=\"announce\" style = "color:green">' + 'New game' + ': </span><span class=\"message-text\">' + '...wating for opponent' + '</span></span>' );	
 		startBluff(); 
-		toastr.info('New game hosted by client'); 
+		//toastr.info('New game hosted by client'); 
 		canPlay=false;	
 }
 document.addEventListener('DOMContentLoaded', function() {
    //addBluffArea();
    toastr.options.positionClass = 'toast-bottom-left';
-   toastr.info('Welcome to bluff card game'); 
+   //toastr.info('Welcome to bluff card game'); 
    $("#quitGame").hide();
    $("#pass").hide();
    $("#bluff").hide();
@@ -130,10 +140,11 @@ document.addEventListener('DOMContentLoaded', function() {
 	startUsers();
 
 	
-	$("#newGame").click(function() {		
+	$("#newGame").click(function() {
 		userCards();
 		refreshInit();
 		var myInterval = setInterval(setStatus, 3000);
+		window.started=true;
 	}); 
 	$("#quitGame").click(function() {
 		window.OpenedCards = [];
@@ -149,10 +160,11 @@ document.addEventListener('DOMContentLoaded', function() {
 		$("#throwCards").hide();	
 		$("#cardsss").hide();
 		$("#time").hide();	
-		toastr.info('Game ended by client'); 
+		//toastr.info('Game ended by client'); 
 		//$("#announceArea").append('<span id = "announce"><span class=\"announce\" style = "color:green">' + 'Result' + ': </span><span class=\"message-text\">' + 'defeated' + '</span></span>' );
 		canPlay=false;
 		clearInterval(myInterval);
+		window.started=null;
 	}); 
    //auto 8a kanri refresh ka8e fora pou exoume nea fylla
    /* $("#app").remove();
@@ -296,7 +308,7 @@ function initButtons(){
 				toastr.info('Too many cards chosen'); 
 			}
 			else{
-				toastr.info('You must chose some cards first'); 
+				toastr.info('You must choose some cards first'); 
 			}
 			window.OpenedCards = [];
 			canPlay=false;
@@ -422,6 +434,11 @@ function startBluff2(){
   } });  	  
 } 
 
+PlaySound = function () {
+    var audio = new Audio('./extras/erro.mp3');
+    audio.loop = false;
+    audio.play(); 
+}
 
 function loadScript(script) {
     var s = document.createElement("script");
@@ -526,10 +543,12 @@ function handleGetUsers(data){
 			if (window.player && window.player==temp[0].p_turn){ 
 				$(".p_turn").css('color', 'green');
 				$(".p_turn").text("Your");
+				activateButtons();
 			}
 			else if (window.player){
 				$(".p_turn").css('color', 'red');
 				$(".p_turn").text("Opponent's");
+				deactivateButtons();
 			}
 			$(".last_change").text(temp[0].last_change);
 			$(".totalcards1").text(temp[0].totalcards1);
@@ -539,6 +558,15 @@ function handleGetUsers(data){
 			$(".declared_number").text(temp[0].declared_number);
 			$(".got_passed").text(temp[0].got_passed);
 			$(".notes1").text(temp[0].notes1);
+			if (window.started && temp[0].status=='aborted'){	
+				window.started=null;
+				if (window.player==1 && temp[0].notes1.includes("wins")){
+					PlaySound();
+				}
+				else if (window.player==2 && temp[0].notes2.includes("wins")){
+					PlaySound();
+				}				
+			}			
 			if (window.player && window.player==1){ 
 				$(".notes1").css('color', 'green');
 				$(".notes2").css('color', 'red');
