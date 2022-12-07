@@ -5,12 +5,10 @@ if (location.href.includes("http://localhost/") || location.href.includes("file:
 else{
 	serverName =  './lib/bluff.php/';
 }
-//var functionFlag=null;
 var functionFlag2=null;
 var functionFlag3=null;
 var functionFlag4=null;
 var functionFlag5=null;
-//var functionFlag6=null;
 var canPlay=false;
 window.OpenedCards = [];
 window.CardOfPlayer = [];
@@ -76,9 +74,7 @@ window.CardTypes = [
 
 function userCards(){	
 	functionFlag2='userCards';
-	//getCards(1);
 	console.log('step userCards');
-	//window.CardOfPlayerPlay = JSON.parse(JSON.stringify(window.CardTypes)); //to window.CardTypes to 8elw sta8ero
 	window.CardOfPlayer = JSON.parse(JSON.stringify(window.CardOfPlayerPlay)); //den einai ayta, alla auta pou dinei o server	
 }	
 function userCards2(){	
@@ -99,8 +95,6 @@ function userCardsTheRest2(){
 	startBluff2();
 	functionFlag3=null;
 	console.log('step userCardsTheRest2');
-	//getCards(1);
-	//window.CardOfPlayer = JSON.parse(JSON.stringify(window.CardOfPlayerPlay)); //den einai ayta, alla auta pou dinei o server
 }	
 function deactivateButtons(){
 	$("#bluff").prop('disabled', true);
@@ -121,15 +115,12 @@ function DOMContentLoaded2(){
 		$("#quitGame").show();
 		$("#newGame").hide();
 		$("#time").show();			
-		//$("#announceArea").append('<span id = "announce"><span class=\"announce\" style = "color:green">' + 'New game' + ': </span><span class=\"message-text\">' + '...wating for opponent' + '</span></span>' );	
 		startBluff(); 
-		//toastr.info('New game hosted by client'); 
 		canPlay=false;	
 }
 document.addEventListener('DOMContentLoaded', function() {
    //addBluffArea();
    toastr.options.positionClass = 'toast-bottom-left';
-   //toastr.info('Welcome to bluff card game'); 
    $("#quitGame").hide();
    $("#pass").hide();
    $("#bluff").hide();
@@ -160,16 +151,10 @@ document.addEventListener('DOMContentLoaded', function() {
 		$("#throwCards").hide();	
 		$("#cardsss").hide();
 		$("#time").hide();	
-		//toastr.info('Game ended by client'); 
-		//$("#announceArea").append('<span id = "announce"><span class=\"announce\" style = "color:green">' + 'Result' + ': </span><span class=\"message-text\">' + 'defeated' + '</span></span>' );
 		canPlay=false;
 		clearInterval(myInterval);
 		window.started=null;
 	}); 
-   //auto 8a kanri refresh ka8e fora pou exoume nea fylla
-   /* $("#app").remove();
-   addBluffArea();
-   startBluff(); */
 });
 
 function refreshInit(){
@@ -182,7 +167,6 @@ function becomeBluffedSucceeded(cards){
 	for (var i=0;i<CardTypes.length;i++){
 		for (var x=0;x<window.TakenCardsAsArray.length;x++){
 			if (CardTypes[i].name==window.TakenCardsAsArray[x]){
-				//console.log(window.TakenCardsAsArray[x]);
 				var temp = { name:  window.TakenCardsAsArray[x], image: "https://legendmod.ml/adise/" + window.TakenCardsAsArray[x] + ".png" }
 				window.CardOfPlayerPlay.push(temp);
 			}
@@ -199,7 +183,6 @@ function becomeBluffedSucceeded(cards){
 	toastr.info('You got bluffed. Cards added: ' + newCards); 
 	
 	window.OpenedCards = [];
-	//refreshInit();
 	canPlay=false;	
 }
 function yourTurn(cardsDown, lastCardsOfEnemey){
@@ -235,21 +218,12 @@ function initButtons(){
 			refreshInit();			
 		});
 		$("#bluff").click(function() {
-		//if (canPlay){
 		setBluff();
-		//$("#announce").remove();	
-		//$("#announceArea").append('<span id = "announce"><span class=\"announce\" style = "color:green">' + 'Result' + ': </span><span class=\"message-text\">' + 'call bluff!' + '</span></span>' );
-		//energeies
 		window.OpenedCards = [];
 		canPlay=false;
-		//}
 		}); 	
 		$("#pass").click(function() {
-			//if (canPlay){
-			//energeies	
 			setPass();
-			//$("#announce").remove();	
-			//$("#announceArea").append('<span id = "announce"><span class=\"announce\" style = "color:green">' + 'Result' + ': </span><span class=\"message-text\">' + 'passed!' + '</span></span>' );
 			window.OpenedCards = [];
 			canPlay=false;			
 		//}
@@ -479,9 +453,7 @@ function Userss(type,whatever){ //auto douleuei, ta alla oxi
 		alert('fatal error on call');
 	}
 }
-//getUserss('board/show/1'); 
-//postUserss('board/show/');
-//window.returnedFromUsers
+
 function handleGetUsers(data){
 	console.log("handleGetUsers " + functionFlag4 + " , " + functionFlag5);
 	console.log(data);
@@ -502,29 +474,19 @@ function handleGetUsers(data){
 		else toastr.error(data.errormesg);
 	}	
 	else if(data.successmesg && data.commander && data.commander == 'show_board') { 
-	//else if(functionFlag=='getCards'){
-		//functionFlag5=null;
 		window.returnedFromUsers = JSON.parse(data.successmesg);
-		//if (window.returnedFromUsers.scalar) window.returnedFromUsers = JSON.parse(window.returnedFromUsers.scalar); //weird bug fix
-		//else window.returnedFromUsers = JSON.parse(window.returnedFromUsers)
-		//console.log(window.returnedFromUsers);
 		getCards2();	
-		//startBluff2();
 	}
 	else if(functionFlag4=='SuffleCards'){
 		functionFlag4=null;
 		refreshing();
 	}
 	else if(data.successmesg && data.commander && data.commander == 'startuser') { 
-	//else if(functionFlag5=='GetUser'){
-		//functionFlag5=null;
 			var temp = JSON.parse(data.successmesg)		
 			window.sessionID = temp[0];
 			window.player = temp[1];
 	}
 	else if(data.successmesg && data.commander && data.commander == 'checkSessionId') { 
-	//else if(functionFlag6=='CheckSessionId'){
-		//functionFlag6=null;
 		if (data.successmesg){
 			window.sessionID = $("#UserProfileUID1").val();		
 			var temp = JSON.parse(data.successmesg);
@@ -539,7 +501,6 @@ function handleGetUsers(data){
 			var temp = JSON.parse(data.successmesg);
 			$(".status").text(temp[0].status);
 			$(".total_moves").text(temp[0].total_moves);		 
-			//$(".p_turn").text(temp[0].p_turn);
 			if (window.player && window.player==temp[0].p_turn){ 
 				$(".p_turn").css('color', 'green');
 				$(".p_turn").text("Your");
@@ -560,10 +521,12 @@ function handleGetUsers(data){
 			$(".notes1").text(temp[0].notes1);
 			if (window.started && temp[0].status=='aborted'){	
 				window.started=null;
-				if (window.player==1 && temp[0].notes1.includes("wins")){
+				deactivateButtons()
+				if (window.player==1 && temp[0].notes1.includes("wins")){				
 					PlaySound();
 				}
 				else if (window.player==2 && temp[0].notes2.includes("wins")){
+					
 					PlaySound();
 				}				
 			}			
@@ -595,7 +558,6 @@ function refreshing2(){
 	refreshInit();	
 }
 function getCardsAfterThrow(){
-	//functionFlag4='SendCards';
 	setTimeout(function() {refreshing2();}, 2000);
 }
 
@@ -607,11 +569,9 @@ function SuffleCards(){
 	
 }
 function checkSessionId(whatever){
-	//window.functionFlag6="CheckSessionId";
 	getUserss('checkSessionId/'+ whatever);
 }
 function startUsers(){
-	//window.functionFlag5="GetUser";
 	getUserss('startuser');
 }
 function setPass(){
@@ -623,11 +583,9 @@ function setBluff(){
 	postUserss('board/'+ window.sessionID + '/bluff');
 }
 function getCards(){
-	//functionFlag='getCards';
 	getUserss('show/'+ window.sessionID); 
 }
 function getCards2(){
-	//refreshInit();
 	var before = window.CardOfPlayerPlay.length;
 	window.CardOfPlayerPlay = [];
 	for (var i=0;i<window.returnedFromUsers.length;i++){
@@ -642,7 +600,6 @@ function getCards2(){
 	}
 	var after = window.CardOfPlayerPlay.length;
 	console.log(after-before);
-	//functionFlag=null;	
 	if(functionFlag2=='userCards')
 		userCards2();
 	else if(functionFlag3=='userCardsTheRest')
