@@ -408,7 +408,7 @@ BEGIN
 	DECLARE stats varchar(50);
 	DECLARE player varchar(1);
 	SELECT status into stats FROM game_status;
-	IF (stats='initialized' OR stats='started') THEN
+	IF (stats='initialized' OR stats='started' OR stats='player_1_waiting') THEN
 		SELECT p_turn into player from game_status;
 	
 		IF (choice = '1') THEN call move(cards);
@@ -451,11 +451,13 @@ DELIMITER ;
 DELIMITER $$
 CREATE OR REPLACE PROCEDURE start()
 BEGIN 
-  Declare STATUS2 varchar(20); 
+  Declare STATUS2 varchar(30); 
   SELECT status into STATUS2 from game_status;	  
   IF (STATUS2="not_active") THEN UPDATE game_status set status="player_1_waiting";
-  ELSEIF (STATUS2="ended") THEN UPDATE game_status set status="player_1_waiting";
-  ELSEIF (STATUS2="player_1_waiting") THEN UPDATE game_status set status="initialized";  
+  ELSEIF (STATUS2="ended") THEN UPDATE game_status set status="player_1_waiting"; CALL shuffleAll();
+  UPDATE game_status set last_change=CURRENT_TIMESTAMP();
+  ELSEIF (STATUS2="player_1_waiting") THEN UPDATE game_status set status="initialized"; 
+  UPDATE game_status set last_change=CURRENT_TIMESTAMP(); 
   END IF;
   CALL startReturn();   
 END $$
@@ -464,16 +466,9 @@ DELIMITER ;
 DELIMITER $$
 CREATE OR REPLACE PROCEDURE startReturn()
 BEGIN 
-  SELECT STATUS from game_status;	  
+  SELECT status from game_status;	  
 END $$
 DELIMITER ;
-
-CALL start();
-
-
-	
-select * from tablo;
-select * from trapoula;
 
 /*
 DELIMITER $$
@@ -494,21 +489,23 @@ DELIMITER $$
   DECLARE diffSec INT;
   DECLARE player varchar(1);	
   DECLARE stats varchar(30);
-  SELECT p_turn into player from game_status;
-  select last_change INTO timer from game_status;
-  SELECT TIMEDIFF(CURRENT_TIMESTAMP(), timer) INTO diff;
-  SELECT TIME_TO_SEC(diff) INTO diffSec;
   SELECT status INTO stats FROM game_status;
-  update players set result='Win' where player<>player_id;
-  update players set result='Defeat' where player=player_id;
-  UPDATE game_status set status="Aborted";
-  if (player=1 AND (stats='initialized' OR stats='started')) then 
-	UPDATE game_status SET notes1 = CONCAT('player ',player, ' defeated, aborted');
-	UPDATE game_status SET notes2 = CONCAT('player ',player, ' wins');  
-  elseif (player=2 AND (stats='initialized' OR stats='started')) then 
-	UPDATE game_status SET notes1 = CONCAT('player ',player, ' wins');
-	UPDATE game_status SET notes2 = CONCAT('player ',player, ' defeated, aborted'); 
-  end if;  
+	SELECT p_turn into player from game_status;
+	select last_change INTO timer from game_status;
+	SELECT TIMEDIFF(CURRENT_TIMESTAMP(), timer) INTO diff;
+	SELECT TIME_TO_SEC(diff) INTO diffSec;  
+  if (stats='initialized' OR stats='started') THEN
+	update players set result='Win' where player<>player_id;
+	update players set result='Defeat' where player=player_id;
+	UPDATE game_status set status="aborted";
+	if (player=1) then 
+		UPDATE game_status SET notes1 = CONCAT('player ',player, ' defeated, aborted');
+		UPDATE game_status SET notes2 = CONCAT('player ',player, ' wins');  
+	elseif (player=2) then 
+		UPDATE game_status SET notes1 = CONCAT('player ',player, ' wins');
+		UPDATE game_status SET notes2 = CONCAT('player ',player, ' defeated, aborted'); 
+	end if;  
+  END IF;
   select * from game_status;
   END $$ 
  DELIMITER ;
