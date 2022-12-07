@@ -44,7 +44,7 @@ function handle_show($method, $z, $sessionID1, $sessionID2) {
 }
 
 function handle_startuser($method, $sessionID1, $sessionID2) {
-	if($method=='GET') {
+	if($method=='POST') {
 		if (sqlreturnoneitem('select * from game_status;', 'status')=='not_active'){
 			if ($sessionID1==null){
 				$sessionID1=session_id();

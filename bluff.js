@@ -578,7 +578,7 @@ function checkSessionId(whatever){
 	getUserss('checkSessionId/'+ whatever);
 }
 function startUsers(){
-	getUserss('startuser');
+	postUserss('startuser');
 }
 function setPass(){
 	functionFlag4='SuffleCards';
