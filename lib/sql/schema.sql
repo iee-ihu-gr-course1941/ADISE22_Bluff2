@@ -494,7 +494,7 @@ DELIMITER $$
 	select last_change INTO timer from game_status;
 	SELECT TIMEDIFF(CURRENT_TIMESTAMP(), timer) INTO diff;
 	SELECT TIME_TO_SEC(diff) INTO diffSec;  
-  if (stats='initialized' OR stats='started') THEN
+  if (diffSec>300 AND (stats='initialized' OR stats='started')) THEN
 	update players set result='Win' where player<>player_id;
 	update players set result='Defeat' where player=player_id;
 	UPDATE game_status set status="aborted";

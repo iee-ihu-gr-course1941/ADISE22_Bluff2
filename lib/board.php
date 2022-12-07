@@ -40,8 +40,7 @@ function show_board($item) {
 	sqlreturner($sql,'show_board');
 	//sqlreturner('CALL show_board_For_Active_Player()');
 }
-function game_status() {
-	
+function game_status() {	
 	$sql = 'CALL checkTimer();';
 	sqlreturner($sql,'game_status');
 }

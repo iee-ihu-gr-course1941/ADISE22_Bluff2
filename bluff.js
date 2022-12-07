@@ -275,7 +275,7 @@ function initButtons(){
 					}
 				}
 
-				getUserss('board/' + window.sessionID + '/throw/'+ '"' + callTheNumber + '"' + '/' + temp[0] + '/' + temp[1] + '/' + temp[2]+ '/' + temp[3]);
+				postUserss('board/' + window.sessionID + '/throw/'+ '"' + callTheNumber + '"' + '/' + temp[0] + '/' + temp[1] + '/' + temp[2]+ '/' + temp[3]);
 				getCardsAfterThrow();				
 			}
 			else if(window.OpenedCards.length>=5){
@@ -428,6 +428,9 @@ function getUserss(whatever){ //auto douleuei, ta alla oxi
 		},		
 		success: function(data){
         handleGetUsers(data);
+		},
+		error: function(data){
+        handleGetUsers(data);
 		}
 	});
 }
@@ -438,6 +441,9 @@ function postUserss(whatever){ //auto douleuei, ta alla oxi
 		headers: {
 		},		
 		success: function(data){
+        handleGetUsers(data);
+		},
+		error: function(data){
         handleGetUsers(data);
 		}
 	});
@@ -456,22 +462,22 @@ function Userss(type,whatever){ //auto douleuei, ta alla oxi
 
 function handleGetUsers(data){
 	console.log("handleGetUsers " + functionFlag4 + " , " + functionFlag5);
-	console.log(data);
-	
-	if (data.errormesg){
-		if (data.errormesg == "2 players already playing."){
+	if (data.responseText && JSON.parse(data.responseText)){
+		var temp = JSON.parse(data.responseText);
+		//console.log(temp);
+		if (temp.errormesg == "2 players already playing."){
 			toastr.error('Seems that other players are bluffing right now. Do you want to terminate them and start new game?' + '</br> <button id=enableshortcuts1 class="btn btn-sm btn-primary btn-play btn-enable-shortcuts" onclick="destroygame();" style="width: 100%;margin-top: 10px;border-color: darkblue;">' + 'yes, yes, do your best' + '</button><br><button class="btn btn-sm btn-warning btn-spectate btn-play btn-enable-shortcuts" style="width: 100%;margin-top: 10px;">' + 'oh no no, let them play' + '</button>', "", {
                         timeOut: 15000,
                         extendedTimeOut: 15000
                     }).css("width", "300px")			
 		}
-		else if (data.errormesg == "Wrong sessionId"){
-			toastr.error(data.errormesg);
+		else if (temp.errormesg == "Wrong sessionId"){
+			toastr.error(temp.errormesg);
 			//functionFlag=null;
 			functionFlag4=null;
 			functionFlag5=null;
 		}
-		else toastr.error(data.errormesg);
+		else toastr.error(temp.errormesg);
 	}	
 	else if(data.successmesg && data.commander && data.commander == 'show_board') { 
 		window.returnedFromUsers = JSON.parse(data.successmesg);

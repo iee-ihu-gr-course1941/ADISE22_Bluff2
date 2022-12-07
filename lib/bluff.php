@@ -3,16 +3,13 @@ header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST');
 header("Access-Control-Allow-Headers: HELLO, HELLO1");
 //http://localhost/Bluff2/lib/bluff.php/board/show/1 ka8e fora pou kanw allh elegxw gia debug
-
 require_once "./connect/dbconnect.php"; 
 require_once "board.php";
-require_once "handle_functions.php";
-
 
 session_start();
 $sessionID1 = sqlreturnoneitem('select * from game_status;', 'session1');
 $sessionID2 = sqlreturnoneitem('select * from game_status;', 'session2');
-
+require_once "handle_functions.php";
 
 $method = $_SERVER['REQUEST_METHOD'];
 $request = explode('/', trim($_SERVER['PATH_INFO'],'/'));
@@ -25,32 +22,13 @@ switch ($r=array_shift($request)) {
 		findPlayerTurn();
 	break;	
 	case 'cheatSession1': //mono gia debugging
-		successMsg($sessionID1, 'cheatSession1');
+		informationMsg($sessionID1, 'cheatSession1');
 	break;
 	case 'cheatSession2': //mono gia debugging
-		successMsg($sessionID2, 'cheatSession2');
+		informationMsg($sessionID2, 'cheatSession2');
 	break;	
     case 'startuser':
-	if (sqlreturnoneitem('select * from game_status;', 'status')=='not_active'){
-		if ($sessionID1==null){
-			$sessionID1=session_id();
-			sqlwithoutreturn('update game_status set session1 ="' . $sessionID1 . '"');
-		}
-		sqlwithoutreturn('update game_status SET status = \'player_1_waiting\';');			
-		successMsg(json_encode([$sessionID1,"1"]),'startuser');
-	}
-	else if (sqlreturnoneitem('select * from game_status;', 'status')=='player_1_waiting'){
-		if ($sessionID2==null){
-			session_regenerate_id(true);
-			$sessionID2=session_id();
-			sqlwithoutreturn('update game_status set session2 ="' . $sessionID2 . '"');
-		}		
-		sqlwithoutreturn('update game_status SET status = \'initialized\';');	
-		successMsg(json_encode([$sessionID2,"2"]),'startuser');
-	}
-	else{
-		errorMsg('2 players already playing.','startuser');
-	}
+		handle_startuser($method, $sessionID1, $sessionID2);
 	break;
 	case 'destroy':
 		sqlwithoutreturn('update game_status SET status = \'not_active\';');
@@ -70,10 +48,7 @@ switch ($r=array_shift($request)) {
 		}
 	break;
     case 'show' : 
-		$z=array_shift($request);
-		if ($sessionID1 == $z) handle_main($method,1);
-		else if ($sessionID2 == $z) handle_main($method,2); 
-		else errorMsg('Wrong sessionId','show');
+		handle_show($method, array_shift($request), $sessionID1, $sessionID2);
 	break; 
     case 'status' : 
 		handle_status($method);
