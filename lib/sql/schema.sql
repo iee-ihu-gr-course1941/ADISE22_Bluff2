@@ -155,19 +155,19 @@ DELIMITER ;
 DELIMITER $$
 CREATE OR REPLACE PROCEDURE new_players()
 BEGIN 
-drop table IF EXISTS `players`;
-CREATE TABLE `players` (
-  `username` varchar(20) DEFAULT NULL,
-  `side` enum('1','2') NOT NULL,
-  `token` varchar(100) DEFAULT NULL,
-  `result` enum('Equal','Win','Defeat') DEFAULT NULL,
-  `last_action` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`side`)
+drop table IF EXISTS players;
+CREATE TABLE players (
+   player_id INT PRIMARY KEY AUTO_INCREMENT,
+   result enum('Equal','Win','Defeat','Ongoing') DEFAULT NULL
 );
+INSERT INTO players (result) VALUES ('Ongoing');
+INSERT INTO players (result) VALUES ('Ongoing');
 END $$
 DELIMITER ;
 
+
 call new_players();
+
 
 
 
@@ -186,11 +186,11 @@ DELIMITER;
 DELIMITER $$
   CREATE OR REPLACE PROCEDURE shuffleAll()
   BEGIN
-  
-	  
-	  drop table if exists tablo;
+
+	  CALL new_game_status();
+	  CALL new_players();
       call new_tablo();
-	  call new_trapoula();
+	  call new_trapoula();  
       SET @a = 0;
       simple_loop: LOOP
 		 call shuffle('1');
@@ -317,7 +317,7 @@ BEGIN
 		call bluffOnCard(); /*LOL*/
 		SELECT COUNT(*) INTO sum FROM tablo WHERE pos = player;
 		IF sum = 0 THEN
-			update `players` set status='Win' where player=p_turn;
+			update players set status='Win' where player=player_id;
 			set stat = '1';
 		END IF;
 	ELSE
@@ -405,20 +405,27 @@ BEGIN
     choice = η κίνηση που θα κάνει ο παίκτης
     cards = οι κάρτες που θα ρίξει ο παίκτης 
     Declared Number = ο αριθμός που δηλώνει στην αρχή του γύρου*/
+	DECLARE stats varchar(50);
 	DECLARE player varchar(1);
-	SELECT p_turn into player from game_status;
+	SELECT status into stats FROM game_status;
+	IF (stats='initialized' OR stats='started') THEN
+		SELECT p_turn into player from game_status;
 	
-	IF (choice = '1') THEN call move(cards);
-	update game_status SET got_passed='0';		
-    ELSEIF (choice = '2') THEN
-		IF (player=1) THEN UPDATE game_status SET notes1 = CONCAT('player ',player, ' passed');
-		ELSEIF (player=2) THEN UPDATE game_status SET notes2 = CONCAT('player ',player, ' passed');
-		END IF;	
-	call pass();
-	update game_status set p_turn=if(p_turn='1','2','1');	
-	ELSEIF (choice = '3') THEN
-    call bluffOnCard();
-	update game_status set got_passed='0';	
+		IF (choice = '1') THEN call move(cards);
+		update game_status SET got_passed='0';	
+		UPDATE game_status set last_change=CURRENT_TIMESTAMP();	
+		ELSEIF (choice = '2') THEN
+			IF (player=1) THEN UPDATE game_status SET notes1 = CONCAT('player ',player, ' passed');
+				ELSEIF (player=2) THEN UPDATE game_status SET notes2 = CONCAT('player ',player, ' passed');
+			END IF;	
+			UPDATE game_status set last_change=CURRENT_TIMESTAMP();
+		call pass();
+		update game_status set p_turn=if(p_turn='1','2','1');	
+		ELSEIF (choice = '3') THEN
+		call bluffOnCard();
+		update game_status set got_passed='0';	
+		UPDATE game_status set last_change=CURRENT_TIMESTAMP();
+		END IF;
 	END IF;
 END $$
 DELIMITER ;
@@ -479,5 +486,32 @@ CREATE TRIGGER checklastaction BEFORE UPDATE ON game_status
        END $$
 delimiter ;   
 */
+DELIMITER $$
+  CREATE OR REPLACE PROCEDURE checkTimer() 
+  BEGIN
+  DECLARE timer TIMESTAMP;
+  DECLARE diff TIMESTAMP;
+  DECLARE diffSec INT;
+  DECLARE player varchar(1);	
+  DECLARE stats varchar(30);
+  SELECT p_turn into player from game_status;
+  select last_change INTO timer from game_status;
+  SELECT TIMEDIFF(CURRENT_TIMESTAMP(), timer) INTO diff;
+  SELECT TIME_TO_SEC(diff) INTO diffSec;
+  SELECT status INTO stats FROM game_status;
+  update players set result='Win' where player<>player_id;
+  update players set result='Defeat' where player=player_id;
+  UPDATE game_status set status="Aborted";
+  if (player=1 AND (stats='initialized' OR stats='started')) then 
+	UPDATE game_status SET notes1 = CONCAT('player ',player, ' defeated, aborted');
+	UPDATE game_status SET notes2 = CONCAT('player ',player, ' wins');  
+  elseif (player=2 AND (stats='initialized' OR stats='started')) then 
+	UPDATE game_status SET notes1 = CONCAT('player ',player, ' wins');
+	UPDATE game_status SET notes2 = CONCAT('player ',player, ' defeated, aborted'); 
+  end if;  
+  select * from game_status;
+  END $$ 
+ DELIMITER ;
 
+CALL checkTimer();
 
