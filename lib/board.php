@@ -1,6 +1,4 @@
 <?php
-
-
 //function show_board($properties) {
 function sqlreturnoneitem($sql, $commandd){ //mporei na dextei kai panw apo ena pedia
 	global $mysqli;	
