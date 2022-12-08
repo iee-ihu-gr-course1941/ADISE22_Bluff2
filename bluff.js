@@ -303,7 +303,7 @@ function addBluffArea(){
 	'<button class="button" id="crashRefresh">Refresh</button>'+
 
 	'<div class="info"><div id="notes1">Player 1 notes: <span class="notes1"></span></div><div id="notes2">Player 2 notes: <span class="notes2"></div></span> <div id="last_change">Last change: <span class="last_change"></span></div>'+
-	'<br><div>Status: <span class="status"></span></div> <div id="player">Player: <span class="player">' + window.player + '</span></div><div id="uid"><span class="uid">UID: <input id="UserProfileUID1"></span></div><div id="time"><span class="label">Time:</span><span class="value">{{ time }}</span></div> <div>Total moves: <span class="total_moves"></span></div>'+
+	'<br><div>Status: <span class="status"></span></div> <div id="player">Player: <span class="player">' + window.player + '</span></div><div id="uid"><span class="uid">UID: <input id="UserProfileUID1"></span></div><div id="time"><span class="label">Time:</span><span class="value">{{ time }}</span></div> <div>Total moves: <span class="total_moves"></span></div><div>Time left: <span class="time_left"></span></div>'+
 	'<br><div>Turn: <span class="p_turn"></span></div> <div>Player 1: <span class="totalcards1"></span></div> <div>Player 2: <span class="totalcards2"></span></div> <div>Mpaza: <span class="totalmpaza"></span></div> <div>Last thrown: <span class="totallast"></span></div> <div>Declared: <span class="declared_number"></span></div> <div>Passed: <span class="got_passed"></span></div>'+
 	'</div>'+
 	'<div class="cards">'+
@@ -525,7 +525,8 @@ function handleGetUsers(data){
 			if (data.successmesg){
 				var temp = JSON.parse(data.successmesg);
 				$(".status").text(temp[0].status);
-				$(".total_moves").text(temp[0].total_moves);		 
+				$(".total_moves").text(temp[0].total_moves);		
+				$(".time_left").text(temp[0].time_left);	
 				if (window.player && window.player==temp[0].p_turn){ 
 					$(".p_turn").css('color', 'green');
 					$(".p_turn").text("Your");
@@ -550,13 +551,20 @@ function handleGetUsers(data){
 				if (window.started && temp[0].status=='aborted'){	
 					window.started=null;
 					deactivateButtons()
-					if (window.player==1 && temp[0].notes1.includes("wins")){				
+					if (window.player==1 && temp[0].notes1.includes("wins")){	
+						toastr.success(temp[0].notes1);
+						PlaySound();						
+					}
+					else if (window.player==2 && temp[0].notes1.includes("wins")){	
+						toastr.success(temp[0].notes2);						
+					}					
+					else if (window.player==2 && temp[0].notes2.includes("wins")){	
+						toastr.success(temp[0].notes2);
 						PlaySound();
 					}
-					else if (window.player==2 && temp[0].notes2.includes("wins")){
-					
-						PlaySound();
-					}				
+					else if (window.player==1 && temp[0].notes2.includes("wins")){	
+						toastr.success(temp[0].notes1);						
+					}					
 				}
 				if (!window.checkOnce && (temp[0].notes1.includes("bluffed on card") || temp[0].notes2.includes("bluffed on card"))){
 					//getCardsAfterThrow();

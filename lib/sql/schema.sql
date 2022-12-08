@@ -108,24 +108,25 @@ DELIMITER $$
 CREATE OR REPLACE PROCEDURE new_game_status()
 BEGIN 
 DROP TABLE IF EXISTS game_status;
-CREATE TABLE `game_status` (
-  `status` enum('not_active','player_1_waiting','initialized','started','ended','aborded') NOT NULL DEFAULT 'not_active',
-  `p_turn` enum('1','2') DEFAULT null,
-  `session1` varchar(50),
-  `session2` varchar(50),
-  `notes1` varchar(50),
-  `notes2` varchar(50),
-  `totalcards1` int, /*arithmos xartiwn paikth 1*/
-  `totalcards2` int, /*arithmos xartiwn paikth 1*/
-  `totalmpaza` int, /*arithmos xartiwn paikth teleutaia poy phksan*/
-  `totallast` int, /*arithmos xartiwn paikth 1*/
-  `moves_left` enum('0','1','2','3','4') DEFAULT null,
-  `declared_number` enum ('1','2','3','4','5','6','7','8','9','10','J','Q','K'),
-  `got_passed` enum('0','1') DEFAULT '0',
-  `total_moves` int,
-  `last_change` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+CREATE TABLE game_status (
+  status enum('not_active','player_1_waiting','initialized','started','ended','aborded') NOT NULL DEFAULT 'not_active',
+  p_turn enum('1','2') DEFAULT null,
+  session1 varchar(50),
+  session2 varchar(50),
+  notes1 varchar(50),
+  notes2 varchar(50),
+  totalcards1 int, /*arithmos xartiwn paikth 1*/
+  totalcards2 int, /*arithmos xartiwn paikth 1*/
+  totalmpaza int, /*arithmos xartiwn paikth teleutaia poy phksan*/
+  totallast int, /*arithmos xartiwn paikth 1*/
+  moves_left enum('0','1','2','3','4') DEFAULT null,
+  declared_number enum ('1','2','3','4','5','6','7','8','9','10','J','Q','K'),
+  got_passed enum('0','1') DEFAULT '0',
+  total_moves int,
+  last_change timestamp NULL DEFAULT current_timestamp(),
+  time_left varchar(50)
 );
-INSERT INTO game_status(`status`,`p_turn`,`session1`,`session2`,`notes1`,`notes2`,`totalcards1`,`totalcards2`,`totalmpaza`,`totallast`, `moves_left`,`declared_number`,`got_passed`,`total_moves`,`last_change`) VALUES ('not_active','1',null,null,'Welcome player 1','Welome player 2',0,0,0,0,"0",null,'0',0,current_timestamp());
+INSERT INTO game_status(status,p_turn,session1,session2,notes1,notes2,totalcards1,totalcards2,totalmpaza,totallast, moves_left,declared_number,got_passed,total_moves,last_change,time_left) VALUES ('not_active','1',null,null,'Welcome player 1','Welome player 2',0,0,0,0,"0",null,'0',0,current_timestamp(),"");
 END $$
 DELIMITER ;
 
@@ -250,7 +251,7 @@ BEGIN
 	SELECT p_turn into player from game_status;
 	
 	SELECT declared_number into DeclaredNumber from game_status;
-	select ( sum(cardNumber <> DeclaredNumber) ) as metablhth
+	select ( sum(cardNumber <> DeclaredNumber) ) into metablhth
 	from tablo	
 	where pos='4';	
 	IF (metablhth = 0) THEN 
@@ -316,7 +317,7 @@ BEGIN
     DECLARE Message varchar(20);
     DECLARE player varchar(1);
     DECLARE sum DECIMAL(10,2) DEFAULT 0;
-    SELECT `p_turn` into player from game_status;	
+    SELECT p_turn into player from game_status;	
 	SELECT COUNT(*) INTO sum FROM tablo WHERE pos = player;
 	IF sum = 0 THEN
 		call bluffOnCard(); /*LOL*/
@@ -497,11 +498,19 @@ DELIMITER $$
   DECLARE diffSec INT;
   DECLARE player varchar(1);	
   DECLARE stats varchar(30);
+  DECLARE secToShow INT;
   SELECT status INTO stats FROM game_status;
-	SELECT p_turn into player from game_status;
-	select last_change INTO timer from game_status;
-	SELECT TIMEDIFF(CURRENT_TIMESTAMP(), timer) INTO diff;
-	SELECT TIME_TO_SEC(diff) INTO diffSec;  
+  SELECT p_turn into player from game_status;
+  select last_change INTO timer from game_status;
+  SELECT TIMEDIFF(CURRENT_TIMESTAMP(), timer) INTO diff;
+  SELECT TIME_TO_SEC(diff) INTO diffSec;
+  if (stats='initialized' OR stats='started') then 
+    SET secToShow = 300-diffSec;
+	IF (secToShow<0) THEN 
+		SET secToShow =0;
+	END IF;
+	UPDATE game_status set time_left = CONCAT(secToShow, ' sec');	
+  end if;
   if (diffSec>300 AND (stats='initialized' OR stats='started')) THEN
 	update players set result='Win' where player<>player_id;
 	update players set result='Defeat' where player=player_id;
