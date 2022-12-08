@@ -461,7 +461,7 @@ function Userss(type,whatever){ //auto douleuei, ta alla oxi
 }
 
 function handleGetUsers(data){
-	console.log("handleGetUsers " + functionFlag4 + " , " + functionFlag5);
+	//console.log("handleGetUsers " + functionFlag4 + " , " + functionFlag5);
 	//console.log(data)
 	if (data.responseText && JSON.parse(data.responseText)){
 		var temp = JSON.parse(data.responseText);
@@ -483,18 +483,18 @@ function handleGetUsers(data){
 	else if (JSON.parse(data)){ // gia na leitourgei me header('HTTP/1.1 200 OK'); anti header('Content-type: application/json');
 		data = JSON.parse(data)
 		if(data.successmesg && data.commander && data.commander == 'show_board') { 
-			console.log(data.successmesg, data.commander);
+			//console.log(data.successmesg, data.commander);
 			window.returnedFromUsers = JSON.parse(data.successmesg);
 			getCards2();	
 		}
 		else if(data.successmesg && data.commander && data.commander == 'manyMoves') { 
-			console.log(data.successmesg, data.commander);
+			//console.log(data.successmesg, data.commander);
 			window.returnedFromUsers = JSON.parse(data.successmesg);
 			refreshing2();	
 			setStatus();
 		}	
 		else if(data.successmesg && data.commander && data.commander == 'bluff') { 
-			console.log(data.successmesg, data.commander);
+			//console.log(data.successmesg, data.commander);
 			window.returnedFromUsers = JSON.parse(data.successmesg);
 			refreshing2();	
 			setStatus();

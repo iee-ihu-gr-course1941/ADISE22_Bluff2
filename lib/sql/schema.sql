@@ -436,7 +436,7 @@ BEGIN
 	END IF;
 	IF (stats='initialized') THEN 
 		update game_status SET status='started';
-	END IF 
+	END IF; 
 END $$
 DELIMITER ;
 
