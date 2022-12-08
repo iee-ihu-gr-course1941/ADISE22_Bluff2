@@ -466,7 +466,7 @@ BEGIN
   Declare STATUS2 varchar(30); 
   SELECT status into STATUS2 from game_status;	  
   IF (STATUS2="not_active") THEN UPDATE game_status set status="player_1_waiting";
-  ELSEIF (STATUS2="ended") THEN UPDATE game_status set status="player_1_waiting"; CALL shuffleAll();
+  ELSEIF (STATUS2="ended" OR STATUS2="ended") THEN UPDATE game_status set status="player_1_waiting"; CALL shuffleAll();
   UPDATE game_status set last_change=CURRENT_TIMESTAMP();
   ELSEIF (STATUS2="player_1_waiting") THEN UPDATE game_status set status="initialized"; 
   UPDATE game_status set last_change=CURRENT_TIMESTAMP(); 

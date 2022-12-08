@@ -315,7 +315,8 @@ function addBluffArea(){
 	'</div>');	
 	$("#UserProfileUID1").val(window.sessionID);
 	$("#UserProfileUID1").change(function(){ 
-		checkSessionId(encodeURIComponent($("#UserProfileUID1").val()));		
+		checkSessionId(encodeURIComponent($("#UserProfileUID1").val()));
+		window.sessionID = $("#UserProfileUID1").val(); //xalase to paixnidi ean to id einai la8os
 	});
 	$("#time").hide();	
 
@@ -548,7 +549,7 @@ function handleGetUsers(data){
 				} 
 				$(".got_passed").text(temp[0].got_passed);
 				$(".notes1").text(temp[0].notes1);
-				if (window.started && temp[0].status=='aborted'){	
+				if (window.started && (temp[0].status=='aborted' || temp[0].status=='ended')){	
 					window.started=null;
 					deactivateButtons()
 					if (window.player==1 && temp[0].notes1.includes("wins")){	
