@@ -9,7 +9,6 @@ var functionFlag2=null;
 var functionFlag3=null;
 var functionFlag4=null;
 var functionFlag5=null;
-var canPlay=false;
 window.OpenedCards = [];
 window.CardOfPlayer = [];
 window.CardOfPlayerPlay = [];
@@ -115,8 +114,7 @@ function DOMContentLoaded2(){
 		$("#quitGame").show();
 		$("#newGame").hide();
 		$("#time").show();			
-		startBluff(); 
-		canPlay=false;	
+		startBluff(); 	
 }
 document.addEventListener('DOMContentLoaded', function() {
    //addBluffArea();
@@ -132,28 +130,35 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	
 	$("#newGame").click(function() {
+		//startUsers();
 		userCards();
 		refreshInit();
 		var myInterval = setInterval(setStatus, 3000);
 		window.started=true;
+		$("#announceArea").show();
+		$("#bluff_hand").show();
+		$("#quitGame").show();		
 	}); 
 	$("#quitGame").click(function() {
 		window.OpenedCards = [];
 		addBluffArea();	
-
+		startUsers();
 		$("#announce").remove();
 		$("#app").remove();
 			
 		$("#newGame").show();
+		$("#announceArea").hide();
+		$("#bluff_hand").hide();
 		$("#quitGame").hide();
-		$("#bluff").hide();
+		/*$("#bluff").hide();
 		$("#pass").hide();
 		$("#throwCards").hide();	
 		$("#cardsss").hide();
-		$("#time").hide();	
-		canPlay=false;
+		$("#time").hide();*/	
 		clearInterval(myInterval);
 		window.started=null;
+		window.sessionID =null;
+		//
 	}); 
 });
 
@@ -182,8 +187,7 @@ function becomeBluffedSucceeded(cards){
 	newCards.replace("_"," ");
 	toastr.info('You got bluffed. Cards added: ' + newCards); 
 	
-	window.OpenedCards = [];
-	canPlay=false;	
+	window.OpenedCards = [];	
 }
 function yourTurn(cardsDown, lastCardsOfEnemey){
 	if (cardsDown && lastCardsOfEnemey){
@@ -210,7 +214,6 @@ function yourTurn(cardsDown, lastCardsOfEnemey){
 		for (var i=0;i<lastCardsOfEnemey;i++) {$("#announce").append('<img src="https://legendmod.ml/adise/card_backside.jpg" alt="" style="margin-left:-10px;width:40px;height:50px;transform:rotate(10deg);">');}
 		$("#announceArea").append('</span>');
 	}	
-	canPlay = true;	
 }
 function initButtons(){
 		$("#crashRefresh").click(function() {	
@@ -220,16 +223,12 @@ function initButtons(){
 		$("#bluff").click(function() {
 		setBluff();
 		window.OpenedCards = [];
-		canPlay=false;
 		}); 	
 		$("#pass").click(function() {
 			setPass();
-			window.OpenedCards = [];
-			canPlay=false;			
-		//}
+			window.OpenedCards = [];		
 		}); 
 		$("#throwCards").click(function() {
-			//if (canPlay){	
 			if(window.OpenedCards && window.OpenedCards.length>0 && window.OpenedCards.length<5){
 				var callTheNumber = $("#cardsss").val();
 				if (callTheNumber=='A') callTheNumber="1";
@@ -285,8 +284,6 @@ function initButtons(){
 				toastr.info('You must choose some cards first'); 
 			}
 			window.OpenedCards = [];
-			canPlay=false;
-
 		}); 
 		
 }	
