@@ -302,9 +302,9 @@ function addBluffArea(){
 	'<button class="button" id="throwCards">Throw Cards</button>'+
 	'<button class="button" id="crashRefresh">Refresh</button>'+
 
-	'<div class="info"><div id="notes1">Player 1 notes: <span class="notes1"></span></div><div id="notes2">Player 2 notes: <span class="notes2"></div></span> <div id="last_change">Last change: <span class="last_change"></span></div>'+
-	'<br><div>Status: <span class="status"></span></div> <div id="player">Player: <span class="player">' + window.player + '</span></div><div id="uid"><span class="uid">UID: <input id="UserProfileUID1"></span></div><div id="time"><span class="label">Time:</span><span class="value">{{ time }}</span></div> <div>Total moves: <span class="total_moves"></span></div><div>Time left: <span class="time_left"></span></div>'+
-	'<br><div>Turn: <span class="p_turn"></span></div> <div>Player 1: <span class="totalcards1"></span></div> <div>Player 2: <span class="totalcards2"></span></div> <div>Mpaza: <span class="totalmpaza"></span></div> <div>Last thrown: <span class="totallast"></span></div> <div>Declared: <span class="declared_number"></span></div> <div>Passed: <span class="got_passed"></span></div>'+
+	'<div class="info"><div id="notes1">Player 1 notes: <b><span class="notes1"></b></span></div><div id="notes2">Player 2 notes: <b><span class="notes2"></div></b></span> <div id="last_change">Last change: <b><span class="last_change"></span></b></div>'+
+	'<br><div>Status: <b><span class="status"></span></b></div> <div id="player">Player: <b><span class="player">' + window.player + '</b></span></div><div id="uid"><span class="uid">UID: <input id="UserProfileUID1"></span></div> <div>Total moves: <b><span class="total_moves"></span></b></div><div>Time left: <b><span class="time_left"></span></b></div>'+
+	'<br><div>Turn: <b><span class="p_turn"></span></b></div> <div>Player 1: <b><span class="totalcards1"></span></b></div> <div>Player 2: <b><span class="totalcards2"></span></b></div> <div>Mpaza: <b><span class="totalmpaza"></span></b></div> <div>Last thrown: <b><span class="totallast"></span></b></div> <div>Declared: <b><span class="declared_number"></span></b></div> <div>Passed: <b><span class="got_passed"></span></b></div>'+
 	'</div>'+
 	'<div class="cards">'+
     '<div class="card" v-for="card in cards" :class="{ flipped: card.flipped, found: card.found }" @click="flipCard(card)">'+
@@ -409,7 +409,7 @@ function startBluff2(){
 } 
 
 PlaySound = function () {
-    var audio = new Audio('./extras/erro.mp3');
+    var audio = new Audio('./extras/victory.mp3');
     audio.loop = false;
     audio.play(); 
 }

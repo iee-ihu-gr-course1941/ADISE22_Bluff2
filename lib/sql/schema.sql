@@ -109,7 +109,7 @@ CREATE OR REPLACE PROCEDURE new_game_status()
 BEGIN 
 DROP TABLE IF EXISTS game_status;
 CREATE TABLE game_status (
-  status enum('not_active','player_1_waiting','initialized','started','ended','aborded') NOT NULL DEFAULT 'not_active',
+  status enum('not_active','player_1_waiting','initialized','started','ended','aborted') NOT NULL DEFAULT 'not_active',
   p_turn enum('1','2') DEFAULT null,
   session1 varchar(50),
   session2 varchar(50),
@@ -419,21 +419,24 @@ BEGIN
 		SELECT p_turn into player from game_status;
 	
 		IF (choice = '1') THEN call move(cards);
-		update game_status SET got_passed='0';	
-		UPDATE game_status set last_change=CURRENT_TIMESTAMP();	
+			update game_status SET got_passed='0';	
+			UPDATE game_status set last_change=CURRENT_TIMESTAMP();	
 		ELSEIF (choice = '2') THEN
 			IF (player=1) THEN UPDATE game_status SET notes1 = CONCAT('player ',player, ' passed');
 				ELSEIF (player=2) THEN UPDATE game_status SET notes2 = CONCAT('player ',player, ' passed');
 			END IF;	
 			UPDATE game_status set last_change=CURRENT_TIMESTAMP();
-		call pass();
-		update game_status set p_turn=if(p_turn='1','2','1');	
+			call pass();
+			update game_status set p_turn=if(p_turn='1','2','1');	
 		ELSEIF (choice = '3') THEN
-		call bluffOnCard();
-		update game_status set got_passed='0';	
-		UPDATE game_status set last_change=CURRENT_TIMESTAMP();
+			call bluffOnCard();
+			update game_status set got_passed='0';	
+			UPDATE game_status set last_change=CURRENT_TIMESTAMP();
 		END IF;
 	END IF;
+	IF (stats='initialized') THEN 
+		update game_status SET status='started';
+	END IF 
 END $$
 DELIMITER ;
 
