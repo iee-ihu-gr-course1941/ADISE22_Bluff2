@@ -117,7 +117,6 @@ function DOMContentLoaded2(){
 		startBluff(); 	
 }
 document.addEventListener('DOMContentLoaded', function() {
-   //addBluffArea();
    toastr.options.positionClass = 'toast-bottom-left';
    $("#quitGame").hide();
    $("#pass").hide();
@@ -125,12 +124,9 @@ document.addEventListener('DOMContentLoaded', function() {
    $("#cardsss").hide();
    $("#throwCards").hide(); 
 	//auta ta kanei apo thn arxh
-
 	startUsers();
 
-	
 	$("#newGame").click(function() {
-		//startUsers();
 		userCards();
 		refreshInit();
 		var myInterval = setInterval(setStatus, 3000);
@@ -145,20 +141,13 @@ document.addEventListener('DOMContentLoaded', function() {
 		startUsers();
 		$("#announce").remove();
 		$("#app").remove();
-			
 		$("#newGame").show();
 		$("#announceArea").hide();
 		$("#bluff_hand").hide();
-		$("#quitGame").hide();
-		/*$("#bluff").hide();
-		$("#pass").hide();
-		$("#throwCards").hide();	
-		$("#cardsss").hide();
-		$("#time").hide();*/	
+		$("#quitGame").hide();	
 		clearInterval(myInterval);
 		window.started=null;
 		window.sessionID =null;
-		//
 	}); 
 });
 
