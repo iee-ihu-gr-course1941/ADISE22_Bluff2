@@ -276,7 +276,7 @@ function initButtons(){
 				}
 
 				postUserss('board/' + window.sessionID + '/throw/'+ '"' + callTheNumber + '"' + '/' + temp[0] + '/' + temp[1] + '/' + temp[2]+ '/' + temp[3]);
-				getCardsAfterThrow();				
+				//getCardsAfterThrow();				
 			}
 			else if(window.OpenedCards.length>=5){
 				toastr.info('Too many cards chosen'); 
@@ -462,6 +462,7 @@ function Userss(type,whatever){ //auto douleuei, ta alla oxi
 
 function handleGetUsers(data){
 	console.log("handleGetUsers " + functionFlag4 + " , " + functionFlag5);
+	//console.log(data)
 	if (data.responseText && JSON.parse(data.responseText)){
 		var temp = JSON.parse(data.responseText);
 		//console.log(temp);
@@ -478,73 +479,103 @@ function handleGetUsers(data){
 			functionFlag5=null;
 		}
 		else toastr.error(temp.errormesg);
-	}	
-	else if(data.successmesg && data.commander && data.commander == 'show_board') { 
-		window.returnedFromUsers = JSON.parse(data.successmesg);
-		getCards2();	
 	}
-	else if(functionFlag4=='SuffleCards'){
-		functionFlag4=null;
-		refreshing();
-	}
-	else if(data.successmesg && data.commander && data.commander == 'startuser') { 
+	else if (JSON.parse(data)){ // gia na leitourgei me header('HTTP/1.1 200 OK'); anti header('Content-type: application/json');
+		data = JSON.parse(data)
+		if(data.successmesg && data.commander && data.commander == 'show_board') { 
+			console.log(data.successmesg, data.commander);
+			window.returnedFromUsers = JSON.parse(data.successmesg);
+			getCards2();	
+		}
+		else if(data.successmesg && data.commander && data.commander == 'manyMoves') { 
+			console.log(data.successmesg, data.commander);
+			window.returnedFromUsers = JSON.parse(data.successmesg);
+			refreshing2();	
+			setStatus();
+		}	
+		else if(data.successmesg && data.commander && data.commander == 'bluff') { 
+			console.log(data.successmesg, data.commander);
+			window.returnedFromUsers = JSON.parse(data.successmesg);
+			refreshing2();	
+			setStatus();
+		}
+		else if(functionFlag4=='SuffleCards'){
+			functionFlag4=null;
+			refreshing();
+			setStatus();
+			setStatus();
+		}
+		else if(data.successmesg && data.commander && data.commander == 'startuser') { 
 			var temp = JSON.parse(data.successmesg)		
 			window.sessionID = temp[0];
 			window.player = temp[1];
-	}
-	else if(data.successmesg && data.commander && data.commander == 'checkSessionId') { 
-		if (data.successmesg){
-			window.sessionID = $("#UserProfileUID1").val();		
-			var temp = JSON.parse(data.successmesg);
-			window.player = temp[1];
-			toastr.info('UID found. Player: ' + window.player); 			
-			userCards();
-			refreshInit();
 		}
-	}	
-	else if(data.successmesg && data.commander && data.commander == 'game_status') { 
-		if (data.successmesg){
-			var temp = JSON.parse(data.successmesg);
-			$(".status").text(temp[0].status);
-			$(".total_moves").text(temp[0].total_moves);		 
-			if (window.player && window.player==temp[0].p_turn){ 
-				$(".p_turn").css('color', 'green');
-				$(".p_turn").text("Your");
-				activateButtons();
+		else if(data.successmesg && data.commander && data.commander == 'checkSessionId') { 
+			if (data.successmesg){
+				window.sessionID = $("#UserProfileUID1").val();		
+				var temp = JSON.parse(data.successmesg);
+				window.player = temp[1];
+				toastr.info('UID found. Player: ' + window.player); 			
+				userCards();
+				refreshInit();
+				setStatus();
 			}
-			else if (window.player){
-				$(".p_turn").css('color', 'red');
-				$(".p_turn").text("Opponent's");
-				deactivateButtons();
-			}
-			$(".last_change").text(temp[0].last_change);
-			$(".totalcards1").text(temp[0].totalcards1);
-			$(".totalcards2").text(temp[0].totalcards2);
-			$(".totalmpaza").text(temp[0].totalmpaza);
-			$(".totallast").text(temp[0].totallast);
-			$(".declared_number").text(temp[0].declared_number);
-			$(".got_passed").text(temp[0].got_passed);
-			$(".notes1").text(temp[0].notes1);
-			if (window.started && temp[0].status=='aborted'){	
-				window.started=null;
-				deactivateButtons()
-				if (window.player==1 && temp[0].notes1.includes("wins")){				
-					PlaySound();
+		}	
+		else if(data.successmesg && data.commander && data.commander == 'game_status') { 
+			if (data.successmesg){
+				var temp = JSON.parse(data.successmesg);
+				$(".status").text(temp[0].status);
+				$(".total_moves").text(temp[0].total_moves);		 
+				if (window.player && window.player==temp[0].p_turn){ 
+					$(".p_turn").css('color', 'green');
+					$(".p_turn").text("Your");
+					activateButtons();
 				}
-				else if (window.player==2 && temp[0].notes2.includes("wins")){
+				else if (window.player){
+					$(".p_turn").css('color', 'red');
+					$(".p_turn").text("Opponent's");
+					deactivateButtons();
+				}
+				$(".last_change").text(temp[0].last_change);
+				$(".totalcards1").text(temp[0].totalcards1);
+				$(".totalcards2").text(temp[0].totalcards2);
+				$(".totalmpaza").text(temp[0].totalmpaza);
+				$(".totallast").text(temp[0].totallast);
+				$(".declared_number").text(temp[0].declared_number);
+				if (temp[0].declared_number==1){
+					$(".declared_number").text('A');
+				} 
+				$(".got_passed").text(temp[0].got_passed);
+				$(".notes1").text(temp[0].notes1);
+				if (window.started && temp[0].status=='aborted'){	
+					window.started=null;
+					deactivateButtons()
+					if (window.player==1 && temp[0].notes1.includes("wins")){				
+						PlaySound();
+					}
+					else if (window.player==2 && temp[0].notes2.includes("wins")){
 					
-					PlaySound();
-				}				
-			}			
-			if (window.player && window.player==1){ 
-				$(".notes1").css('color', 'green');
-				$(".notes2").css('color', 'red');
+						PlaySound();
+					}				
+				}
+				if (!window.checkOnce && (temp[0].notes1.includes("bluffed on card") || temp[0].notes2.includes("bluffed on card"))){
+					//getCardsAfterThrow();
+					refreshing2();
+					window.checkOnce= true;
+				}
+				else if (!temp[0].notes1.includes("bluffed on card") && !temp[0].notes2.includes("bluffed on card")){
+					window.checkOnce= null;
+				}			
+				if (window.player && window.player==1){ 
+					$(".notes1").css('color', 'green');
+					$(".notes2").css('color', 'red');
+				}
+				else if (window.player){
+					$(".notes1").css('color', 'red');
+					$(".notes2").css('color', 'green');
+				}
+				$(".notes2").text(temp[0].notes2);
 			}
-			else if (window.player){
-				$(".notes1").css('color', 'red');
-				$(".notes2").css('color', 'green');
-			}
-			$(".notes2").text(temp[0].notes2);
 		}
 	}	
 }

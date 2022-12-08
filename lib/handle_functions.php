@@ -5,11 +5,12 @@ function errorMsg($msg, $commander){
 		print json_encode(['errormesg' => $msg, 'commander' => $commander], JSON_PRETTY_PRINT);	
 }
 function successMsg($msg, $commander){
-		header('Content-type: application/json');
+		header('HTTP/1.1 200 OK');
+		//header('Content-type: application/json');
 		print json_encode(['successmesg' => $msg, 'commander' => $commander], JSON_PRETTY_PRINT);	
 }
 function informationMsg($msg, $commander){
-		header('HTTP/1.1 100 Information');
+		header('HTTP/1.1 100 Informational');
 		print json_encode(['successmesg' => $msg, 'commander' => $commander], JSON_PRETTY_PRINT);	
 }
 //function handle_main($method, $properties) {

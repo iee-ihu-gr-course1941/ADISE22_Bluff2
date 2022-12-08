@@ -254,17 +254,22 @@ BEGIN
 	from tablo	
 	where pos='4';	
 	IF (metablhth = 0) THEN 
-		IF (player=1) THEN UPDATE game_status SET notes1 = CONCAT('player ',player, ' bluffed on card ', DeclaredNumber, ' and lost');
-		ELSEIF (player=2) THEN UPDATE game_status SET notes2 = CONCAT('player ',player, ' bluffed on card ', DeclaredNumber, ' and lost');
+		IF (player=1) THEN 
+			UPDATE game_status SET notes1 = CONCAT('player ',player, ' bluffed on card ', DeclaredNumber, ' and lost');
+		ELSEIF (player=2) THEN 
+			UPDATE game_status SET notes2 = CONCAT('player ',player, ' bluffed on card ', DeclaredNumber, ' and lost');
 		END IF;	
 	CALL takeBackAll();
 	ELSE 
-		IF (player=1) THEN UPDATE game_status SET notes1 = CONCAT('player ',player, ' bluffed on card ', DeclaredNumber, ' and won');
-		ELSEIF (player=2) THEN UPDATE game_status SET notes2 = CONCAT('player ',player, ' bluffed on card ', DeclaredNumber, ' and won');
+		IF (player=1) THEN 
+			UPDATE game_status SET notes1 = CONCAT('player ',player, ' bluffed on card ', DeclaredNumber, ' and won');
+		ELSEIF (player=2) THEN 
+			UPDATE game_status SET notes2 = CONCAT('player ',player, ' bluffed on card ', DeclaredNumber, ' and won');
 		END IF;	
-	update game_status set p_turn=if(p_turn='1','2','1');
-	CALL takeBackAll();
+		update game_status set p_turn=if(p_turn='1','2','1');
+		CALL takeBackAll();	
 	END IF;
+	CALL show_board_For_Active_Player();
 END $$
 DELIMITER ;
 
@@ -276,7 +281,7 @@ DELIMITER $$
   */
   DECLARE player varchar(1);
   SELECT p_turn into player from game_status ;
-	UPDATE tablo SET pos = '4' WHERE card = cardd; 
+	UPDATE tablo SET pos = '4' WHERE card = cardd; 	
 	/*UPDATE tablo SET pos = '4' WHERE card = cardd and pos=player;    -> auth bgainei la8os, den kserw giati*/
 	/*Εβγαλα απο την move την αλλαγή σειράς γιατί θα καλείτε σε κάθε κάρτα που αλλάζει θέση
 	Η αλλαγή σειράς θα γίνεται στην επιλογή της κίνησης
@@ -386,9 +391,10 @@ BEGIN
 	IF @b = 1 THEN
 		UPDATE game_status SET status = 'ended';
 	END IF;
-	update game_status set p_turn=if(p_turn='1','2','1');
-	UPDATE game_status SET total_moves = total_moves+1;		
+	UPDATE game_status SET total_moves = total_moves+1;	
 	call cardNumberCount();
+	CALL show_board_For_Active_Player();
+	update game_status set p_turn=if(p_turn='1','2','1');	
 	/*update game_status set notes1='wtf';
 	update game_status set p_turn=if(p_turn='1','2','1');	*/
 END $$
@@ -441,9 +447,11 @@ DELIMITER ;
 DELIMITER $$
 CREATE OR REPLACE PROCEDURE show_board_For_Active_Player()
 BEGIN 
+	DECLARE player varchar(1);
+	SELECT p_turn into player from game_status;
 	SELECT *
-	FROM tablo t, game_status g
-	WHERE t.pos = g.p_turn;
+	FROM tablo
+	WHERE pos = player;
 END $$
 DELIMITER ; 	
 
