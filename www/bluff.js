@@ -120,6 +120,10 @@ function DOMContentLoaded2(){
 }
 document.addEventListener('DOMContentLoaded', function() {
    toastr.options.positionClass = 'toast-bottom-left';
+   	toastr.success('ΚΑΛΟΣΗΣΘΑΤΕ. ΠΡΟΣΟΧΗ: ΟΣΟΙ ΜΠΑΙΝΟΥΝ ΑΠΟ ΤΟ USERS, ΕΑΝ ΚΑΝΟΥΝ DESTROY ΑΛΛΟ ΠΑΙΧΝΙΔΙ, ΝΑ ΠΕΡΙΜΕΝΟΥΝ 10 ΔΕΥΤΕΡΟΛΕΠΤΑ ΠΡΙΝ ΠΑΤΗΣΟΥΝ NEW GAME', "", {
+        timeOut: 15000,
+        extendedTimeOut: 15000
+   }).css("width", "300px");	
    $("#quitGame").hide();
    $("#pass").hide();
    $("#bluff").hide();
