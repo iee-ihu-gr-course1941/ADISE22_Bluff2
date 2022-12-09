@@ -464,7 +464,7 @@ function handleGetUsers(data){
                         timeOut: 15000,
                         extendedTimeOut: 15000
                     }).css("width", "300px");
-		toastr.success('ΠΡΟΣΟΧΗ: ΟΣΟΙ ΜΠΑΙΝΟΥΝ ΑΠΟ ΤΟ USERS, ΕΑΝ ΚΑΝΟΥΝ DESTROY ΑΛΛΟ ΠΑΙΧΝΙΔΙ, ΝΑ ΠΕΡΙΜΕΝΟΥΝ 10 ΔΕΥΤΕΡΟΛΕΠΤΑ ΠΡΙΝ ΠΑΤΗΣΟΥΝ NEW GAME', "", {
+		toastr.success('ΠΡΟΣΟΧΗ: ΔΟΥΛΕΘΥΕΙ ΣΕ CHROME. ΟΣΟΙ ΜΠΑΙΝΟΥΝ ΑΠΟ ΤΟ USERS, ΕΑΝ ΚΑΝΟΥΝ DESTROY ΑΛΛΟ ΠΑΙΧΝΙΔΙ, ΝΑ ΠΕΡΙΜΕΝΟΥΝ 10 ΔΕΥΤΕΡΟΛΕΠΤΑ ΠΡΙΝ ΠΑΤΗΣΟΥΝ NEW GAME', "", {
 			timeOut: 15000,
 			extendedTimeOut: 8000
 		}).css("width", "300px");					
