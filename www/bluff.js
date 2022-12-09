@@ -119,11 +119,7 @@ function DOMContentLoaded2(){
 		startBluff(); 	
 }
 document.addEventListener('DOMContentLoaded', function() {
-   toastr.options.positionClass = 'toast-bottom-left';
-   	toastr.success('ΚΑΛΟΣΗΣΘΑΤΕ. ΠΡΟΣΟΧΗ: ΟΣΟΙ ΜΠΑΙΝΟΥΝ ΑΠΟ ΤΟ USERS, ΕΑΝ ΚΑΝΟΥΝ DESTROY ΑΛΛΟ ΠΑΙΧΝΙΔΙ, ΝΑ ΠΕΡΙΜΕΝΟΥΝ 10 ΔΕΥΤΕΡΟΛΕΠΤΑ ΠΡΙΝ ΠΑΤΗΣΟΥΝ NEW GAME', "", {
-        timeOut: 15000,
-        extendedTimeOut: 15000
-   }).css("width", "300px");	
+   toastr.options.positionClass = 'toast-bottom-left';	
    $("#quitGame").hide();
    $("#pass").hide();
    $("#bluff").hide();
@@ -467,7 +463,11 @@ function handleGetUsers(data){
 			toastr.error('Seems that other players are bluffing right now. Do you want to terminate them and start new game?' + '</br> <button id=enableshortcuts1 class="btn btn-sm btn-primary btn-play btn-enable-shortcuts" onclick="destroygame();" style="width: 100%;margin-top: 10px;border-color: darkblue;">' + 'yes, yes, do your best' + '</button><br><button class="btn btn-sm btn-warning btn-spectate btn-play btn-enable-shortcuts" style="width: 100%;margin-top: 10px;">' + 'oh no no, let them play' + '</button>', "", {
                         timeOut: 15000,
                         extendedTimeOut: 15000
-                    }).css("width", "300px")			
+                    }).css("width", "300px");
+		toastr.success('ΚΑΛΟΣΗΣΘΑΤΕ. ΠΡΟΣΟΧΗ: ΟΣΟΙ ΜΠΑΙΝΟΥΝ ΑΠΟ ΤΟ USERS, ΕΑΝ ΚΑΝΟΥΝ DESTROY ΑΛΛΟ ΠΑΙΧΝΙΔΙ, ΝΑ ΠΕΡΙΜΕΝΟΥΝ 10 ΔΕΥΤΕΡΟΛΕΠΤΑ ΠΡΙΝ ΠΑΤΗΣΟΥΝ NEW GAME', "", {
+			timeOut: 15000,
+			extendedTimeOut: 8000
+		}).css("width", "300px");					
 		}
 		else if (temp.errormesg == "Wrong sessionId"){
 			toastr.error(temp.errormesg);
