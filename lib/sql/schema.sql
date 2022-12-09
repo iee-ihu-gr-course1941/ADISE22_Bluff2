@@ -536,10 +536,10 @@ BEGIN
 		CALL takeBackAll();		
 		UPDATE game_status set status="ended";
 
-		if (player=1) then 
+		if (player=2) then 
 			UPDATE game_status SET notes1 = CONCAT('player 1 defeated');
 			UPDATE game_status SET notes2 = CONCAT('player 2 wins'); 
-		elseif (player=2) then 
+		elseif (player=1) then 
 			UPDATE game_status SET notes1 = CONCAT('player 1 wins');
 			UPDATE game_status SET notes2 = CONCAT('player 2 defeated'); 
 		END IF;
