@@ -592,6 +592,7 @@ function handleGetUsers(data){
 		}
 	}	
 }
+
 function destroygame(){
 	functionFlag5='destroy';
 	postUserss('destroy');
