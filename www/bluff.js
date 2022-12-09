@@ -556,16 +556,15 @@ function handleGetUsers(data){
 					window.started=null;
 					window.dontactivatebuttons=true;
 					deactivateButtons();
+					PlaySound();
 					if (window.player==1 && temp[0].notes1.includes("wins")){	
-						toastr.success(temp[0].notes1);
-						PlaySound();						
+						toastr.success(temp[0].notes1);											
 					}
 					else if (window.player==2 && temp[0].notes1.includes("wins")){	
 						toastr.success(temp[0].notes2);						
 					}					
 					else if (window.player==2 && temp[0].notes2.includes("wins")){	
-						toastr.success(temp[0].notes2);
-						PlaySound();
+						toastr.success(temp[0].notes2);						
 					}
 					else if (window.player==1 && temp[0].notes2.includes("wins")){	
 						toastr.success(temp[0].notes1);						
