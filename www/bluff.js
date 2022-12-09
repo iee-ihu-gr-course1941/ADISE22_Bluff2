@@ -101,9 +101,11 @@ function deactivateButtons(){
 	$("#throwCards").prop('disabled', true);
 }
 function activateButtons(){
-	$("#bluff").prop('disabled', false);
-	$("#pass").prop('disabled', false);
-	$("#throwCards").prop('disabled', false);
+	if (!window.dontactivatebuttons){
+		$("#bluff").prop('disabled', false);
+		$("#pass").prop('disabled', false);
+		$("#throwCards").prop('disabled', false);
+	}
 }
 function DOMContentLoaded2(){
 		$("#announce").remove();
@@ -131,6 +133,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		refreshInit();
 		var myInterval = setInterval(setStatus, 3000);
 		window.started=true;
+		window.dontactivatebuttons=null;
 		$("#announceArea").show();
 		$("#bluff_hand").show();
 		$("#quitGame").show();		
@@ -266,7 +269,7 @@ function initButtons(){
 					}
 				}
 
-				postUserss('board/' + window.sessionID + '/throw/'+ callTheNumber + '/' + temp[0] + '/' + temp[1] + '/' + temp[2]+ '/' + temp[3]);
+				postUserss('board/' + window.sessionID + '/throw/'+ '"' + callTheNumber + '"' + '/' + temp[0] + '/' + temp[1] + '/' + temp[2]+ '/' + temp[3]);
 				//getCardsAfterThrow();				
 			}
 			else if(window.OpenedCards.length>=5){
@@ -286,7 +289,7 @@ function addBluffArea(){
 	'<button class="button" id="pass">Pass</button>'+
 	'<select class="button" name="cardsss" id="cardsss">'+
     '<option value="A">A</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option>'+
-    '<option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="J">J</option><option value="5">5</option><option value="Q">Q</option><option value="K">K</option>'+
+    '<option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="J">J</option><option value="Q">Q</option><option value="K">K</option>'+
     '</select>'+
 	'<button class="button" id="throwCards">Throw Cards</button>'+
 	'<button class="button" id="crashRefresh">Refresh</button>'+
@@ -547,7 +550,8 @@ function handleGetUsers(data){
 				$(".notes2").text(temp[0].notes2);
 				if (window.started && (temp[0].status=='aborted' || temp[0].status=='ended')){	
 					window.started=null;
-					deactivateButtons()
+					window.dontactivatebuttons=true;
+					deactivateButtons();
 					if (window.player==1 && temp[0].notes1.includes("wins")){	
 						toastr.success(temp[0].notes1);
 						PlaySound();						

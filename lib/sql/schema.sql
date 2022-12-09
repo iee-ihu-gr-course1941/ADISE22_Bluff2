@@ -274,6 +274,7 @@ BEGIN
 END $$
 DELIMITER ;
 
+
 DELIMITER $$
   CREATE OR REPLACE PROCEDURE move(cardd tinyint) /* DEN DOYLEYEI SWSTA GIA MEGALA NOUMERA, 8ELEI AUTOCOMMIT 0, ELEGXO STHN PHP KAI RETURN sthn manyMoves*/
   BEGIN 
@@ -308,31 +309,6 @@ DELIMITER ;
   call cardNumberCount();
   END $$ 
  DELIMITER ;
- 
-DELIMITER $$
-CREATE OR REPLACE PROCEDURE checkVictory()
-READS SQL DATA
-DETERMINISTIC
-BEGIN
-    DECLARE Message varchar(20);
-    DECLARE player varchar(1);
-    DECLARE sum DECIMAL(10,2) DEFAULT 0;
-    SELECT p_turn into player from game_status;	
-	SELECT COUNT(*) INTO sum FROM tablo WHERE pos = player;
-	IF sum = 0 THEN
-		update game_status set p_turn=if(p_turn='1','2','1');
-		call bluffOnCard(); /*LOL*/
-		update game_status set got_passed='0';	
-		/*update game_status set p_turn=if(p_turn='1','2','1');	*/
-		SELECT COUNT(*) INTO sum FROM tablo WHERE pos = player;
-		IF sum = 0 THEN
-			update players set result='Win' where player=player_id;
-			update players set result='Defeat' where player<>player_id;
-			update game_status set status='ended';
-		END IF;
-	END IF;
-END $$
-DELIMITER ;
 
 /*
 DELIMITER $$
@@ -354,7 +330,7 @@ SELECT @TotalSum;
 
 
 DELIMITER $$
-CREATE OR REPLACE PROCEDURE manyMoves(declaredN varchar(2), card1 varchar(10),card2 varchar(10),card3 varchar(10),card4 varchar(10))
+CREATE OR REPLACE PROCEDURE manyMoves(declaredN varchar(1), card1 varchar(10),card2 varchar(10),card3 varchar(10),card4 varchar(10))
 BEGIN 
 	DECLARE moves2 INT;
     DECLARE player varchar(1);
@@ -387,19 +363,14 @@ BEGIN
          IF moves2=0 THEN	
             LEAVE simple_loop;
          END IF;
-    END LOOP simple_loop;
-	/*UPDATE game_status SET moves_left='0';*/
-	CALL checkVictory();
+    END LOOP simple_loop;	
 	UPDATE game_status SET total_moves = total_moves+1;	
+	CALL checkVictory();
 	call cardNumberCount();
 	CALL show_board_For_Active_Player();
 	update game_status set p_turn=if(p_turn='1','2','1');	
-	/*update game_status set notes1='wtf';
-	update game_status set p_turn=if(p_turn='1','2','1');	*/
 END $$
 DELIMITER ;
-
-/*call manyMoves('J',1,2,NULL,NULL);*/
 
 SELECT * FROM game_status;
 
@@ -517,11 +488,11 @@ DELIMITER $$
 	update players set result='Defeat' where player=player_id;
 	UPDATE game_status set status="aborted";
 	if (player=1) then 
-		UPDATE game_status SET notes1 = CONCAT('player ',player, ' defeated, aborted');
-		UPDATE game_status SET notes2 = CONCAT('player ',player, ' wins');  
+		UPDATE game_status SET notes1 = CONCAT('player 1 defeated, aborted');
+		UPDATE game_status SET notes2 = CONCAT('player 2 wins');  
 	elseif (player=2) then 
-		UPDATE game_status SET notes1 = CONCAT('player ',player, ' wins');
-		UPDATE game_status SET notes2 = CONCAT('player ',player, ' defeated, aborted'); 
+		UPDATE game_status SET notes1 = CONCAT('player 1 wins');
+		UPDATE game_status SET notes2 = CONCAT('player 2 defeated, aborted'); 
 	end if; 
     UPDATE game_status set p_turn="3";	
   END IF;
@@ -529,5 +500,52 @@ DELIMITER $$
   END $$ 
  DELIMITER ;
 
-CALL checkTimer();
 
+DELIMITER $$
+CREATE OR REPLACE PROCEDURE checkVictory()
+BEGIN
+    DECLARE player varchar(1);
+    DECLARE sum INT DEFAULT 0;
+    SELECT p_turn into player from game_status;	
+	SELECT COUNT(*) INTO sum FROM tablo WHERE pos = player;
+	IF sum = 0 THEN
+		call bluffOnCardForVictory(); 
+	END IF;
+END $$
+DELIMITER ;
+
+DELIMITER $$
+CREATE OR REPLACE PROCEDURE bluffOnCardForVictory() 
+BEGIN
+	DECLARE player varchar(1);	
+	DECLARE DeclaredNumber varchar(2);
+	DECLARE metablhth varchar(2);
+	SELECT p_turn into player from game_status;
+	
+	SELECT declared_number into DeclaredNumber from game_status;
+	select ( sum(cardNumber <> DeclaredNumber) ) into metablhth
+	from tablo	
+	where pos='4';			
+	IF (metablhth > 0) THEN
+		CALL takeBackAll();
+		UPDATE game_status SET notes1 = CONCAT('player ', player, ' did not win yet, got cheating');
+		UPDATE game_status SET notes2 = CONCAT('player ', player, ' did not win yet, got cheating');	
+		update game_status set p_turn=if(p_turn='1','2','1');
+	ELSEIF (metablhth = 0) THEN
+		update game_status set p_turn=if(p_turn='1','2','1');
+		CALL takeBackAll();		
+		UPDATE game_status set status="ended";
+
+		if (player=1) then 
+			UPDATE game_status SET notes1 = CONCAT('player 1 defeated');
+			UPDATE game_status SET notes2 = CONCAT('player 2 wins'); 
+		elseif (player=2) then 
+			UPDATE game_status SET notes1 = CONCAT('player 1 wins');
+			UPDATE game_status SET notes2 = CONCAT('player 2 defeated'); 
+		END IF;
+		update players set result='Win' where player<>player_id;
+		update players set result='Defeat' where player=player_id;	
+		UPDATE game_status set p_turn="3";			
+	END IF;	
+END $$
+DELIMITER ;
