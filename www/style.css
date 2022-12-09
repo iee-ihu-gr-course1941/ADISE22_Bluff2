@@ -207,3 +207,6 @@ body {
 .player{
   color: green;
 }
+#http, #httpreq1, #httpreq{
+	width: 400px;
+}

@@ -1,0 +1,53 @@
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="Jimboy3100, jimboy3100@gmail.com">
+    <title>ADISE: Bluff</title>
+	
+	<link rel="stylesheet" href="https://legendmod.ml/toastr.min.css"></link>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.css">	
+    <link href="./www/style.css" rel="stylesheet">
+    
+    
+    <script src="https://legendmod.ml/jquery.min.js"></script>
+	<script src="https://legendmod.ml/jquery-ui.js"></script>
+	
+	<script src="https://legendmod.ml/toastr.min.js"></script>	
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/1.0.26/vue.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.12.0/lodash.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.14.1/moment.min.js"></script>	
+	<script src="./www/APIcontroller.js"></script>
+</head>
+<body>
+<section id="mainSection">
+		<iframe id="bannerFrame" class="result-iframe"  src="./extras/banner.html" sandbox="allow-scripts allow-pointer-lock allow-same-origin allow-popups allow-modals allow-forms" allowfullscreen="allowfullscreen"></iframe>
+</section>
+    <div id="bluff_board">
+	<h4>Bluff2 API controller</h4>
+	<br>
+	<input type="radio" name="fav_language" id="checkbox1">
+	<span class="token">Token1:<input id="token1"></input></span>    <span class="token">Token2:<input id="token2"></input></span>	
+	<input type="radio" name="fav_language" id="checkbox2">
+	<br><br><span class="request">Request type: <select name="request" id="request"><option value="POST">POST</option><option value="GET">GET</option></select></span>	  
+	<span class="readyFun">Ready Functions: <select name="readyFun" id="readyFun"><option value="find">find</option><option value="cheatSession1">cheatSession1</option>
+	<option value="cheatSession2">cheatSession2</option><option value="startuser">startuser</option>
+	<option value="destroy">destroy</option><option value="startuser">startuser</option>
+	<option value="checkSessionId">checkSessionId</option><option value="show">show</option>
+	<option value="status">status</option><option value="throw">throw</option>
+	<option value="pass">pass</option><option value="bluff">bluff</option>
+	</select></span>	
+	<br><br>
+	<span class="http">Pre:<input id="http"></input></span>
+	<br>
+	<br><span class="httpreq">Request: <input id="httpreq1"></input><br><br></span>
+	<span class="httpreq">Http request: <input id="httpreq"></input></span>
+	<br><br><button id= "send" class="send">Send</button>
+	<br><br>
+	<div id="announceArea">  <textarea id="review" name="review" rows="40" cols="80"></textarea></div>
+	
+    </div>
+    <br />
+
+</body>
+</html>

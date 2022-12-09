@@ -61,12 +61,12 @@ function handle_find($method){
         errorMsg('Method Not Allowed','find');  
 	}	
 }
-function handle_cheatSession(){ 
+function handle_cheatSession($method, $sessionID){ 
 	if($method=='GET') {
-		informationMsg($sessionID1, 'cheatSession');
+		successMsg($sessionID, 'cheatSession'); //me informationMsg den douleuei
 	}
 	else {
-        errorMsg('Method Not Allowed','heatSession');  
+        errorMsg('Method Not Allowed','cheatSession');  
 	}	
 }
 function handle_board($method, $request, $sessionID1, $sessionID2) {

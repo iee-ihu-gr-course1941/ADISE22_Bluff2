@@ -310,7 +310,7 @@ DELIMITER ;
  DELIMITER ;
  
 DELIMITER $$
-CREATE OR REPLACE PROCEDURE checkVictory(out stat int)
+CREATE OR REPLACE PROCEDURE checkVictory()
 READS SQL DATA
 DETERMINISTIC
 BEGIN
@@ -320,14 +320,15 @@ BEGIN
     SELECT p_turn into player from game_status;	
 	SELECT COUNT(*) INTO sum FROM tablo WHERE pos = player;
 	IF sum = 0 THEN
+		update game_status set p_turn=if(p_turn='1','2','1');
 		call bluffOnCard(); /*LOL*/
+		update game_status set got_passed='0';	
+		/*update game_status set p_turn=if(p_turn='1','2','1');	*/
 		SELECT COUNT(*) INTO sum FROM tablo WHERE pos = player;
 		IF sum = 0 THEN
-			update players set status='Win' where player=player_id;
-			set stat = '1';
+			update players set result='Win' where player=player_id;
+			update game_status set status='ended' where player=player_id;
 		END IF;
-	ELSE
-	set stat = '0';
 	END IF;
 END $$
 DELIMITER ;
@@ -387,11 +388,7 @@ BEGIN
          END IF;
     END LOOP simple_loop;
 	/*UPDATE game_status SET moves_left='0';*/
-	CALL checkVictory(@TotalSum); 
-	SET @b = @TotalSum;
-	IF @b = 1 THEN
-		UPDATE game_status SET status = 'ended';
-	END IF;
+	CALL checkVictory();
 	UPDATE game_status SET total_moves = total_moves+1;	
 	call cardNumberCount();
 	CALL show_board_For_Active_Player();
