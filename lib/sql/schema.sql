@@ -110,7 +110,7 @@ BEGIN
 DROP TABLE IF EXISTS game_status;
 CREATE TABLE game_status (
   status enum('not_active','player_1_waiting','initialized','started','ended','aborted') NOT NULL DEFAULT 'not_active',
-  p_turn enum('1','2') DEFAULT null,
+  p_turn enum('1','2','3') DEFAULT null, /*to 3 kleinei olous*/
   session1 varchar(50),
   session2 varchar(50),
   notes1 varchar(50),
@@ -327,7 +327,8 @@ BEGIN
 		SELECT COUNT(*) INTO sum FROM tablo WHERE pos = player;
 		IF sum = 0 THEN
 			update players set result='Win' where player=player_id;
-			update game_status set status='ended' where player=player_id;
+			update players set result='Defeat' where player<>player_id;
+			update game_status set status='ended';
 		END IF;
 	END IF;
 END $$
@@ -521,7 +522,8 @@ DELIMITER $$
 	elseif (player=2) then 
 		UPDATE game_status SET notes1 = CONCAT('player ',player, ' wins');
 		UPDATE game_status SET notes2 = CONCAT('player ',player, ' defeated, aborted'); 
-	end if;  
+	end if; 
+    UPDATE game_status set p_turn="3";	
   END IF;
   select * from game_status;
   END $$ 
