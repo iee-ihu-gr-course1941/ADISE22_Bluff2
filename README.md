@@ -58,11 +58,13 @@ API controller: [API](https://users.iee.ihu.gr/~it032378/ADISE22_Bluff2/APIcontr
 
  * Θα πρέπει να δημιουργήσετε στην Mysql την βάση με όνομα 'ADISE22_Bluff2' και να φορτώσετε σε αυτήν την βάση τα δεδομένα από το αρχείο schema.sql απο τον φάκελο lib/sql/
 
- * Θα πρέπει να φτιάξετε το αρχείο lib/connect/config_local.php το οποίο να περιέχει:
+ * Θα πρέπει να φτιάξετε το αρχείο lib/connect/db_upass.php το οποίο να περιέχει:
 ```
     <?php
 	$DB_PASS = 'κωδικός';
 	$DB_USER = 'όνομα χρήστη';
+	$dbUsers = 'διέυθυνση του mysql.sock της Mysql';
+	$db = 'όνομα βάσης δεδομένων στην Mysql';
     ?>
 ```
 
@@ -78,8 +80,6 @@ API controller: [API](https://users.iee.ihu.gr/~it032378/ADISE22_Bluff2/APIcontr
 Η εφαρμογή απαπτύχθηκε μέχρι το σημείο .....(αναφέρετε τι υλοποιήσατε και τι όχι)
 
 ## Συντελεστές
-
-Περιγράψτε τις αρμοδιότητες της ομάδας.
 
 Κυριακίδης Δημήτριος: User Interface, PHP, Mysql
 
