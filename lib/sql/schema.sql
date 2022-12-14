@@ -1,6 +1,5 @@
-/*it174940@users:~/public_html/ADISE22_Bluff2$ mysql -u root -p bluff < lib/sql/schema.sql*/
+/*it032378@users:~/public_html/ADISE22_Bluff2$ mysql -u root -p bluff < lib/sql/schema.sql*/
 
-/* 8elei ta initialized, ktpl elegxous, elegxo me timestamp aborted */
 SET SQL_SAFE_UPDATES = 0;
 
 DELIMITER $$
@@ -276,18 +275,11 @@ DELIMITER ;
 
 
 DELIMITER $$
-  CREATE OR REPLACE PROCEDURE move(cardd tinyint) /* DEN DOYLEYEI SWSTA GIA MEGALA NOUMERA, 8ELEI AUTOCOMMIT 0, ELEGXO STHN PHP KAI RETURN sthn manyMoves*/
+  CREATE OR REPLACE PROCEDURE move(cardd tinyint)
   BEGIN 
-  /*
-  H Καρτα που μετακινούμε πρέπει να ανήκει στον παίκτη που παίζει
-  */
   DECLARE player varchar(1);
   SELECT p_turn into player from game_status ;
 	UPDATE tablo SET pos = '4' WHERE card = cardd; 	
-	/*UPDATE tablo SET pos = '4' WHERE card = cardd and pos=player;    -> auth bgainei la8os, den kserw giati*/
-	/*Εβγαλα απο την move την αλλαγή σειράς γιατί θα καλείτε σε κάθε κάρτα που αλλάζει θέση
-	Η αλλαγή σειράς θα γίνεται στην επιλογή της κίνησης
-    */
  END $$
 DELIMITER ;
  
