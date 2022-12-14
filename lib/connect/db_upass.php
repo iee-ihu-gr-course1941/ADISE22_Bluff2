@@ -17,4 +17,8 @@
 		$DB_USER = 'όνομα χρήστη';
 		$db = 'όνομα βάσης δεδομένων στην Mysql';
 	}
+<<<<<<< Updated upstream
 ?>
+=======
+?>
+>>>>>>> Stashed changes

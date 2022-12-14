@@ -54,7 +54,7 @@
 
  * Κάντε clone το project σε κάποιον φάκελο <br/>
   ```bash
-  `$ git clone https://github.com/iee-ihu-gr-course1941/ADISE22_Bluff2.git`
+  $ git clone https://github.com/iee-ihu-gr-course1941/ADISE22_Bluff2.git
   ```
 
  * Βεβαιωθείτε ότι ο φάκελος είναι προσβάσιμος από τον Apache Server. πιθανόν να χρειαστεί να καθορίσετε τις παρακάτω ρυθμίσεις.
@@ -164,9 +164,7 @@ $\color{#D29922}\textsf{\Large\&#x26A0;\kern{0.2cm}\normalsize Προσοχή}$
 | `bluffOnCardForVictory()`        | 'Ενέργειες αυτόματη μπλόφας|
 
 
-
-
-Η εφαρμογή απαπτύχθηκε μέχρι το σημείο .....(αναφέρετε τι υλοποιήσατε και τι όχι)
+Η εφαρμογή απαπτύχθηκε πλήρως.
 
 ## Συντελεστές
 
