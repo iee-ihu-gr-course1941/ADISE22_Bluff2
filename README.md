@@ -169,7 +169,11 @@ $\color{#D29922}\textsf{\Large\&#x26A0;\kern{0.2cm}\normalsize Προσοχή}$
 ## Συντελεστές
 
  * [Κυριακίδης Δημήτριος](https://github.com/kyriakidisdimitrios) User Interface, PHP, Mysql
- ** reerww
+ ```
+Στόχοι εργασίας; Μάθημα [Ανάπτυξη Διαδικτυακών Συστημάτων και Εφαρμογών](https://1941.iee.ihu.gr/site/) στο [Tμήμα Μηχανικών Πληροφορικής και Ηλεκτρονικών Συστημάτων Tμήμα Μηχανικών Πληροφορικής και Ηλεκτρονικών Συστημάτων](https://www.iee.ihu.gr/en/)
+Εκπαιδευτικοί στόχοι: Μεταπτυχιακό σε "Big data management and administration
+Προγραμματιστική εμπειρία σε παρεμφερές 
+```
 
  * [Σκαρλάτος Στράτος](https://github.com/Haxemaniac) PHP, Mysql, χειρισμός USERS
 
