@@ -54,7 +54,9 @@ API controller: [API](https://users.iee.ihu.gr/~it032378/ADISE22_Bluff2/APIcontr
 ## Οδηγίες_Εγκατάστασης
 
  * Κάντε clone το project σε κάποιον φάκελο <br/>
-  $${`$ git clone https://github.com/iee-ihu-gr-course1941/ADISE22_Bluff2.git`}$$ 
+  $$\color{black}{
+  `$ git clone https://github.com/iee-ihu-gr-course1941/ADISE22_Bluff2.git`
+  }$$ 
 
  * Βεβαιωθείτε ότι ο φάκελος είναι προσβάσιμος από τον Apache Server. πιθανόν να χρειαστεί να καθορίσετε τις παρακάτω ρυθμίσεις.
 
@@ -62,14 +64,13 @@ API controller: [API](https://users.iee.ihu.gr/~it032378/ADISE22_Bluff2/APIcontr
 
  * Θα πρέπει να φτιάξετε το αρχείο lib/connect/db_upass.php το οποίο να περιέχει:
  
-$$\color{blue}{
 ```
 	$DB_PASS = 'κωδικός';
 	$DB_USER = 'όνομα χρήστη';
 	$dbUsers = 'διέυθυνση του mysql.sock της Mysql';
 	$db = 'όνομα βάσης δεδομένων στην Mysql';
 ```
-}$$ 
+
 
 # Περιγραφή_Εγαρμογής_Παιχνιδιού
 
