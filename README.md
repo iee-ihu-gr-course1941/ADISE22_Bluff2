@@ -34,7 +34,7 @@
 
 #### Στόχοι εργασίας: Μάθημα [Ανάπτυξη Διαδικτυακών Συστημάτων και Εφαρμογών](https://1941.iee.ihu.gr/site/) στο [Tμήμα Μηχανικών Πληροφορικής και Ηλεκτρονικών Συστημάτων Tμήμα Μηχανικών Πληροφορικής και Ηλεκτρονικών Συστημάτων](https://www.iee.ihu.gr/en/)
 #### Εκπαιδευτικοί στόχοι: Μεταπτυχιακό σε [MSc in Big Data Management and Analytics](https://www.griffith.ie/faculties/computing/courses/msc-big-data-management-and-analytics)  
-#### Προγραμματιστική εμπειρία παρεμφερής με την παρούσα εργασία: Διαδικτυακή πλατφόρμα χρήσης για το παιχνίδι [agar.io](https://agar.io), με ενεργούς χρήστες, [legendmod.ml](https://legendmod.ml/), και βρίσκεται στο [jimboy3100.github.io](https://github.com/jimboy3100/jimboy3100.github.io) 
+#### Προγραμματιστική εμπειρία παρεμφερής με την παρούσα εργασία: Διαδικτυακή πλατφόρμα χρήσης για το παιχνίδι [agar.io](https://agar.io) με ενεργούς χρήστες [legendmod.ml](https://legendmod.ml/), και βρίσκεται στο [jimboy3100.github.io](https://github.com/jimboy3100/jimboy3100.github.io) 
 
  * Σκαρλάτος Στράτος [Github για ακαδημαϊκή χρήση](https://github.com/Haxemaniac): PHP, Mysql, χειρισμός USERS
 #### Στόχοι εργασίας: Μάθημα [Ανάπτυξη Διαδικτυακών Συστημάτων και Εφαρμογών](https://1941.iee.ihu.gr/site/) στο [Tμήμα Μηχανικών Πληροφορικής και Ηλεκτρονικών Συστημάτων Tμήμα Μηχανικών Πληροφορικής και Ηλεκτρονικών Συστημάτων](https://www.iee.ihu.gr/en/)
