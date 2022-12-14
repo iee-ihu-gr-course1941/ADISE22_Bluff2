@@ -63,7 +63,7 @@ API controller: [API](https://users.iee.ihu.gr/~it032378/ADISE22_Bluff2/APIcontr
 
  * Θα πρέπει να φτιάξετε το αρχείο lib/connect/db_upass.php το οποίο να περιέχει:
  
- $\color{#58A6FF}\textsf{\Large\&#x24D8;\kern{0.2cm}\normalsize Noteq}$
+$\color{#D29922}\textsf{\Large\&#x26A0;\kern{0.2cm}\normalsize Προσοχή}$
 ```
 	$DB_PASS = 'κωδικός';
 	$DB_USER = 'όνομα χρήστη';
