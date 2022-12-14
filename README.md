@@ -168,9 +168,9 @@ $\color{#D29922}\textsf{\Large\&#x26A0;\kern{0.2cm}\normalsize Προσοχή}$
 
 ## Συντελεστές
 
-Κυριακίδης Δημήτριος: User Interface, PHP, Mysql
+ * [Κυριακίδης Δημήτριος](https://github.com/kyriakidisdimitrios) User Interface, PHP, Mysql
 
-Σκαρλάτος Στράτος: PHP, Mysql, χειρισμός USERS
+ * [Σκαρλάτος Στράτος](https://github.com/Haxemaniac) PHP, Mysql, χειρισμός USERS
 
 
 
