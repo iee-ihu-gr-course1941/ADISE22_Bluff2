@@ -167,7 +167,7 @@ $\color{#D29922}\textsf{\Large\&#x26A0;\kern{0.2cm}\normalsize Προσοχή}$
 
 # Περιγραφή API
 
-   * API controller: [API](https://users.iee.ihu.gr/~it032378/ADISE22_Bluff2/APIcontroller.html) 
+   * [API controller](https://users.iee.ihu.gr/~it032378/ADISE22_Bluff2/APIcontroller.html) 
    * Όλες οι επιστροφές, πλήν του κενού είναι JSON, όπου το 1ο στοιχείο είναι String είτε "successmesg" είτε "errormesg", 
 το 2ο στοιχείο είναι JSON με τα επιστρεφόμενα στοιχεία, ενώ επίσης περιέχει το είδος της επιστροφής π.χ game_status
    * Κανένα στοιχείο επιστροφής δεν έχει header('Content-type: application/json'), αλλά  header('HTTP/1.1 200 OK', αντί αυτού, οπότε χρίζει απο interface 
