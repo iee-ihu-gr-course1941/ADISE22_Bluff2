@@ -131,13 +131,19 @@ API controller: [API](https://users.iee.ihu.gr/~it032378/ADISE22_Bluff2/APIcontr
 | `trapoula`        | card_id INT, card_number enum, card_symbol enum, card_icon varchar | Φύλλα τράπουλας (Άσσος Καρώ, κτλπ) |
 | `tablo`           | cardNumber enum , card tinyint, card_symbol enum, pos enum | Θέση των απαριθμημένων φύλλων Παίκτης 1, Παίκτης 2, Τελευταία κίνηση, Κάτω φύλλα |
 | `game_status`     | status enum, p_turn enum, session1 varchar, session2 varchar, notes1 varchar, notes2 varchar, totalcards1 int, totalcards2 int, totalmpaza int, totallast int, moves_left enum, declared_number enum, got_passed enum, total_moves int, last_change timestamp, time_left | Αποθήκευση σταθερών μεταβλητών, σχολίων και στοιχείων παιχνιδιού        |
+| `players`           | player_id, result enum | Πίνακας παικτών, φοτώνονται δεδομένα, αλλά δεν χρησιμοποιύντε (Χρήση για επέκταση σε άνω των 2 παικτών) |
 
 #### Stored Procedures
 
 | Πίνακας             | Σχόλια   |
 | ----------------- | --------------------------- |
 | `createtrapoulaTable()`        | Δημιουργία πίνακα trapoula |
-| `createtrapoulaTable()`        | Δημιουργία πίνακα trapoula |
+| `create_Card()`        | Μέθοδος φότωσης καρτών στον πίνακα trapoula |
+| `new_trapoula()`        | Φόρτωση καρτών στην τράπουλα |
+| `new_tablo()`        | Δημιουργία πίνακα tablo |
+| `new_game_status())`        | Δημιουργία πίνακα status |
+| `new_players()`        | Δημιουργία πίνακα players |
+
 
 Η εφαρμογή απαπτύχθηκε μέχρι το σημείο .....(αναφέρετε τι υλοποιήσατε και τι όχι)
 
