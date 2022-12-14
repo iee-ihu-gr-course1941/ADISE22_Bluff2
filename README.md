@@ -124,7 +124,7 @@ API controller: [API](https://users.iee.ihu.gr/~it032378/ADISE22_Bluff2/APIcontr
  * Pass
 
 
-#### Η βάση μας κρατάει τους εξής πίνακες και στοιχεία
+#### Πίνακες
 
 | Πίνακας             | Παιδία                | Σχόλια   |
 | ----------------- | --------------------------- | ---------- |
@@ -132,7 +132,12 @@ API controller: [API](https://users.iee.ihu.gr/~it032378/ADISE22_Bluff2/APIcontr
 | `tablo`           | cardNumber enum , card tinyint, card_symbol enum, pos enum | Θέση των απαριθμημένων φύλλων Παίκτης 1, Παίκτης 2, Τελευταία κίνηση, Κάτω φύλλα |
 | `game_status`     | status enum, p_turn enum, session1 varchar, session2 varchar, notes1 varchar, notes2 varchar, totalcards1 int, totalcards2 int, totalmpaza int, totallast int, moves_left enum, declared_number enum, got_passed enum, total_moves int, last_change timestamp, time_left | Αποθήκευση σταθερών μεταβλητών, σχολίων και στοιχείων παιχνιδιού        |
 
+#### Stored Procedures
 
+| Πίνακας             | Σχόλια   |
+| ----------------- | --------------------------- |
+| `createtrapoulaTable()`        | Δημιουργία πίνακα trapoula |
+| `createtrapoulaTable()`        | Δημιουργία πίνακα trapoula |
 
 Η εφαρμογή απαπτύχθηκε μέχρι το σημείο .....(αναφέρετε τι υλοποιήσατε και τι όχι)
 
