@@ -172,7 +172,7 @@ $\color{#D29922}\textsf{\Large\&#x26A0;\kern{0.2cm}\normalsize Προσοχή}$
 
 #### Στόχοι εργασίας: Μάθημα [Ανάπτυξη Διαδικτυακών Συστημάτων και Εφαρμογών](https://1941.iee.ihu.gr/site/) στο [Tμήμα Μηχανικών Πληροφορικής και Ηλεκτρονικών Συστημάτων Tμήμα Μηχανικών Πληροφορικής και Ηλεκτρονικών Συστημάτων](https://www.iee.ihu.gr/en/)
 #### Εκπαιδευτικοί στόχοι: Μεταπτυχιακό σε [MSc in Big Data Management and Analytics](https://www.griffith.ie/faculties/computing/courses/msc-big-data-management-and-analytics)  
-#### Προγραμματιστική εμπειρία σε παρεμφερές με την εργασία [legendmod.ml](https://legendmod.ml/), [legendmod.ml](https://github.com/jimboy3100/jimboy3100.github.io) 
+#### Προγραμματιστική εμπειρία σε παρεμφερές με την εργασία. Διαδικτυακή πλατφόρμα χρήσης για το παιχνίδι [agar.io](https://agar.io), με ενεργούς παγκόσμιους χρήστες, [legendmod.ml](https://legendmod.ml/), και βρίσκεται στο [jimboy3100.github.io](https://github.com/jimboy3100/jimboy3100.github.io) 
 
 
  * [Σκαρλάτος Στράτος](https://github.com/Haxemaniac) PHP, Mysql, χειρισμός USERS
