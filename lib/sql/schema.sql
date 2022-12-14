@@ -488,7 +488,10 @@ DELIMITER $$
 	end if; 
     UPDATE game_status set p_turn="3";	
   END IF;
-  select * from game_status;
+  /*select * from game_status;*/
+  select status,p_turn,notes1,notes2,totalcards1,totalcards2,totalmpaza,totallast, moves_left,declared_number,got_passed,total_moves,last_change,time_left 
+  from game_status;
+  
   END $$ 
  DELIMITER ;
 
