@@ -16,21 +16,6 @@
       
    * [Περιγραφή API](#περιγραφή-api)
       * [Methods](#methods)
-         * [Board](#board)
-            * [Ανάγνωση Board](#ανάγνωση-board)
-            * [Αρχικοποίηση Board](#αρχικοποίηση-board)
-         * [Piece](#piece)
-            * [Ανάγνωση Θέσης/Πιονιού](#ανάγνωση-θέσηςπιονιού)
-            * [Μεταβολή Θέσης Πιονιού](#μεταβολή-θέσης-πιονιού)
-         * [Player](#player)
-            * [Ανάγνωση στοιχείων παίκτη](#ανάγνωση-στοιχείων-παίκτη)
-            * [Καθορισμός στοιχείων παίκτη](#καθορισμός-στοιχείων-παίκτη)
-         * [Status](#status)
-            * [Ανάγνωση κατάστασης παιχνιδιού](#ανάγνωση-κατάστασης-παιχνιδιού)
-      * [Entities](#entities)
-         * [Board](#board-1)
-         * [Players](#players)
-         * [Game_status](#game_status)
 
 
 ![alt tag](https://raw.githubusercontent.com/iee-ihu-gr-course1941/ADISE22_Bluff2/main/images/Bluff.jpg)
