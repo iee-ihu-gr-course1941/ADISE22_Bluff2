@@ -36,9 +36,9 @@
 
 # Ιστοσελίδα_Demo
 
-Ιστοσελίδα: [ADISE22_Bluff2 USERS IEE IHU](https://users.iee.ihu.gr/~it032378/ADISE22_Bluff2/)
-2η Ιστοσελίδα: [ADISE22_Bluff2 Custom](https://legendmod.ml/adise/)
-API controller: [API](https://users.iee.ihu.gr/~it032378/ADISE22_Bluff2/APIcontroller.html) 
+* Ιστοσελίδα: [ADISE22_Bluff2 USERS IEE IHU](https://users.iee.ihu.gr/~it032378/ADISE22_Bluff2/)
+* 2η Ιστοσελίδα: [ADISE22_Bluff2 Custom](https://legendmod.ml/adise/)
+* API controller: [API](https://users.iee.ihu.gr/~it032378/ADISE22_Bluff2/APIcontroller.html) 
 
 
 
