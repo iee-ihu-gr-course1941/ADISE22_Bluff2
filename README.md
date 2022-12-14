@@ -1,14 +1,13 @@
 # Bluff Game
 ## ADISE22_Bluff2
 
-Διαδικτυακό παιχνίδι μπλόφας
+Διαδικτυακό παιχνίδι μπλόφας 2 πακτών
 
 ###### [Bluff GitHub Library](https://github.com/iee-ihu-gr-course1941/ADISE22_Bluff2)
 
-
-
-Table of Contents
+Περιεχόμενα
 =================
+   * [Ιστοσελίδα_Demo](#Ιστοσελίδα_Demo)
    * [Εγκατάσταση](#Εγκατάσταση)
       * [Απαιτήσεις](#Απαιτήσεις)
       * [Οδηγίες Εγκατάστασης](##Οδηγίες_Εγκατάστασης)
@@ -35,7 +34,7 @@ Table of Contents
 
 ![alt tag](https://raw.githubusercontent.com/iee-ihu-gr-course1941/ADISE22_Bluff2/main/images/Bluff.jpg)
 
-# Demo Page
+# Ιστοσελίδα_Demo
 
 Ιστοσελίδα: [ADISE22_Bluff2 USERS IEE IHU](https://users.iee.ihu.gr/~it032378/ADISE22_Bluff2/)
 2η Ιστοσελίδα: [ADISE22_Bluff2 Custom](https://legendmod.ml/adise/)
