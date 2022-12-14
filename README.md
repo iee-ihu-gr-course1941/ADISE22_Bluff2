@@ -168,15 +168,16 @@ $\color{#D29922}\textsf{\Large\&#x26A0;\kern{0.2cm}\normalsize Προσοχή}$
 
 ## Συντελεστές
 
- * [Κυριακίδης Δημήτριος](https://github.com/kyriakidisdimitrios) User Interface, PHP, Mysql
+ * Κυριακίδης Δημήτριος [Github για ακαδημαϊκή χρήση](https://github.com/kyriakidisdimitrios), [Github προγραμματιστή](https://github.com/jimboy3100/): User Interface, PHP, Mysql
 
 #### Στόχοι εργασίας: Μάθημα [Ανάπτυξη Διαδικτυακών Συστημάτων και Εφαρμογών](https://1941.iee.ihu.gr/site/) στο [Tμήμα Μηχανικών Πληροφορικής και Ηλεκτρονικών Συστημάτων Tμήμα Μηχανικών Πληροφορικής και Ηλεκτρονικών Συστημάτων](https://www.iee.ihu.gr/en/)
 #### Εκπαιδευτικοί στόχοι: Μεταπτυχιακό σε [MSc in Big Data Management and Analytics](https://www.griffith.ie/faculties/computing/courses/msc-big-data-management-and-analytics)  
-#### Προγραμματιστική εμπειρία σε παρεμφερές με την εργασία. Διαδικτυακή πλατφόρμα χρήσης για το παιχνίδι [agar.io](https://agar.io), με ενεργούς παγκόσμιους χρήστες, [legendmod.ml](https://legendmod.ml/), και βρίσκεται στο [jimboy3100.github.io](https://github.com/jimboy3100/jimboy3100.github.io) 
+#### Προγραμματιστική εμπειρία σε παρεμφερές με την εργασία: Διαδικτυακή πλατφόρμα χρήσης για το παιχνίδι [agar.io](https://agar.io), με ενεργούς παγκόσμιους χρήστες, [legendmod.ml](https://legendmod.ml/), και βρίσκεται στο [jimboy3100.github.io](https://github.com/jimboy3100/jimboy3100.github.io) 
 
-
- * [Σκαρλάτος Στράτος](https://github.com/Haxemaniac) PHP, Mysql, χειρισμός USERS
-
+ * Σκαρλάτος Στράτος[Github για ακαδημαϊκή χρήση](https://github.com/Haxemaniac): PHP, Mysql, χειρισμός USERS
+#### Στόχοι εργασίας: Μάθημα [Ανάπτυξη Διαδικτυακών Συστημάτων και Εφαρμογών](https://1941.iee.ihu.gr/site/) στο [Tμήμα Μηχανικών Πληροφορικής και Ηλεκτρονικών Συστημάτων Tμήμα Μηχανικών Πληροφορικής και Ηλεκτρονικών Συστημάτων](https://www.iee.ihu.gr/en/)
+#### Εκπαιδευτικοί στόχοι: Πτυχιακή εργασία σε APIs σχετικά με δειχείρηση στοιχείων απο βάσεις δεδομένων, π.χ Βελτιστοποίηση εφαρμογής "Πρόγραμμα εξεταστικής" ή "Εβδομαδιαίο πρόγραμμα μαθημάτων"
+#### Εργασιακοί στόχοι: Βελτιστοποίηση APIs για επιχειρήσεις. Βελτιστοποίηση πληροφορικών συστημάτων
 
 
 
