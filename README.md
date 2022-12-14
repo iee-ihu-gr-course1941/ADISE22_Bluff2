@@ -61,6 +61,8 @@ API controller: [API](https://users.iee.ihu.gr/~it032378/ADISE22_Bluff2/APIcontr
  * Θα πρέπει να δημιουργήσετε στην Mysql την βάση με όνομα 'ADISE22_Bluff2' και να φορτώσετε σε αυτήν την βάση τα δεδομένα από το αρχείο schema.sql απο τον φάκελο lib/sql/
 
  * Θα πρέπει να φτιάξετε το αρχείο lib/connect/db_upass.php το οποίο να περιέχει:
+ 
+ __Warning__
 ```
 	$DB_PASS = 'κωδικός';
 	$DB_USER = 'όνομα χρήστη';
